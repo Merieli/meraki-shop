@@ -92,7 +92,7 @@ npm run format
 
 **Testing**
 ```sh
-composer run test
+cmp test
 ```
 
 ### Accessing the Application
