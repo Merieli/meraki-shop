@@ -1,4 +1,4 @@
-# meraki-shop
+# 🛍️ Meraki Shop
 
 > Meraki é uma palavra grega que significa "fazer algo com alma, criatividade ou amor"
 
@@ -11,7 +11,7 @@
 - Git
 - Account in [WorkOS](https://workos.com/)
 
-### Docker Setup & Development
+### 🏳️ Docker Setup & Development
 
 1. Clone the repository and enter the directory:
 
