@@ -1,0 +1,65 @@
+name: meraki-shop
+
+services:
+    app:
+        container_name: $COMPOSE_PROJECT_NAME-dev-php-fpm
+        build:
+            context: .
+            dockerfile: ./.docker/Dockerfile
+            args:
+                PHP_VERSION: "8.3.20-fpm-alpine3.20"
+                PROJECT_NAME: "${COMPOSE_PROJECT_NAME}"
+                USER_NAME: "${USER}"
+        depends_on:
+            database:
+                condition: service_healthy
+        ports:
+            - 8086:80
+            - 5173:5173
+        volumes:
+            - ./:/var/www/${COMPOSE_PROJECT_NAME}
+        networks:
+            - app_network
+
+    nginx:
+        image: nginx:alpine
+        container_name: $COMPOSE_PROJECT_NAME-dev-nginx
+        ports:
+            - 8080:80
+        volumes:
+            - ./:/var/www/${COMPOSE_PROJECT_NAME}
+        depends_on:
+            - app
+        networks:
+            - app_network
+
+    database:
+        image: bitnami/postgresql:latest
+        container_name: $COMPOSE_PROJECT_NAME-dev-postgres
+        restart: unless-stopped
+        # Iniciando com usuário root para garantir permissões corretas
+        user: root
+        environment:
+            POSTGRESQL_USERNAME: ${USER}
+            POSTGRESQL_PASSWORD: root
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready"]
+            interval: 1s
+            timeout: 5s
+            retries: 10
+        ports:
+            - 5439:5432
+        volumes:
+            - postgres_data:/bitnami/postgresql
+        networks:
+            - app_network
+
+volumes:
+    postgres_data:
+        name: ${COMPOSE_PROJECT_NAME}-postgres-data
+        driver: local
+
+networks:
+    app_network:
+        driver: bridge
+        name: ${COMPOSE_PROJECT_NAME}-network
