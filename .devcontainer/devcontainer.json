@@ -72,7 +72,14 @@
 				"visualstudioexptteam.vscodeintellicode",
 				"xdebug.php-debug",
 				"yzhang.markdown-all-in-one",
-				"jaguadoromero.vscode-php-create-class"
+				"jaguadoromero.vscode-php-create-class",
+				// Frontend:
+				"Vue.volar",
+				"ms-vscode.vscode-typescript-next",
+				"yoavbls.pretty-ts-errors",
+				"esbenp.prettier-vscode",
+				"bradlc.vscode-tailwindcss",
+				"ChakrounAnas.turbo-console-log"
 			]
 		},
 		"settings": {

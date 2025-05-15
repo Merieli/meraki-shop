@@ -1,14 +1,15 @@
 # meraki-shop
 
-Meraki é uma palavra grega que significa "fazer algo com alma, criatividade ou amor"
+> Meraki é uma palavra grega que significa "fazer algo com alma, criatividade ou amor"
 
-## Installation Guide
+## 📖  Installation Guide
 
-### Prerequisites
+### ✅ Prequisites
 
 - Docker
 - Docker Compose
 - Git
+- Account in [WorkOS](https://workos.com/)
 
 ### Docker Setup & Development
 
@@ -24,6 +25,9 @@ cd meraki-shop
 ```sh
 cp .env.example .env
 ```
+
+> 💡 Prepare as keys necessárias para o projeto:
+> - Todas que começam com `WORKOS`
 
 3. Start an interactive Docker session to set up the project:
 
@@ -53,11 +57,11 @@ php artisan migrate
 ```
 
 
-### Common Development Commands
+### 🛠️ Common Development Commands
 
-These are the standard commands used in development (without Docker):
+These are the standard commands used in development:
 
-**Package Management**
+**📦 Package Management**
 ```sh
 # PHP Dependencies
 composer install
@@ -66,7 +70,7 @@ composer install
 npm install
 ```
 
-**Development**
+**🖥️ Development**
 ```sh
 # Start Laravel development server, queue listener, log watcher and Vite
 cmp dev
@@ -75,29 +79,29 @@ cmp dev
 npm run docs:dev
 ```
 
-**Code Quality**
+**🧹 Code Quality**
 ```sh
 # Format PHP code
-composer run lint:pint
+cmp lint:pint
 
 # Run PHPStan analysis
-composer run check
+cmp check
 
 # Run all validations
-composer run valid
+cmp valid
 
 # Format frontend code
 npm run format
 ```
 
-**Testing**
+**🧪 Testing**
 ```sh
 cmp test
 ```
 
 ### Accessing the Application
 
-- Main application: http://localhost:8086
-- Development server with Vite HMR: http://localhost:5173
-- Documentation of Project in Vitepress: http://localhost:5175
-- Documentation of API: http://localhost:8086/docs/api
+- 🏠 Main application: http://localhost:8086
+- ⚡ Development server with Vite HMR: http://localhost:5173
+- 📚 Documentation of Project in Vitepress: http://localhost:5175
+- 📖 Documentation of API: http://localhost:8086/docs/api
