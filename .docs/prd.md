@@ -46,6 +46,7 @@ Este projeto consiste na criação de um MVP de ecommerce simplificado, com func
 | RF-009 | Admin pode listar e gerenciar usuários                                      | Média      |
 
 
+
 ## 📑 Requisitos Não-Funcionais
 
 | ID      | Requisito                                                               | Prioridade |
@@ -53,7 +54,7 @@ Este projeto consiste na criação de um MVP de ecommerce simplificado, com func
 | RNF-001 | API deve responder em menos de 500ms                                    | Alta       |
 | RNF-002 | Aplicação deve estar disponível 99,9% do tempo                          | Alta       |
 | RNF-003 | Sistema responsivo (mobile first)                                       | Alta       |
-| RNF-004 | Autenticação segura com Laravel Sanctum                                 | Alta       |
+| RNF-004 | Autenticação segura com Google e JWT                                | Alta       |
 | RNF-005 | Compra 1 clique deve simular integração com API de pagamentos (sandbox) | Média      |
 | RNF-006 | Deploy containerizado via Docker                                        | Média      |
 
