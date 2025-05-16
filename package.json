@@ -8,8 +8,9 @@
     "dev:dkr": "npm run dev -- --host 0.0.0.0",
     "format": "prettier --write resources/",
     "format:check": "prettier --check resources/",
-    "lint": "eslint . --fix",
-    "docs:dev": "vitepress dev .docs --host 0.0.0.0",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "docs:dev": "vitepress dev .docs --host 0.0.0.0 --port 5175",
     "docs:build": "vitepress build .docs --host 0.0.0.0",
     "docs:preview": "vitepress preview .docs --host 0.0.0.0"
   },
