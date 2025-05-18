@@ -37,12 +37,12 @@ Este projeto consiste na criação de um MVP de ecommerce simplificado, com func
 | :----- | :-------------------------------------------------------------------------- | :--------- |
 | RF-001 | Usuário pode criar uma conta                                                | Alta       |
 | RF-002 | Usuário pode fazer login/logout                                             | Alta       |
-| RF-003 | Usuário autenticado pode visualizar catálogo de produtos                    | Alta       |
+| RF-003 | Usuário pode visualizar catálogo de produtos                    | Alta       |
 | RF-004 | Usuário autenticado pode realizar compra padrão via checkout                | Alta       |
 | RF-005 | Usuário autenticado pode realizar compra com 1 clique se tiver cartão salvo | Alta       |
 | RF-006 | Usuário pode consultar suas compras realizadas                              | Alta       |
 | RF-007 | Admin pode cadastrar/editar produtos via painel                             | Alta       |
-| RF-008 | Admin pode visualizar vendas realizadas                                     | Alta       |
+| RF-008 | Admin pode visualizar vendas realizadas                                     | Média       |
 | RF-009 | Admin pode listar e gerenciar usuários                                      | Média      |
 
 
@@ -56,7 +56,6 @@ Este projeto consiste na criação de um MVP de ecommerce simplificado, com func
 | RNF-003 | Sistema responsivo (mobile first)                                       | Alta       |
 | RNF-004 | Autenticação segura com Google e JWT                                | Alta       |
 | RNF-005 | Compra 1 clique deve simular integração com API de pagamentos (sandbox) | Média      |
-| RNF-006 | Deploy containerizado via Docker                                        | Média      |
 
 
 ## 🚧 Restrições de Tecnologia
