@@ -9,10 +9,10 @@ hero:
   actions:
     - theme: brand
       text: Requisitos do produto
-      link: /prd
+      link: /requirements/prd
     - theme: alt
-      text: API Examples
-      link: /markdown-examples
+      text: Diagrama ER
+      link: /design-arch/diagram-er
 
 features:
   - title: 🚀 Experiência de Compra Rápida e Descomplicada

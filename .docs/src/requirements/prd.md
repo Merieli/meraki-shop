@@ -3,7 +3,7 @@ outline: deep
 lastUpdated: true
 ---
 
-# 📄 PRD (Product Requirements Document)  <Badge type="warning" text="em andamento" />
+# PRD (Product Requirements Document)  <Badge type="tip" text="aprovada" />
 
 - **Autor:** Meriéli  
 - **Data:** 2025-05-13
