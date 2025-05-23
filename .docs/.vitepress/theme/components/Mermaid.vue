@@ -30,22 +30,17 @@ const renderDiagram = async () => {
     if (!diagram.value) return;
 
     try {
-        // Decodifica o conteúdo URL encoded
         const decodedCode = decodeURIComponent(props.code);
 
-        // Verifica se há texto antes do tipo de diagrama
         const firstLine = decodedCode.split('\n')[0].trim();
         const hasDiagramType = /^(flowchart|graph|sequenceDiagram|gantt|erDiagram|pie|journey|classDiagram|stateDiagram|gitGraph)\b/i.test(firstLine);
 
-        // Adiciona o tipo de diagrama se não estiver presente
         const finalCode = hasDiagramType ? decodedCode : `flowchart TD\n${decodedCode}`;
 
-        // Valida a sintaxe
         await mermaid.parse(finalCode);
 
-        // Renderiza o diagrama
         diagram.value.innerHTML = finalCode;
-        await mermaid.init(undefined, diagram.value);
+        await mermaid.run(undefined, diagram.value);
         error.value = null;
     } catch (e) {
         error.value = `Erro no diagrama: ${e.message}`;
