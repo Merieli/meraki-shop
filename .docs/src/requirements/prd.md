@@ -62,7 +62,7 @@ Este projeto consiste na criação de um MVP de ecommerce simplificado, com func
 ## 🚧 Restrições de Tecnologia
 
 - Backend deve ser em **Laravel**.
-- Frontend deve utilizar **Vue 3 com Laravel Starter Kit**.
+- Frontend deve utilizar **Vue 3**.
 - Integração simulada de pagamento (sandbox ou API mockada).
 - Sem páginas individuais de produto (apenas listagem geral).
 - Sem controle de estoque, frete ou promoções.
