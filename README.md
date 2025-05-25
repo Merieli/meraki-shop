@@ -102,6 +102,5 @@ cmp test
 ### Accessing the Application
 
 - 🏠 Main application: http://localhost:8086
-- ⚡ Development server with Vite HMR: http://localhost:5173
-- 📚 Documentation of Project in Vitepress: http://localhost:5175
 - 📖 Documentation of API: http://localhost:8086/docs/api
+- 📚 Documentation of Project in Vitepress: http://localhost:5175

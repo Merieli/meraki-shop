@@ -64,6 +64,7 @@
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
             "@php artisan migrate --graceful --ansi"
         ],
+        "export-api:docs": "@php artisan scramble:export --path=public/open-api-meraki-shop.json",
         "dev": [
             "Composer\\Config::disableProcessTimeout",
             "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve --host=0.0.0.0 --port=80\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev:dkr\" --names=server,queue,logs,vite"

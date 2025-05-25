@@ -16,6 +16,7 @@ services:
     ports:
       - 8086:80
       - 5173:5173
+      - 5175:5175
     volumes:
       - ./:/var/www/${COMPOSE_PROJECT_NAME}
     networks:
@@ -40,9 +41,9 @@ services:
     # Iniciando com usuário root para garantir permissões corretas
     user: root
     environment:
-      POSTGRESQL_DATABASE: teste
+      POSTGRESQL_DATABASE: ${COMPOSE_PROJECT_NAME}
       POSTGRESQL_USERNAME: ${USER}
-      POSTGRESQL_PASSWORD: root
+      POSTGRESQL_PASSWORD: ${DB_PASSWORD}
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready']
       interval: 1s
