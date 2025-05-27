@@ -24,6 +24,7 @@ class UserFactory extends Factory
             'workos_id' => 'fake-' . Str::random(10),
             'remember_token' => Str::random(10),
             'avatar' => '',
+            'role' => 'c'
         ];
     }
 

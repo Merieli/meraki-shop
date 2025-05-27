@@ -14,7 +14,7 @@ services:
       database:
         condition: service_healthy
     ports:
-      - 8086:80
+      - 8000:80
       - 5173:5173
       - 5175:5175
     volumes:

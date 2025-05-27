@@ -19,13 +19,15 @@ const mainNavItems: NavItem[] = [
 const footerNavItems: NavItem[] = [
     {
         title: 'Github Repo',
-        href: 'https://github.com/laravel/vue-starter-kit',
+        href: 'https://github.com/Merieli/meraki-shop',
         icon: Folder,
+        admin: true,
     },
     {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
+        title: 'Documentation API',
+        href: '/docs/api',
         icon: BookOpen,
+        admin: true,
     },
 ];
 </script>
