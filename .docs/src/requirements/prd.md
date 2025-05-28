@@ -8,7 +8,6 @@ lastUpdated: true
 - **Autor:** Meriéli  
 - **Data:** 2025-05-13
 
-
 ## 🎯 Visão Geral
 
 Este projeto consiste na criação de um MVP de ecommerce simplificado, com funcionalidades básicas para cadastro de produtos, realização de compras e consulta de vendas. O objetivo é validar o modelo de negócio e testar a usabilidade da funcionalidade de compra rápida (1 clique) com usuários autenticados. O painel administrativo permitirá o gerenciamento básico de produtos, vendas e usuários.

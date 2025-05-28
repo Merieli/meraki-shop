@@ -2,6 +2,12 @@
 
 > Meraki é uma palavra grega que significa "fazer algo com alma, criatividade ou amor"
 
+## Stack do Projeto
+
+- Laravel 12 Starter Kit com Vue 3
+- [CDN para imagens com Statically](https://statically.io/)
+https://cdn.statically.io/gh/Merieli/meraki-shop/main/.images-cdn/
+
 ## 📖  Installation Guide
 
 ### ✅ Prequisites
