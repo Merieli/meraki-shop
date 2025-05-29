@@ -59,7 +59,7 @@ return [
         /*
          * URL to an image that displays as a small square logo next to the title, above the table of contents.
          */
-        'logo' => '',
+        'logo' => 'https://cdn.statically.io/gh/Merieli/meraki-shop/main/.images-cdn/meraki-shop-only-logo.png',
 
         /*
          * Use to fetch the credential policy for the Try It feature. Options are: omit, include (default), and same-origin

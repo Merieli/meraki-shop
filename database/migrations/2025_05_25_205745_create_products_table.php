@@ -17,11 +17,11 @@ return new class extends Migration {
             $table->integer('cost_price')->nullable();
             $table->integer('stock')->nullable();
             $table->text('thumbnail');
-            $table->text('images');
+            $table->text('images')->nullable();
             $table->string('short_description', 255);
             $table->text('description')->nullable();
             $table->smallInteger('rating');
-            $table->string('sku', 50);
+            $table->string('sku', 50)->nullable();
             $table->timestamps();
         });
     }
