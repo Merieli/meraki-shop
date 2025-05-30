@@ -8,10 +8,10 @@ use MerakiShop\Http\Controllers\Api\{
     AuthController
 };
 
-Route::post('/tokens/create', AuthController::class);
+// Route::post('/tokens/create', AuthController::class);
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('/users', UserController::class)->only(['index', 'store']);
-});
+Route::apiResource('/users', UserController::class)->only(['index', 'store']);
+// Route::middleware('auth:sanctum')->group(function () {
+// });
 
 Route::resource('/products', ProductController::class);

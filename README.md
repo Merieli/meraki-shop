@@ -33,7 +33,7 @@ cp .env.example .env
 ```
 
 > 💡 Prepare as keys necessárias para o projeto:
-> - Todas que começam com `WORKOS`
+> - Todas que começam com `WORKOS`, depois os `DB_PASSWORD` e `DB_USERNAME` que deve ser o usuário da sua máquina
 
 3. Start an interactive Docker session to set up the project:
 
@@ -54,6 +54,9 @@ cmp install
 
 # Install Node.js dependencies
 npm install
+
+# Generate a manifest of vite
+npm run build
 
 # Generate application key
 php artisan key:generate
