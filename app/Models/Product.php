@@ -2,6 +2,7 @@
 
 namespace MerakiShop\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
@@ -23,5 +24,12 @@ class Product extends Model
         'rating',
         'sku'
     ];
+
+    protected static function booted()
+    {
+        self::addGlobalScope('ordered', function (Builder $queryBuilder) {
+            $queryBuilder->orderBy('name');
+        });
+    }
 
 }

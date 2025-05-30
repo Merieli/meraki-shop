@@ -26,4 +26,48 @@ class ProductRepository implements ProductRepositoryInterface
             ]);
         }, 3);
     }
+
+    public function findById(string $id): ?Product
+    {
+        return Product::find($id);
+    }
+
+    public function update(string $id, array $data): ?Product
+    {
+        return DB::transaction(function () use ($id, $data) {
+            $product = $this->findById($id);
+
+            if (!$product) {
+                return null;
+            }
+
+            $product->update([
+                'name' => $data['name'],
+                'price' => $data['price'],
+                'cost_price' => $data['cost_price'] ?? $product->cost_price,
+                'stock' => $data['stock'] ?? $product->stock,
+                'thumbnail' => $data['thumbnail'],
+                'images' => $data['images'] ?? $product->images,
+                'short_description' => $data['short_description'],
+                'description' => $data['description'] ?? $product->description,
+                'rating' => $data['rating'],
+                'sku' => $data['sku'] ?? $product->sku
+            ]);
+
+            return $product->fresh();
+        }, 3);
+    }
+
+    public function delete(string $id): bool
+    {
+        return DB::transaction(function () use ($id) {
+            $product = $this->findById($id);
+
+            if (!$product) {
+                return false;
+            }
+
+            return $product->delete();
+        }, 3);
+    }
 }

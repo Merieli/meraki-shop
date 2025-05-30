@@ -3,7 +3,7 @@
 namespace MerakiShop\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use MerakiShop\Facades\Logger;
 use Symfony\Component\HttpFoundation\Response;
 use MerakiShop\Contracts\ProductRepositoryInterface;
 use MerakiShop\Http\Controllers\Controller;
@@ -24,22 +24,33 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::query();
+        try {
+            $query = Product::query();
 
-        if ($query->has('name')) {
-            $query->where('name', $request->name);
+            if ($request->has('name')) {
+                $query->where('name', $request->name);
+            }
+
+            if ($request->has('stock')) {
+                $query->where('stock', $request->stock);
+            }
+
+            $size = 25;
+            if ($request->has('size')) {
+                $size = $request->size;
+            }
+
+            return $query->paginate($size);
+        } catch (\Throwable $e) {
+            $statusText = Response::$statusTexts[Response::HTTP_UNPROCESSABLE_ENTITY];
+            return response()
+                ->json(
+                    [
+                        'message' => $statusText
+                    ],
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
         }
-
-        if ($query->has('stock')) {
-            $query->where('stock', $request->stock);
-        }
-
-        $size = 25;
-        if ($query->has('size')) {
-            $size = $request->size;
-        }
-
-        return $query->paginate($size);
     }
 
 
@@ -55,7 +66,7 @@ class ProductController extends Controller
 
             return response()->json($product, Response::HTTP_CREATED);
         } catch (\Throwable $e) {
-            Log::error('Falha ao salvar o produto ->', [$e]);
+            Logger::error('Falha ao salvar o produto', [$e]);
 
             $statusText = Response::$statusTexts[Response::HTTP_UNPROCESSABLE_ENTITY];
 
@@ -71,15 +82,49 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        //
+        try {
+            $product = $this->repository->findById($id);
+
+            if (!$product) {
+                return response()->json([
+                    'message' => 'Produto não encontrado'
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            return response()->json($product);
+        } catch (\Throwable $e) {
+            Logger::error('Falha ao buscar produto ->', [$e]);
+
+            return response()->json([
+                'message' => Response::$statusTexts[Response::HTTP_INTERNAL_SERVER_ERROR]
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ProductFormRequest $request, string $id)
     {
-        //
+        try {
+            $validated = $request->validated();
+
+            $product = $this->repository->update($id, $validated);
+
+            if (!$product) {
+                return response()->json([
+                    'message' => 'Produto não encontrado'
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            return response()->json($product);
+        } catch (\Throwable $e) {
+            Logger::error('Falha ao atualizar produto', [$e]);
+
+            return response()->json([
+                'message' => Response::$statusTexts[Response::HTTP_UNPROCESSABLE_ENTITY]
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
     }
 
     /**
@@ -87,6 +132,23 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $deleted = $this->repository->delete($id);
+
+
+            if (!$deleted) {
+                return response()->json([
+                    'message' => 'Produto não encontrado'
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            return response()->json(null, Response::HTTP_NO_CONTENT);
+        } catch (\Throwable $e) {
+            Logger::error('Falha ao excluir produto', [$e]);
+
+            return response()->json([
+                'message' => Response::$statusTexts[Response::HTTP_INTERNAL_SERVER_ERROR]
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }

@@ -4,12 +4,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use MerakiShop\Http\Controllers\Api\{
     ProductController,
-    UserController
+    UserController,
+    AuthController
 };
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
+Route::post('/tokens/create', AuthController::class);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/users', UserController::class)->only(['index', 'store']);
