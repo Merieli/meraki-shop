@@ -16,6 +16,10 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
+    Route::get('products/create', function () {
+        return Inertia::render('products/Create');
+    })->name('products.create');
+
 });
 
 require __DIR__ . '/settings.php';

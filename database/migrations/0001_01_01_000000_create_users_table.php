@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('email', 320)->unique();
+            $table->string('phone', 25)->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('workos_id')->unique();
             $table->rememberToken();
