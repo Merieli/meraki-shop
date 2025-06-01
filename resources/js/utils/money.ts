@@ -18,18 +18,20 @@ export function fromCents(cents: number): number {
 }
 
 /**
- * Format a decimal amount as a currency string with 2 decimal places
+ * Format a decimal amount as a currency string
  * @param amount The amount to format
  * @param currency The currency code (default: USD)
+ * @param valueInCents Whether the amount is in cents (default: false)
  * @returns Formatted currency string
  */
-export function formatCurrency(amount: number, currency = 'USD'): string {
+export function formatCurrency(amount: number, currency = 'USD', valueInCents = false): string {
+    const valueToFormat = valueInCents ? fromCents(amount) : amount;
     return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: currency,
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
-    }).format(amount);
+    }).format(valueToFormat);
 }
 
 /**

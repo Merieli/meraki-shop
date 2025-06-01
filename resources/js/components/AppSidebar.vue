@@ -5,7 +5,7 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, MapPin, Package } from 'lucide-vue-next';
+import { BookOpen, CreditCard, Folder, LayoutGrid, MapPin, Package, ShoppingBag } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
@@ -25,6 +25,18 @@ const mainNavItems: NavItem[] = [
         title: 'Register Address',
         href: '/addresses/create',
         icon: MapPin,
+        admin: false,
+    },
+    {
+        title: 'Register Card',
+        href: '/cards/create',
+        icon: CreditCard,
+        admin: false,
+    },
+    {
+        title: 'My Orders',
+        href: '/orders',
+        icon: ShoppingBag,
         admin: false,
     },
 ];

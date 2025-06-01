@@ -24,6 +24,13 @@ Route::middleware([
         return Inertia::render('addresses/CreateAddress');
     })->name('addresses.create');
 
+    Route::get('cards/create', function () {
+        return Inertia::render('cards/CreateCard');
+    })->name('cards.create');
+
+    Route::get('orders', function () {
+        return Inertia::render('orders/OrdersIndex');
+    })->name('orders.index');
 });
 
 require __DIR__ . '/settings.php';
