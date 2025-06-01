@@ -4,19 +4,13 @@ namespace MerakiShop\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use MerakiShop\Facades\Logger;
+use MerakiShop\Facades\ProductService;
 use Symfony\Component\HttpFoundation\Response;
-use MerakiShop\Contracts\ProductRepositoryInterface;
 use MerakiShop\Http\Controllers\Controller;
 use MerakiShop\Http\Requests\ProductFormRequest;
-use MerakiShop\Models\Product;
 
 class ProductController extends Controller
 {
-    public function __construct(private ProductRepositoryInterface $repository)
-    {
-    }
-
-
     /**
      * Display a listing of the resource.
      *
@@ -25,15 +19,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = Product::query();
-
-            if ($request->has('name')) {
-                $query->where('name', $request->name);
-            }
-
-            if ($request->has('stock')) {
-                $query->where('stock', $request->stock);
-            }
+            $query = ProductService::getProducts($request);
 
             $size = 25;
             if ($request->has('size')) {
@@ -60,9 +46,7 @@ class ProductController extends Controller
     public function store(ProductFormRequest $request)
     {
         try {
-            $validated = $request->validated();
-
-            $product = $this->repository->create($validated);
+            $product = ProductService::createProduct($request);
 
             return response()->json($product, Response::HTTP_CREATED);
         } catch (\Throwable $e) {
@@ -83,7 +67,7 @@ class ProductController extends Controller
     public function show(string $id)
     {
         try {
-            $product = $this->repository->findById($id);
+            $product = ProductService::findProduct($id);
 
             if (!$product) {
                 return response()->json([
@@ -107,9 +91,7 @@ class ProductController extends Controller
     public function update(ProductFormRequest $request, string $id)
     {
         try {
-            $validated = $request->validated();
-
-            $product = $this->repository->update($id, $validated);
+            $product = ProductService::updateProduct( $request, $id);
 
             if (!$product) {
                 return response()->json([
@@ -133,8 +115,7 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         try {
-            $deleted = $this->repository->delete($id);
-
+            $deleted = ProductService::deleteProduct($id);
 
             if (!$deleted) {
                 return response()->json([

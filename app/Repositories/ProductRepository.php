@@ -2,14 +2,30 @@
 
 namespace MerakiShop\Repositories;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use MerakiShop\Contracts\ProductRepositoryInterface;
-use MerakiShop\Http\Requests\ProductFormRequest;
 use MerakiShop\Models\Product;
 
 class ProductRepository implements ProductRepositoryInterface
 {
-    public function create(ProductFormRequest $request): Product
+    public function list(Request $request): Builder
+    {
+        $query = Product::query();
+
+        if ($request->has('name')) {
+            $query->where('name', $request['name']);
+        }
+
+        if ($request->has('stock')) {
+            $query->where('stock', $request['stock']);
+        }
+
+        return $query;
+    }
+
+    public function create(array $request): Product
     {
         return DB::transaction(function () use ($request) {
             return Product::create([

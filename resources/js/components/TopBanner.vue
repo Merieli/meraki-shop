@@ -1,12 +1,10 @@
 <script setup lang="ts">
 withDefaults(
     defineProps<{
-        promoMessage?: string;
         cardLastDigits?: string;
         addressSummary?: string;
     }>(),
     {
-        promoMessage: '🔥 FRETE GRÁTIS para compras acima de R$ 200',
         cardLastDigits: '4567',
         addressSummary: 'Rua *********, 123 - São Paulo, SP',
     },
@@ -36,9 +34,6 @@ withDefaults(
                         Cartão: •••• •••• •••• {{ cardLastDigits }}
                     </span>
                 </div>
-            </div>
-            <div class="mx-auto flex items-center sm:mx-0">
-                <span class="animate-pulse font-semibold">{{ promoMessage }}</span>
             </div>
             <div class="hidden items-center space-x-4 sm:flex">
                 <div class="flex flex-col">

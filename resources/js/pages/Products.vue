@@ -1,13 +1,10 @@
 <script setup lang="ts">
+import ProductCard from '@/components/ProductCard.vue';
+import TopBanner from '@/components/TopBanner.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Head, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
-// Importando os componentes criados
-import ProductCard from '@/components/ProductCard.vue';
-import TopBanner from '@/components/TopBanner.vue';
-
-// Dados mockados de produtos
 const products = ref([
     {
         id: 1,
@@ -66,9 +63,7 @@ const products = ref([
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     </Head>
 
-    <!-- Banner de linha no topo usando o componente TopBanner -->
     <TopBanner
-        promoMessage="🔥 FRETE GRÁTIS para compras acima de R$ 200"
         cardLastDigits="2345"
         addressSummary="Av. P********, 1500 - Apto 42 - São Paulo, SP"
     />
@@ -105,7 +100,6 @@ const products = ref([
             <main class="flex w-full max-w-[1200px] flex-col overflow-hidden rounded-lg lg:max-w-6xl">
                 <h2 class="mb-6 text-2xl font-semibold">Nossos Produtos</h2>
 
-                <!-- Grid de produtos usando o componente ProductCard -->
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                     <ProductCard v-for="product in products" :key="product.id" :product="product" />
                 </div>
