@@ -1,6 +1,6 @@
 # Diagrama de Entidade Relacionamento  <Badge type="warning" text="em andamento" />
 
-[Ver no DrawDB](https://www.drawdb.app/editor?shareId=7fa1b26fecf3bb4237ac6109275e62c2)
+[Ver no DrawDB](https://www.drawdb.app/editor?shareId=77b2549df4fc14594615fc9ca2adaca2)
 
 ```mermaid
 erDiagram
@@ -97,20 +97,20 @@ erDiagram
 ## Summary
 
 - [Diagrama de Entidade Relacionamento  ](#diagrama-de-entidade-relacionamento--)
-	- [Summary](#summary)
-	- [Database type](#database-type)
-	- [Table structure](#table-structure)
-		- [users](#users)
-		- [products](#products)
-			- [Indexes](#indexes)
-		- [product\_attributes](#product_attributes)
-		- [attributes](#attributes)
-		- [variation\_attributes](#variation_attributes)
-		- [variations](#variations)
-		- [orders](#orders)
-		- [order\_items](#order_items)
-		- [customer\_cards](#customer_cards)
-	- [Relationships](#relationships)
+  - [Summary](#summary)
+  - [Database type](#database-type)
+  - [Table structure](#table-structure)
+    - [users](#users)
+    - [products](#products)
+      - [Indexes](#indexes)
+    - [product\_attributes](#product_attributes)
+    - [attributes](#attributes)
+    - [variation\_attributes](#variation_attributes)
+    - [variations](#variations)
+    - [orders](#orders)
+    - [order\_items](#order_items)
+    - [customer\_cards](#customer_cards)
+  - [Relationships](#relationships)
 
 
 
