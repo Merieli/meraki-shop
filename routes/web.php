@@ -20,6 +20,10 @@ Route::middleware([
         return Inertia::render('products/Create');
     })->name('products.create');
 
+    Route::get('addresses/create', function () {
+        return Inertia::render('addresses/CreateAddress');
+    })->name('addresses.create');
+
 });
 
 require __DIR__ . '/settings.php';

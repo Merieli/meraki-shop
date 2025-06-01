@@ -1,6 +1,15 @@
-# Coding Standards - APIs Laravel Tray
+# Coding Standards - APIs Laravel
 
-Este documento define os padrões de codificação para desenvolvimento de APIs em Laravel utilizados na Tray. Estes padrões são fundamentais para manter a consistência, legibilidade e manutenibilidade do código.
+Este documento define os padrões de codificação para desenvolvimento de APIs em Laravel. Estes padrões são fundamentais para manter a consistência, legibilidade e manutenibilidade do código.
+
+
+- Laravel 12
+- Starter Kit Vue
+
+## Princípios base:
+
+- KISS
+- Object Calisthenics
 
 ## Arquitetura Geral
 
