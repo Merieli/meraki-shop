@@ -13,13 +13,19 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: '/dashboard',
         icon: LayoutGrid,
-        admin: false,
+        admin: true,
     },
     {
         title: 'Register Product',
         href: '/products/create',
         icon: Package,
         admin: true,
+    },
+    {
+        title: 'My Orders',
+        href: '/orders',
+        icon: ShoppingBag,
+        admin: false,
     },
     {
         title: 'Register Address',
@@ -31,12 +37,6 @@ const mainNavItems: NavItem[] = [
         title: 'Register Card',
         href: '/cards/create',
         icon: CreditCard,
-        admin: false,
-    },
-    {
-        title: 'My Orders',
-        href: '/orders',
-        icon: ShoppingBag,
         admin: false,
     },
 ];
