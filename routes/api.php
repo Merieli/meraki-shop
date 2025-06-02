@@ -12,3 +12,4 @@ Route::apiResource('/users', UserController::class)->only(['index', 'store']);
 // });
 
 Route::resource('/products', ProductController::class)->except(['create', 'edit']);
+

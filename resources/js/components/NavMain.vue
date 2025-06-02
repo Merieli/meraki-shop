@@ -12,7 +12,7 @@ const page = usePage<SharedData>();
 
 <template>
     <SidebarGroup class="px-2 py-0">
-        <SidebarGroupLabel>Platform</SidebarGroupLabel>
+        <SidebarGroupLabel>Ecommerce Platform</SidebarGroupLabel>
         <SidebarMenu>
             <template v-for="item in items" :key="item.title">
                 <SidebarMenuItem v-if="(item.admin && $page.props.auth.user?.is_admin ) || !item.admin">
