@@ -57,13 +57,13 @@ const props = defineProps<Props>();
                         v-model="formData.rating"
                         @blur="validateField('rating', formData.rating)"
                         type="number"
-                        min="0"
+                        min="1"
                         max="5"
                         step="1"
-                        placeholder="0"
+                        placeholder="1"
                     />
                 </FormControl>
-                <FormDescription>Set the initial rating for the product (0-5).</FormDescription>
+                <FormDescription>Set the initial rating for the product (1-5).</FormDescription>
                 <FormMessage v-if="errors.rating">{{ errors.rating }}</FormMessage>
             </FormItem>
         </FormField>
