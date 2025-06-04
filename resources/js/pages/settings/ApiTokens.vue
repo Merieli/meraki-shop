@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, useForm, usePage } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 import axios from 'axios';
 import { ref } from 'vue';
 
@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
-import { type BreadcrumbItem, type SharedData } from '@/types';
+import { type BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -19,7 +19,6 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const page = usePage<SharedData>();
 const loading = ref(false);
 const success = ref(false);
 const error = ref('');
@@ -43,6 +42,7 @@ const createToken = async () => {
         success.value = true;
         form.reset();
     } catch (err) {
+        console.error(err);
         error.value = 'Não foi possível criar o token. Tente novamente.';
     } finally {
         loading.value = false;

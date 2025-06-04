@@ -17,7 +17,6 @@ class ProductService implements ProductServiceInterface
     public function getProducts(Request $request): Builder
     {
         return $this->repository->list($request);
-        
     }
 
     public function findProduct(string $id): Product | null
