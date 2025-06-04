@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('customer_cards', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('card_token');
             $table->char('card_last4', 4);
             $table->string('card_brand', 50);
             $table->timestamps();

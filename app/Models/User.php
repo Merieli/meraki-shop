@@ -92,10 +92,18 @@ class User extends Authenticatable
 
 
     /**
-     * Get the addres assiciated with the user
+     * Get the addres associated with the user
      */
     public function address(): HasOne
     {
         return $this->hasOne(Address::class);
+    }
+
+     /**
+     * Get the customer_card associated with the user
+     */
+    public function customerCard(): HasOne
+    {
+        return $this->hasOne(CustomerCard::class);
     }
 }
