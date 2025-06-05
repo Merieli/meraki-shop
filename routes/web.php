@@ -17,7 +17,7 @@ Route::middleware([
     })->name('dashboard');
 
     Route::get('products/create', function () {
-        return Inertia::render('products/Create');
+        return Inertia::render('products/CreateProduct');
     })->name('products.create');
 
     Route::get('addresses/create', function () {
