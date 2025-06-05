@@ -15,6 +15,11 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+
+const validateRating = (value: any) => {
+    const numValue = Number(value);
+    props.validateField('rating', numValue);
+};
 </script>
 
 <template>

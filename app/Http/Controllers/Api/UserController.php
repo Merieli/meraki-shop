@@ -8,14 +8,12 @@ use MerakiShop\Models\User;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $query = User::query();
-
-            return $query->paginate(20);
+            return $request->user();
         } catch (\Throwable $th) {
-
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
     }
 }

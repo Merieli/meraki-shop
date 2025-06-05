@@ -1,4 +1,8 @@
 import axios from 'axios';
+import { getApiToken } from './cookies';
+
+// Endpoints protegidos que precisam de token
+const protectedEndpoints = ['/users', '/address', '/credit-card', '/token'];
 
 const api = axios.create({
     baseURL: '/api',
@@ -16,16 +20,47 @@ api.interceptors.request.use((config) => {
         config.headers['X-CSRF-TOKEN'] = (token as HTMLMetaElement).content;
     }
 
+    const isProtectedEndpoint = protectedEndpoints.some((endpoint) => config.url && (config.url.startsWith(endpoint) || config.url === endpoint));
+
+    const useToken = config.useToken === true || isProtectedEndpoint;
+
+    if (useToken) {
+        const apiToken = getApiToken();
+        if (apiToken) {
+            config.headers['Authorization'] = `Bearer ${apiToken}`;
+        }
+    }
+
     return config;
 });
 
+declare module 'axios' {
+    interface AxiosRequestConfig {
+        useToken?: boolean;
+        skipToken?: boolean; // Mantemos para compatibilidade, mas não usamos mais
+    }
+}
+
 export const apiService = {
     /**
-     * Envia uma requisição POST para criar um recurso
+     * Verifica se o usuário está autenticado
      */
-    async create<T>(endpoint: string, data: any): Promise<T> {
+    async checkAuth(): Promise<boolean> {
         try {
-            const response = await api.post(endpoint, data);
+            const response = await api.get('/user', { useToken: true });
+            return !!response.data;
+        } catch (error) {
+            return false;
+        }
+    },
+
+    /**
+     * Envia uma requisição POST para criar um recurso
+     * @param useToken Se true, força o uso do token de autenticação
+     */
+    async create<T>(endpoint: string, data: any, useToken = false): Promise<T> {
+        try {
+            const response = await api.post(endpoint, data, { useToken });
             return response.data;
         } catch (error) {
             console.error('API Error:', error);
@@ -35,10 +70,11 @@ export const apiService = {
 
     /**
      * Envia uma requisição GET para obter uma lista de recursos
+     * @param useToken Se true, força o uso do token de autenticação
      */
-    async list<T>(endpoint: string, params = {}): Promise<T> {
+    async list<T>(endpoint: string, params = {}, useToken = false): Promise<T> {
         try {
-            const response = await api.get(endpoint, { params });
+            const response = await api.get(endpoint, { params, useToken });
             return response.data;
         } catch (error) {
             console.error('API Error:', error);
@@ -48,10 +84,11 @@ export const apiService = {
 
     /**
      * Envia uma requisição GET para obter um único recurso
+     * @param useToken Se true, força o uso do token de autenticação
      */
-    async get<T>(endpoint: string, id: string | number): Promise<T> {
+    async get<T>(endpoint: string, id: string | number, useToken = false): Promise<T> {
         try {
-            const response = await api.get(`${endpoint}/${id}`);
+            const response = await api.get(`${endpoint}/${id}`, { useToken });
             return response.data;
         } catch (error) {
             console.error('API Error:', error);
@@ -61,10 +98,11 @@ export const apiService = {
 
     /**
      * Envia uma requisição PUT para atualizar um recurso
+     * @param useToken Se true, força o uso do token de autenticação
      */
-    async update<T>(endpoint: string, id: string | number, data: any): Promise<T> {
+    async update<T>(endpoint: string, id: string | number, data: any, useToken = false): Promise<T> {
         try {
-            const response = await api.put(`${endpoint}/${id}`, data);
+            const response = await api.put(`${endpoint}/${id}`, data, { useToken });
             return response.data;
         } catch (error) {
             console.error('API Error:', error);
@@ -74,10 +112,11 @@ export const apiService = {
 
     /**
      * Envia uma requisição DELETE para remover um recurso
+     * @param useToken Se true, força o uso do token de autenticação
      */
-    async delete(endpoint: string, id: string | number): Promise<void> {
+    async delete(endpoint: string, id: string | number, useToken = false): Promise<void> {
         try {
-            await api.delete(`${endpoint}/${id}`);
+            await api.delete(`${endpoint}/${id}`, { useToken });
         } catch (error) {
             console.error('API Error:', error);
             throw error;

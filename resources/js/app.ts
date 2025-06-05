@@ -9,6 +9,7 @@ import { initializeTheme } from './composables/useAppearance';
 import './utils/api';
 
 // Extend ImportMeta interface for Vite...
+// @ts-ignore - ignorar erro do módulo vite/client
 declare module 'vite/client' {
     interface ImportMetaEnv {
         readonly VITE_APP_NAME: string;
