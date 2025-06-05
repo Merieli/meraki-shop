@@ -1,40 +1,52 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use Laravel\WorkOS\Http\Requests\AuthKitAuthenticationRequest;
 use Laravel\WorkOS\Http\Requests\AuthKitLoginRequest;
 use Laravel\WorkOS\Http\Requests\AuthKitLogoutRequest;
 use MerakiShop\Facades\Logger;
 use MerakiShop\Models\User;
+use Illuminate\Http\Request;
 
 Route::get('login', function (AuthKitLoginRequest $request) {
     return $request->redirect();
 })->middleware(['guest'])->name('login');
 
 Route::get('authenticate', function (AuthKitAuthenticationRequest $request) {
-    $workosUser = $request->authenticate();
+    try {
+        $workosUser = $request->authenticate();
 
-    $user = User::firstOrCreate(
-        ['email' => $workosUser->email],
-        ['name' => $workosUser->firstName . ' ' . $workosUser->lastName]
-    );
+        $user = User::firstOrCreate(
+            ['email' => $workosUser->email],
+            [
+                'name' => $workosUser->firstName . ' ' . $workosUser->lastName,
+                'workos_id' => $workosUser->id ?? null,
+                'avatar' => $workosUser->profilePictureUrl ?? '',
+            ]
+        );
 
-    Auth::login($user);
+        Auth::login($user);
 
-    // Gera o token Sanctum
-    $token = $user->createToken('api-token')->plainTextToken;
+        $token = $user->createToken('api-token')->plainTextToken;
+        $cookie = cookie('X-API-TOKEN', $token, 60 * 24); // 1 dia válido
 
-    // Define o cookie — HttpOnly e Secure só se for HTTPS
-    $cookie = cookie('X-API-TOKEN', $token, 60 * 24); // 1 dia válido
+        Logger::critical('token ->>', [$token]);
 
-    Logger::critical('token ->>', [$token]);
+        return redirect()->route('dashboard')->withCookie($cookie);
+    } catch (\Exception $e) {
+        Logger::critical('Erro de autenticação: ' . $e->getMessage());
+        return redirect()->route('login');
+    }
+})->middleware(['web', 'guest'])->name('authenticate');
 
-    return tap(
-        to_route('dashboard'), callback:
-        fn() => $request->authenticate()
-    )->withCookie($cookie);
-})->middleware(['guest']);
-
-Route::post('logout', function (AuthKitLogoutRequest $request) {
-    return $request->logout();
+Route::match(['get', 'post'], 'logout', function (Request $request) {
+    // Limpa o cookie do token
+    $cookie = cookie('X-API-TOKEN', '', -1);
+    
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    
+    return redirect('/')->withCookie($cookie);
 })->middleware(['auth'])->name('logout');

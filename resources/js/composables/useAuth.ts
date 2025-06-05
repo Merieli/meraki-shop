@@ -1,4 +1,5 @@
 import { apiService } from '@/utils/api';
+import { deleteCookie } from '@/utils/cookies';
 import { router } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
@@ -44,7 +45,8 @@ export function useAuth() {
     };
 
     const logout = () => {
-        router.post('/logout');
+        deleteCookie('X-API-TOKEN');
+        window.location.href = '/logout';
     };
 
     return {
