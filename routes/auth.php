@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Laravel\WorkOS\Http\Requests\AuthKitAuthenticationRequest;
 use Laravel\WorkOS\Http\Requests\AuthKitLoginRequest;
-use Laravel\WorkOS\Http\Requests\AuthKitLogoutRequest;
 use MerakiShop\Facades\Logger;
 use MerakiShop\Models\User;
 use Illuminate\Http\Request;
@@ -29,9 +28,9 @@ Route::get('authenticate', function (AuthKitAuthenticationRequest $request) {
         Auth::login($user);
 
         $token = $user->createToken('api-token')->plainTextToken;
-        $cookie = cookie('X-API-TOKEN', $token, 60 * 24); // 1 dia válido
+        $cookie = cookie('X-API-TOKEN', $token, 60 * 24, null, null, false, false);
 
-        Logger::critical('token ->>', [$token]);
+        Logger::critical('token ->>', [$token, $cookie]);
 
         return redirect()->route('dashboard')->withCookie($cookie);
     } catch (\Exception $e) {

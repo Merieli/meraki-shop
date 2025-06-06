@@ -20,12 +20,15 @@ api.interceptors.request.use((config) => {
         config.headers['X-CSRF-TOKEN'] = (token as HTMLMetaElement).content;
     }
 
-    const isProtectedEndpoint = protectedEndpoints.some((endpoint) => config.url && (config.url.startsWith(endpoint) || config.url === endpoint));
+    const url = config.url ? (config.url.startsWith('/') ? config.url : `/${config.url}`) : '';
+
+    const isProtectedEndpoint = protectedEndpoints.some((endpoint) => url === endpoint || url.startsWith(`${endpoint}/`));
 
     const useToken = config.useToken === true || isProtectedEndpoint;
-
+    console.log('useToken', useToken);
     if (useToken) {
         const apiToken = getApiToken();
+        console.log('apiToken', apiToken);
         if (apiToken) {
             config.headers['Authorization'] = `Bearer ${apiToken}`;
         }
@@ -37,7 +40,7 @@ api.interceptors.request.use((config) => {
 declare module 'axios' {
     interface AxiosRequestConfig {
         useToken?: boolean;
-        skipToken?: boolean; // Mantemos para compatibilidade, mas não usamos mais
+        skipToken?: boolean;
     }
 }
 

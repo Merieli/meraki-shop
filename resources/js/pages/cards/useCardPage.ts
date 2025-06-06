@@ -105,11 +105,10 @@ export function useCardPage() {
 
     const performCardCreation = async (formData: CardApiData): Promise<CardResponse | null> => {
         try {
-            // Garantir que estamos enviando apenas os dados necessários para a API
             const apiData = {
-                card_token: formData.card_number, // Envia o token como card_token
-                card_last4: formData.card_last4, // Últimos 4 dígitos
-                card_brand: formData.card_brand, // Bandeira do cartão
+                card_token: formData.card_number,
+                card_last4: formData.card_last4,
+                card_brand: formData.card_brand,
             };
 
             console.log('Enviando para API:', apiData);

@@ -73,16 +73,10 @@ const handleSubmit = async () => {
         const cardToken = generateCardToken(formData.value.card_number);
         const cardLast4 = formData.value.card_number.slice(-4);
 
-        // Emite apenas os dados necessários para a API
         emit('submit', {
-            card_number: cardToken, // Este será o card_token no backend
-            card_last4: cardLast4, // Últimos 4 dígitos do cartão
-            card_brand: formData.value.card_brand, // Bandeira do cartão
-
-            // Não enviamos outros dados para o backend:
-            // - Nome do titular
-            // - Data de expiração
-            // - CVV
+            card_number: cardToken,
+            card_last4: cardLast4,
+            card_brand: formData.value.card_brand,
         });
     } catch (error) {
         console.error('Error submitting form:', error);

@@ -15,7 +15,6 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
 const { isSubmitting, error, success, formKey, createCard } = useCardPage();
 
-// Recebe apenas os dados essenciais do cartão para envio à API
 const handleSubmit = async (cardData: CardApiData) => {
     console.log('Form submitted with card data:', {
         card_token: cardData.card_number,
