@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import AddressForm from '@/components/addresses/AddressForm.vue';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/vue3';
+import { useAddressPage, type AddressApiData } from './useAddressPage';
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
@@ -11,21 +13,11 @@ const breadcrumbItems: BreadcrumbItem[] = [
     },
 ];
 
-interface AddressApiData {
-    label: string;
-    recipient_name: string;
-    street: string;
-    number: string;
-    neighborhood: string;
-    complement: string;
-    city: string;
-    state: string;
-    country: string;
-    postal_code: string;
-}
+const { isSubmitting, error, success, formKey, createAddress } = useAddressPage();
 
-const handleSubmit = (formData: AddressApiData) => {
-    router.post('/api/addresses', formData as unknown as Record<string, any>);
+const handleSubmit = async (addressData: AddressApiData) => {
+    console.log('Form submitted with address data:', addressData);
+    await createAddress(addressData);
 };
 
 const handleCancel = () => {
@@ -43,9 +35,40 @@ const handleCancel = () => {
                 <p class="text-muted-foreground">Fill in the information below to register a new address</p>
             </div>
 
+            <!-- Mensagens de erro/sucesso -->
+            <Alert v-if="error" variant="destructive">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                        fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                        clip-rule="evenodd"
+                    />
+                </svg>
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>{{ error }}</AlertDescription>
+            </Alert>
+
+            <Alert v-if="success" variant="success">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                        fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clip-rule="evenodd"
+                    />
+                </svg>
+                <AlertTitle>Success</AlertTitle>
+                <AlertDescription>{{ success }}</AlertDescription>
+            </Alert>
+
             <div class="flex flex-col space-y-8 lg:flex-row lg:space-y-0 lg:space-x-12">
                 <div class="flex-1 lg:max-w-3xl">
-                    <AddressForm submit-endpoint="/api/addresses" @submit="handleSubmit" @cancel="handleCancel" />
+                    <AddressForm
+                        :key="formKey"
+                        submit-endpoint="/api/address"
+                        @submit="handleSubmit"
+                        @cancel="handleCancel"
+                        :disabled="isSubmitting"
+                    />
                 </div>
             </div>
         </div>

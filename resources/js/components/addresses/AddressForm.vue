@@ -34,6 +34,7 @@ interface AddressApiData {
 const props = defineProps<{
     initialData?: Partial<AddressFormData>;
     submitEndpoint: string;
+    disabled?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -104,7 +105,7 @@ const sections = [{ id: 'address', title: 'Address Information' }];
 </script>
 
 <template>
-    <Form @submit.prevent="handleSubmit">
+    <Form @submit.prevent>
         <!-- Form content -->
         <div class="space-y-8">
             <!-- Address Information Section -->
@@ -117,8 +118,8 @@ const sections = [{ id: 'address', title: 'Address Information' }];
 
             <!-- Form actions -->
             <div class="flex justify-end space-x-4 pt-4">
-                <Button type="button" variant="outline" @click="emit('cancel')">Cancel</Button>
-                <Button type="submit" :disabled="isSubmitting">
+                <Button type="button" variant="outline" @click="emit('cancel')" :disabled="props.disabled">Cancel</Button>
+                <Button type="button" @click="handleSubmit" :disabled="isSubmitting || props.disabled">
                     {{ isSubmitting ? 'Saving...' : 'Register Address' }}
                 </Button>
             </div>
