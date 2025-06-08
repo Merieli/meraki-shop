@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AppLogo from '@/components/AppLogo.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -27,9 +28,8 @@ const isCurrentRoute = computed(() => (url: string) => page.url === url);
 
 const handleSearch = () => {
     if (searchQuery.value.trim()) {
-        // Implemente a lógica de pesquisa aqui
+        // TODO: Implementar a lógica de pesquisa aqui
         console.log('Pesquisando por:', searchQuery.value);
-        // Redirecione para a página de resultados de pesquisa ou filtre no local
         isSearchOpen.value = false;
     }
 };
@@ -92,7 +92,7 @@ const handleSearch = () => {
 
             <!-- Centro - Logo (centralizado na página) -->
             <div class="flex items-center justify-center">
-                <img src="/logo.png" alt="Meraki Shop" class="h-10" />
+                <AppLogo />
             </div>
 
             <!-- Lado direito - Ícones e Login (apenas visível em telas médias e maiores) -->

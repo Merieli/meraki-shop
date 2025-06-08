@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AppLogo from '@/components/AppLogo.vue';
 import { Link } from '@inertiajs/vue3';
 
 const currentYear = new Date().getFullYear();
@@ -9,8 +10,8 @@ const currentYear = new Date().getFullYear();
         <div class="mx-auto flex max-w-[1200px] flex-col px-6 lg:max-w-6xl">
             <div class="flex flex-col justify-between space-y-8 md:flex-row md:space-y-0">
                 <!-- Logo -->
-                <div class="flex flex-col">
-                    <h2 class="text-xl font-bold">Meraki Shop</h2>
+                <div class="flex items-center">
+                    <AppLogo />
                 </div>
 
                 <!-- Navigation Links -->
@@ -40,7 +41,7 @@ const currentYear = new Date().getFullYear();
 
             <!-- Copyright -->
             <div class="mt-8 border-t border-[#EDEDEC20] pt-6 text-center text-xs text-[#EDEDEC80] md:text-left">
-                © {{ currentYear }} Meraki Shop. All rights reserved.
+                © {{ currentYear }} Meriéli Manzano. All rights reserved.
             </div>
         </div>
     </footer>

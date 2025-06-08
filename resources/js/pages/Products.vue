@@ -4,8 +4,13 @@ import AppHeader from '@/components/AppHeader.vue';
 import CustomerTestimonials from '@/components/CustomerTestimonials.vue';
 import ProductCard from '@/components/ProductCard.vue';
 import TopBanner from '@/components/TopBanner.vue';
-import { Head } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { Head, usePage } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
+
+const isLoggedIn = computed(() => {
+    // @ts-ignore - Acessando a propriedade dinamicamente
+    return !!usePage().props.auth && !!usePage().props.auth.user;
+});
 
 const products = ref([
     {
@@ -60,16 +65,21 @@ const products = ref([
 </script>
 
 <template>
-    <Head title="Collectibles & Rare Action Figures | Meraki Shop">
+    <Head title="Collectibles & Rare Action Figures">
         <link rel="preconnect" href="https://rsms.me/" />
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     </Head>
 
-    <div class="fixed top-0 left-0 z-50 w-full">
-        <TopBanner cardLastDigits="2345" addressSummary="P******** Ave, 1500 - Apt 42 - San Francisco, CA" />
+    <div v-if="isLoggedIn" class="fixed top-0 left-0 z-50 w-full">
+        <TopBanner cardLastDigits="2345" addressRaw="Pennsylvania" addressNumber="1500" addressCity="San Francisco" />
     </div>
 
-    <div class="flex min-h-screen flex-col items-center bg-[#FDFDFC] p-6 pt-20 text-[#1b1b18] lg:justify-center lg:p-8 lg:pt-24 dark:bg-[#0a0a0a]">
+    <div
+        :class="[
+            'flex min-h-screen flex-col items-center bg-[#FDFDFC] p-6 text-[#1b1b18] lg:justify-center lg:p-8 dark:bg-[#0a0a0a]',
+            isLoggedIn ? 'pt-20 lg:pt-24' : 'pt-6 lg:pt-8',
+        ]"
+    >
         <AppHeader />
         <div class="flex w-full items-center justify-center opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0">
             <main class="flex w-full max-w-[1200px] flex-col overflow-hidden rounded-lg lg:max-w-6xl">

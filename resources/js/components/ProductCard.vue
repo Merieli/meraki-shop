@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { usePage } from '@inertiajs/vue3';
+import { LogIn } from 'lucide-vue-next';
+import { computed } from 'vue';
 
 interface Product {
     id: number;
@@ -15,11 +19,23 @@ defineProps<{
     product: Product;
 }>();
 
+const isLoggedIn = computed(() => {
+    // @ts-ignore - Acessando a propriedade dinamicamente
+    return !!usePage().props.auth && !!usePage().props.auth.user;
+});
+
 const formatPrice = (price: number): string => {
     return price.toLocaleString('en-US', {
         style: 'currency',
         currency: 'USD',
     });
+};
+
+const handleBuyClick = (e: Event) => {
+    if (!isLoggedIn.value) {
+        e.preventDefault();
+        window.location.href = route('login');
+    }
 };
 </script>
 
@@ -39,7 +55,27 @@ const formatPrice = (price: number): string => {
             </div>
         </CardContent>
         <CardFooter class="mt-auto flex justify-center p-4 pt-0">
+            <HoverCard v-if="!isLoggedIn">
+                <HoverCardTrigger asChild>
+                    <Button
+                        size="sm"
+                        :disabled="!product.inStock"
+                        class="w-full bg-[#1b1b18] text-white hover:bg-[#333] dark:bg-[#f0f0f0] dark:text-[#1b1b18] dark:hover:bg-white"
+                        @click="handleBuyClick"
+                    >
+                        Buy with 1-Click
+                    </Button>
+                </HoverCardTrigger>
+                <HoverCardContent class="w-auto">
+                    <div class="flex items-center gap-2">
+                        <LogIn class="text-primary h-4 w-4" />
+                        <span class="text-sm">Login required</span>
+                    </div>
+                </HoverCardContent>
+            </HoverCard>
+
             <Button
+                v-else
                 size="sm"
                 :disabled="!product.inStock"
                 class="w-full bg-[#1b1b18] text-white hover:bg-[#333] dark:bg-[#f0f0f0] dark:text-[#1b1b18] dark:hover:bg-white"
