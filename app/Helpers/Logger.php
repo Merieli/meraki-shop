@@ -12,7 +12,7 @@ class Logger
     {
         Log::info("$code | $msg" . PHP_EOL, [...$context, $this->divider]);
     }
-    
+
     public function critical(string $msg, array $context = [], string $code = "UNKNOWN")
     {
         Log::critical("$code | $msg" . PHP_EOL, [...$context, $this->divider]);
@@ -27,5 +27,5 @@ class Logger
     {
         Log::debug("$code | $msg" . PHP_EOL, [...$context, $this->divider]);
     }
-    
+
 }

@@ -5,23 +5,28 @@ use MerakiShop\Http\Controllers\Api\{
     CustomerCardController,
     UserController,
     ProductController,
+    OrderController,
     AddressController,
     AuthTokenController
 };
 
 
-Route::middleware('auth')->post('/token', [AuthTokenController::class, 'create']);
+Route::middleware('auth')->post('token', [AuthTokenController::class, 'create']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('/users', UserController::class)->only(['index', 'store']);
+    Route::apiResource('users', UserController::class)->only(['index', 'store']);
 
-    Route::resource('/address', AddressController::class)
-        ->except(['create', 'edit', 'destroy', 'show']);
-
-    Route::resource('/credit-card', CustomerCardController::class)
-        ->except(['create', 'edit', 'destroy', 'show']);
+    Route::apiResource(
+        'address', AddressController::class,
+    )->except(['create', 'edit', 'destroy', 'show']);;
+    Route::apiResource(
+        'credit-card', CustomerCardController::class,
+    )->except(['create', 'edit', 'destroy', 'show']);
+    Route::apiResource(
+        'order', OrderController::class,
+    )->except(['create', 'edit', 'destroy', 'show']);
 });
 
-Route::resource('/products', ProductController::class)->except(['create', 'edit']);
+Route::apiResource('products', ProductController::class)->except(['create', 'edit']);
 
 

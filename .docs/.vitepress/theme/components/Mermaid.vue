@@ -1,13 +1,15 @@
-<script setup>
+<script setup lang="ts">
 import mermaid from 'mermaid';
 import { onMounted, ref, watch } from 'vue';
 
-const props = defineProps({
-    code: { type: String, required: true },
-});
+interface Props {
+    code: string;
+}
 
-const diagram = ref(null);
-const error = ref(null);
+const props = defineProps<Props>();
+
+const diagram = ref<HTMLElement | null>(null);
+const error = ref<string | null>(null);
 
 const initMermaid = () => {
     try {
@@ -21,8 +23,9 @@ const initMermaid = () => {
                 htmlLabels: true,
             },
         });
-    } catch (e) {
-        error.value = `Erro na inicialização: ${e.message}`;
+    } catch (e: unknown) {
+        const errorMessage = e instanceof Error ? e.message : 'Erro desconhecido';
+        error.value = `Erro na inicialização: ${errorMessage}`;
     }
 };
 
@@ -42,9 +45,12 @@ const renderDiagram = async () => {
         diagram.value.innerHTML = finalCode;
         await mermaid.run(undefined, diagram.value);
         error.value = null;
-    } catch (e) {
-        error.value = `Erro no diagrama: ${e.message}`;
-        diagram.value.innerHTML = '';
+    } catch (e: unknown) {
+        const errorMessage = e instanceof Error ? e.message : 'Erro desconhecido';
+        error.value = `Erro no diagrama: ${errorMessage}`;
+        if (diagram.value) {
+            diagram.value.innerHTML = '';
+        }
         console.error('Mermaid error details:', e);
     }
 };
@@ -61,7 +67,7 @@ watch(() => props.code, renderDiagram);
     <div class="mermaid-container">
         <div v-if="error" class="error">
             {{ error }}
-            <pre>{{ decodeURIComponent(code) }}</pre>
+            <pre>{{ decodeURIComponent(props.code) }}</pre>
         </div>
         <div ref="diagram" class="mermaid"></div>
     </div>
