@@ -4,64 +4,98 @@ import AppHeader from '@/components/AppHeader.vue';
 import CustomerTestimonials from '@/components/CustomerTestimonials.vue';
 import ProductCard from '@/components/ProductCard.vue';
 import TopBanner from '@/components/TopBanner.vue';
+import { fromCents } from '@/utils/money';
 import { Head, usePage } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import axios from 'axios';
+import { computed, onMounted, ref } from 'vue';
 
 const isLoggedIn = computed(() => {
     // @ts-ignore - Acessando a propriedade dinamicamente
     return !!usePage().props.auth && !!usePage().props.auth.user;
 });
 
-const products = ref([
-    {
-        id: 1,
-        name: 'Pro Sports Sneakers',
-        price: 299.9,
-        category: 'Footwear',
-        image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff',
-        inStock: true,
-    },
-    {
-        id: 2,
-        name: 'Basic T-Shirt',
-        price: 79.9,
-        category: 'Clothing',
-        image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab',
-        inStock: true,
-    },
-    {
-        id: 3,
-        name: 'Smart Watch',
-        price: 499.9,
-        category: 'Accessories',
-        image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12',
-        inStock: false,
-    },
-    {
-        id: 4,
-        name: 'Durable Backpack',
-        price: 159.9,
-        category: 'Accessories',
-        image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62',
-        inStock: true,
-    },
-    {
-        id: 5,
-        name: 'Sunglasses',
-        price: 129.9,
-        category: 'Accessories',
-        image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f',
-        inStock: true,
-    },
-    {
-        id: 6,
-        name: 'Headphones',
-        price: 199.9,
-        category: 'Electronics',
-        image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e',
-        inStock: true,
-    },
-]);
+interface Product {
+    id: number;
+    name: string;
+    price: number;
+    category: string;
+    image: string;
+    inStock: boolean;
+}
+
+interface ApiProduct {
+    id: number;
+    name: string;
+    price: string | number;
+    category?: string;
+    image?: string;
+    in_stock?: boolean;
+    inStock?: boolean;
+    [key: string]: any; // Para quaisquer outras propriedades que possam existir
+}
+
+const products = ref<Product[]>([]);
+const loading = ref(true);
+const error = ref<string | null>(null);
+
+const fetchProducts = async () => {
+    loading.value = true;
+    error.value = null;
+
+    try {
+        const response = await axios.get('/api/products');
+
+        if (response.data && Array.isArray(response.data.data)) {
+            products.value = response.data.data.map((item: ApiProduct) => ({
+                id: item.id,
+                name: item.name,
+                price: fromCents(Number(item.price)),
+                category: item.category || 'Uncategorized',
+                image: item.image || 'https://via.placeholder.com/150',
+                inStock: item.in_stock || item.inStock || true,
+            }));
+        } else {
+            throw new Error('Unexpected API response format');
+        }
+    } catch (err) {
+        console.error('Error fetching products:', err);
+        error.value = 'Failed to load products. Please try again later.';
+        if (import.meta.env.DEV) {
+            products.value = [
+                {
+                    id: 1,
+                    name: 'Pro Sports Sneakers',
+                    price: 299.9,
+                    category: 'Footwear',
+                    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff',
+                    inStock: true,
+                },
+                {
+                    id: 2,
+                    name: 'Basic T-Shirt',
+                    price: 79.9,
+                    category: 'Clothing',
+                    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab',
+                    inStock: true,
+                },
+                {
+                    id: 3,
+                    name: 'Smart Watch',
+                    price: 499.9,
+                    category: 'Accessories',
+                    image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12',
+                    inStock: true,
+                },
+            ];
+        }
+    } finally {
+        loading.value = false;
+    }
+};
+
+onMounted(() => {
+    fetchProducts();
+});
 </script>
 
 <template>
@@ -91,8 +125,35 @@ const products = ref([
                     </p>
                 </div>
 
-                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                    <ProductCard v-for="product in products" :key="product.id" :product="product" />
+                <!-- Loading State -->
+                <div v-if="loading" class="flex flex-col items-center justify-center py-12">
+                    <div
+                        class="h-12 w-12 animate-spin rounded-full border-4 border-[#1b1b18] border-t-transparent dark:border-white dark:border-t-transparent"
+                    ></div>
+                    <p class="mt-4 text-[#555] dark:text-gray-300">Loading products...</p>
+                </div>
+
+                <!-- Error State -->
+                <div v-else-if="error" class="rounded-lg bg-red-50 p-6 text-center dark:bg-red-900/20">
+                    <p class="text-red-600 dark:text-red-400">{{ error }}</p>
+                    <button
+                        @click="fetchProducts"
+                        class="mt-4 rounded-md bg-[#1b1b18] px-4 py-2 text-white hover:bg-[#333] dark:bg-[#f0f0f0] dark:text-[#1b1b18] dark:hover:bg-white"
+                    >
+                        Try Again
+                    </button>
+                </div>
+
+                <!-- Products Grid -->
+                <div v-else class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                    <template v-if="products.length > 0">
+                        <ProductCard v-for="product in products" :key="product.id" :product="product" />
+                    </template>
+                    <template v-else>
+                        <div class="col-span-full rounded-lg bg-gray-50 p-6 text-center dark:bg-gray-800/20">
+                            <p class="text-[#555] dark:text-gray-300">No products found.</p>
+                        </div>
+                    </template>
                 </div>
 
                 <CustomerTestimonials />

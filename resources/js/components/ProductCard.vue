@@ -2,6 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { formatCurrency } from '@/utils/money';
 import { usePage } from '@inertiajs/vue3';
 import { LogIn } from 'lucide-vue-next';
 import { computed } from 'vue';
@@ -25,10 +26,7 @@ const isLoggedIn = computed(() => {
 });
 
 const formatPrice = (price: number): string => {
-    return price.toLocaleString('en-US', {
-        style: 'currency',
-        currency: 'USD',
-    });
+    return formatCurrency(price);
 };
 
 const handleBuyClick = (e: Event) => {

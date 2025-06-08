@@ -42,3 +42,32 @@ export function formatCurrency(amount: number, currency = 'USD', valueInCents = 
 export function normalizeCurrencyValue(value: number): number {
     return Math.round(value * 100) / 100;
 }
+
+/**
+ * Format a price specifically for product displays
+ * @param price The price in cents
+ * @param currency The currency code (default: USD)
+ * @returns Formatted price string for product displays
+ */
+export function formatProductPrice(price: number, currency = 'USD'): string {
+    return formatCurrency(price, currency, true);
+}
+
+/**
+ * Parses a price value from various formats
+ * @param price The price value which can be a string or number
+ * @param isCents Whether the input is already in cents
+ * @returns Normalized price in dollars as a number
+ */
+export function parsePrice(price: string | number, isCents = true): number {
+    let numericValue: number;
+
+    if (typeof price === 'string') {
+        const cleanedString = price.replace(/[^\d.]/g, '');
+        numericValue = parseFloat(cleanedString);
+    } else {
+        numericValue = price;
+    }
+
+    return isCents ? fromCents(numericValue) : numericValue;
+}
