@@ -6,7 +6,7 @@ withDefaults(
     }>(),
     {
         cardLastDigits: '4567',
-        addressSummary: 'Rua *********, 123 - São Paulo, SP',
+        addressSummary: 'Main St *********, 123 - New York, NY',
     },
 );
 </script>
@@ -16,7 +16,7 @@ withDefaults(
         <div class="mx-auto flex max-w-[1200px] items-center justify-between px-4 text-sm font-medium lg:max-w-6xl">
             <div class="hidden items-center space-x-4 sm:flex">
                 <div class="flex flex-col">
-                    <span class="text-xs uppercase opacity-80">Compra com 1 clique</span>
+                    <span class="text-xs uppercase opacity-80">1-Click Purchase</span>
                     <span class="flex items-center gap-2">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -31,13 +31,13 @@ withDefaults(
                             <rect width="20" height="14" x="2" y="5" rx="2" />
                             <line x1="2" x2="22" y1="10" y2="10" />
                         </svg>
-                        Cartão: •••• •••• •••• {{ cardLastDigits }}
+                        Card: •••• •••• •••• {{ cardLastDigits }}
                     </span>
                 </div>
             </div>
             <div class="hidden items-center space-x-4 sm:flex">
                 <div class="flex flex-col">
-                    <span class="text-xs uppercase opacity-80">Entrega em</span>
+                    <span class="text-xs uppercase opacity-80">Delivery to</span>
                     <span class="flex items-center gap-2">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"

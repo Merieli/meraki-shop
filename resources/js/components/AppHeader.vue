@@ -1,193 +1,155 @@
 <script setup lang="ts">
-import AppLogo from '@/components/AppLogo.vue';
-import AppLogoIcon from '@/components/AppLogoIcon.vue';
-import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import {
-    NavigationMenu,
-    NavigationMenuItem,
-    NavigationMenuLink,
-    NavigationMenuList,
-    navigationMenuTriggerStyle,
-} from '@/components/ui/navigation-menu';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import UserMenuContent from '@/components/UserMenuContent.vue';
-import { getInitials } from '@/composables/useInitials';
-import type { BreadcrumbItem, NavItem, User } from '@/types';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import type { BreadcrumbItem, User } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-vue-next';
-import { computed } from 'vue';
+import { Menu, Search, User as UserIcon } from 'lucide-vue-next';
+import { computed, ref } from 'vue';
 
 interface Props {
     breadcrumbs?: BreadcrumbItem[];
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
     breadcrumbs: () => [],
 });
 
 const page = usePage();
 const auth = computed(() => page.props.auth as { user: User });
+const searchQuery = ref('');
+const isSearchOpen = ref(false);
+const isMobileMenuOpen = ref(false);
 
 const isCurrentRoute = computed(() => (url: string) => page.url === url);
 
-const activeItemStyles = computed(
-    () => (url: string) => (isCurrentRoute.value(url) ? 'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100' : ''),
-);
-
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid,
-    },
-];
-
-const rightNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
-    },
-];
+const handleSearch = () => {
+    if (searchQuery.value.trim()) {
+        // Implemente a lógica de pesquisa aqui
+        console.log('Pesquisando por:', searchQuery.value);
+        // Redirecione para a página de resultados de pesquisa ou filtre no local
+        isSearchOpen.value = false;
+    }
+};
 </script>
 
 <template>
-    <div>
-        <div class="border-sidebar-border/80 border-b">
-            <div class="mx-auto flex h-16 items-center px-4 md:max-w-7xl">
-                <!-- Mobile Menu -->
-                <div class="lg:hidden">
-                    <Sheet>
-                        <SheetTrigger :as-child="true">
-                            <Button variant="ghost" size="icon" class="mr-2 h-9 w-9">
-                                <Menu class="h-5 w-5" />
-                            </Button>
-                        </SheetTrigger>
-                        <SheetContent side="left" class="w-[300px] p-6">
-                            <SheetTitle class="sr-only">Navigation Menu</SheetTitle>
-                            <SheetHeader class="flex justify-start text-left">
-                                <AppLogoIcon class="size-6 fill-current text-black dark:text-white" />
-                            </SheetHeader>
-                            <div class="flex h-full flex-1 flex-col justify-between space-y-4 py-6">
-                                <nav class="-mx-3 space-y-1">
-                                    <Link
-                                        v-for="item in mainNavItems"
-                                        :key="item.title"
-                                        :href="item.href"
-                                        class="hover:bg-accent flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium"
-                                        :class="activeItemStyles(item.href)"
-                                    >
-                                        <component v-if="item.icon" :is="item.icon" class="h-5 w-5" />
-                                        {{ item.title }}
-                                    </Link>
-                                </nav>
-                                <div class="flex flex-col space-y-4">
-                                    <a
-                                        v-for="item in rightNavItems"
-                                        :key="item.title"
-                                        :href="item.href"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        class="flex items-center space-x-2 text-sm font-medium"
-                                    >
-                                        <component v-if="item.icon" :is="item.icon" class="h-5 w-5" />
-                                        <span>{{ item.title }}</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </SheetContent>
-                    </Sheet>
-                </div>
+    <header class="mb-6 w-full max-w-[1200px] text-sm lg:max-w-6xl">
+        <nav class="relative flex items-center justify-center gap-4">
+            <!-- Menu Mobile (esquerda) - Visível apenas em telas pequenas -->
+            <div class="absolute left-0 md:hidden">
+                <Sheet v-model:open="isMobileMenuOpen">
+                    <SheetTrigger as-child>
+                        <button class="flex items-center justify-center rounded-full p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800">
+                            <Menu class="h-5 w-5 text-neutral-700 dark:text-neutral-300" />
+                        </button>
+                    </SheetTrigger>
+                    <SheetContent side="left" class="w-full max-w-[280px] p-6 sm:w-[280px]">
+                        <div class="flex flex-col gap-6 py-4">
+                            <div class="flex flex-col gap-4">
+                                <h3 class="text-lg font-semibold">Menu</h3>
 
-                <Link :href="route('dashboard')" class="flex items-center gap-x-2">
-                    <AppLogo />
+                                <!-- Usuário em Mobile -->
+                                <div v-if="$page.props.auth.user" class="flex items-center gap-3 rounded-md bg-neutral-50 p-3 dark:bg-neutral-800/50">
+                                    <Avatar>
+                                        <AvatarImage :src="$page.props.auth.user.avatar ?? ''" alt="@unovue" />
+                                        <AvatarFallback>{{ $page.props.auth.user.name.charAt(0) }}</AvatarFallback>
+                                    </Avatar>
+                                    <div>
+                                        <p class="text-sm font-medium">{{ $page.props.auth.user.name }}</p>
+                                        <Link :href="route('dashboard')" class="text-xs text-neutral-500">Dashboard</Link>
+                                    </div>
+                                </div>
+
+                                <!-- Login em Mobile -->
+                                <Link
+                                    v-else
+                                    :href="route('login')"
+                                    class="flex items-center gap-3 rounded-md px-4 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                                >
+                                    <UserIcon class="h-5 w-5" />
+                                    <span>Fazer login</span>
+                                </Link>
+
+                                <!-- Pesquisa em Mobile -->
+                                <button
+                                    class="flex items-center gap-3 rounded-md px-4 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                                    @click="
+                                        isSearchOpen = true;
+                                        isMobileMenuOpen = false;
+                                    "
+                                >
+                                    <Search class="h-5 w-5" />
+                                    <span>Pesquisar</span>
+                                </button>
+                            </div>
+                        </div>
+                    </SheetContent>
+                </Sheet>
+            </div>
+
+            <!-- Centro - Logo (centralizado na página) -->
+            <div class="flex items-center justify-center">
+                <img src="/logo.png" alt="Meraki Shop" class="h-10" />
+            </div>
+
+            <!-- Lado direito - Ícones e Login (apenas visível em telas médias e maiores) -->
+            <div class="absolute right-0 hidden items-center gap-4 md:flex">
+                <!-- Ícone de busca com Dialog -->
+                <Dialog v-model:open="isSearchOpen">
+                    <DialogTrigger as-child>
+                        <button
+                            class="flex items-center justify-center rounded-full p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                            @click="isSearchOpen = true"
+                        >
+                            <Search class="h-5 w-5 text-neutral-700 dark:text-neutral-300" />
+                        </button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Buscar no site</DialogTitle>
+                            <DialogDescription> Digite o que você está procurando </DialogDescription>
+                        </DialogHeader>
+                        <div class="flex flex-col gap-4">
+                            <div class="flex gap-2">
+                                <Input
+                                    v-model="searchQuery"
+                                    placeholder="Pesquise produtos, categorias..."
+                                    class="flex-1"
+                                    @keyup.enter="handleSearch"
+                                />
+                                <Button @click="handleSearch">Buscar</Button>
+                            </div>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+
+                <!-- Usuário conectado -->
+                <Link
+                    v-if="$page.props.auth.user"
+                    :href="route('dashboard')"
+                    class="flex items-center justify-center gap-2 rounded-sm px-3 py-1.5 text-sm leading-normal text-[#1b1b18] hover:bg-neutral-100 dark:text-[#EDEDEC] dark:hover:bg-neutral-800"
+                >
+                    Hello {{ $page.props.auth.user.name }}
+
+                    <Avatar>
+                        <AvatarImage :src="$page.props.auth.user.avatar ?? ''" alt="@unovue" />
+                        <AvatarFallback>{{ $page.props.auth.user.name.charAt(0) }}</AvatarFallback>
+                    </Avatar>
                 </Link>
 
-                <!-- Desktop Menu -->
-                <div class="hidden h-full lg:flex lg:flex-1">
-                    <NavigationMenu class="ml-10 flex h-full items-stretch">
-                        <NavigationMenuList class="flex h-full items-stretch space-x-2">
-                            <NavigationMenuItem v-for="(item, index) in mainNavItems" :key="index" class="relative flex h-full items-center">
-                                <Link :href="item.href">
-                                    <NavigationMenuLink
-                                        :class="[navigationMenuTriggerStyle(), activeItemStyles(item.href), 'h-9 cursor-pointer px-3']"
-                                    >
-                                        <component v-if="item.icon" :is="item.icon" class="mr-2 h-4 w-4" />
-                                        {{ item.title }}
-                                    </NavigationMenuLink>
-                                </Link>
-                                <div
-                                    v-if="isCurrentRoute(item.href)"
-                                    class="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-black dark:bg-white"
-                                ></div>
-                            </NavigationMenuItem>
-                        </NavigationMenuList>
-                    </NavigationMenu>
-                </div>
-
-                <div class="ml-auto flex items-center space-x-2">
-                    <div class="relative flex items-center space-x-1">
-                        <Button variant="ghost" size="icon" class="group h-9 w-9 cursor-pointer">
-                            <Search class="size-5 opacity-80 group-hover:opacity-100" />
-                        </Button>
-
-                        <div class="hidden space-x-1 lg:flex">
-                            <template v-for="item in rightNavItems" :key="item.title">
-                                <TooltipProvider :delay-duration="0">
-                                    <Tooltip>
-                                        <TooltipTrigger>
-                                            <Button variant="ghost" size="icon" as-child class="group h-9 w-9 cursor-pointer">
-                                                <a :href="item.href" target="_blank" rel="noopener noreferrer">
-                                                    <span class="sr-only">{{ item.title }}</span>
-                                                    <component :is="item.icon" class="size-5 opacity-80 group-hover:opacity-100" />
-                                                </a>
-                                            </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>{{ item.title }}</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
-                            </template>
-                        </div>
-                    </div>
-
-                    <DropdownMenu>
-                        <DropdownMenuTrigger :as-child="true">
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                class="focus-within:ring-primary relative size-10 w-auto rounded-full p-1 focus-within:ring-2"
-                            >
-                                <Avatar class="size-8 overflow-hidden rounded-full">
-                                    <AvatarImage v-if="auth.user.avatar" :src="auth.user.avatar" :alt="auth.user.name" />
-                                    <AvatarFallback class="rounded-lg bg-neutral-200 font-semibold text-black dark:bg-neutral-700 dark:text-white">
-                                        {{ getInitials(auth.user?.name) }}
-                                    </AvatarFallback>
-                                </Avatar>
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" class="w-56">
-                            <UserMenuContent :user="auth.user" />
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </div>
+                <!-- Usuário não conectado -->
+                <template v-else>
+                    <Link
+                        :href="route('login')"
+                        class="flex items-center justify-center rounded-full p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                    >
+                        <UserIcon class="h-5 w-5 text-neutral-700 dark:text-neutral-300" />
+                    </Link>
+                </template>
             </div>
-        </div>
-
-        <div v-if="props.breadcrumbs.length > 1" class="border-sidebar-border/70 flex w-full border-b">
-            <div class="mx-auto flex h-12 w-full items-center justify-start px-4 text-neutral-500 md:max-w-7xl">
-                <Breadcrumbs :breadcrumbs="breadcrumbs" />
-            </div>
-        </div>
-    </div>
+        </nav>
+    </header>
 </template>
