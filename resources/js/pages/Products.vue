@@ -4,6 +4,7 @@ import AppHeader from '@/components/AppHeader.vue';
 import CustomerTestimonials from '@/components/CustomerTestimonials.vue';
 import ProductCard from '@/components/ProductCard.vue';
 import TopBanner from '@/components/TopBanner.vue';
+import { ApiProduct, Product } from '@/types/product';
 import { fromCents } from '@/utils/money';
 import { Head, usePage } from '@inertiajs/vue3';
 import axios from 'axios';
@@ -13,26 +14,6 @@ const isLoggedIn = computed(() => {
     // @ts-ignore - Acessando a propriedade dinamicamente
     return !!usePage().props.auth && !!usePage().props.auth.user;
 });
-
-interface Product {
-    id: number;
-    name: string;
-    price: number;
-    category: string;
-    image: string;
-    inStock: boolean;
-}
-
-interface ApiProduct {
-    id: number;
-    name: string;
-    price: string | number;
-    category?: string;
-    image?: string;
-    in_stock?: boolean;
-    inStock?: boolean;
-    [key: string]: any; // Para quaisquer outras propriedades que possam existir
-}
 
 const products = ref<Product[]>([]);
 const loading = ref(true);
@@ -50,9 +31,10 @@ const fetchProducts = async () => {
                 id: item.id,
                 name: item.name,
                 price: fromCents(Number(item.price)),
-                category: item.category || 'Uncategorized',
-                image: item.image || 'https://via.placeholder.com/150',
-                inStock: item.in_stock || item.inStock || true,
+                shortDescription: item.short_description || '',
+                thumbnail: item.thumbnail || 'https://via.placeholder.com/150',
+                inStock: item.stock && item.stock > 0,
+                rating: item.rating || 0,
             }));
         } else {
             throw new Error('Unexpected API response format');
@@ -66,24 +48,28 @@ const fetchProducts = async () => {
                     id: 1,
                     name: 'Pro Sports Sneakers',
                     price: 299.9,
-                    category: 'Footwear',
-                    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff',
+                    thumbnail: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff',
+                    shortDescription: 'Professional sports sneakers with advanced cushioning.',
+                    rating: 4.5,
                     inStock: true,
                 },
                 {
                     id: 2,
                     name: 'Basic T-Shirt',
                     price: 79.9,
-                    category: 'Clothing',
-                    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab',
+                    thumbnail: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab',
+                    shortDescription: 'Comfortable cotton t-shirt for everyday use.',
+                    rating: 4.0,
                     inStock: true,
                 },
                 {
                     id: 3,
                     name: 'Smart Watch',
                     price: 499.9,
-                    category: 'Accessories',
+                    thumbnail: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12',
                     image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12',
+                    shortDescription: 'Advanced smartwatch with health tracking features.',
+                    rating: 4.8,
                     inStock: true,
                 },
             ];

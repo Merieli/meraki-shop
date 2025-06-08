@@ -2,19 +2,11 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { Product } from '@/types/product';
 import { formatCurrency } from '@/utils/money';
 import { usePage } from '@inertiajs/vue3';
 import { LogIn } from 'lucide-vue-next';
 import { computed } from 'vue';
-
-interface Product {
-    id: number;
-    name: string;
-    price: number;
-    category: string;
-    image: string;
-    inStock: boolean;
-}
 
 defineProps<{
     product: Product;
@@ -40,7 +32,7 @@ const handleBuyClick = (e: Event) => {
 <template>
     <Card class="flex h-full flex-col overflow-hidden">
         <div class="aspect-square w-full overflow-hidden">
-            <img :src="product.image" :alt="product.name" class="h-full w-full object-cover transition-transform duration-300 hover:scale-105" />
+            <img :src="product.thumbnail" :alt="product.name" class="h-full w-full object-cover transition-transform duration-300 hover:scale-105" />
         </div>
         <CardHeader class="p-4">
             <CardTitle class="text-lg font-medium text-[#1b1b18] dark:text-white">{{ product.name }}</CardTitle>

@@ -46,3 +46,34 @@ export interface ProductResponse extends ProductApiData {
     created_at: string;
     updated_at: string;
 }
+
+/**
+ * Interface para o produto usado no frontend
+ */
+export interface Product {
+    id: number;
+    name: string;
+    price: number;
+    thumbnail: string;
+    image?: string;
+    category?: string;
+    shortDescription: string;
+    rating: number;
+    inStock: boolean;
+}
+
+/**
+ * Interface para o produto recebido da API
+ */
+export interface ApiProduct {
+    id: number;
+    name: string;
+    price: string | number;
+    short_description: string;
+    thumbnail: string;
+    rating: number;
+    images?: string[];
+    description?: string;
+    sku?: string;
+    stock?: number;
+}
