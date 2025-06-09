@@ -77,7 +77,7 @@ class OrderController extends Controller
                 ]);
 
                 return response()->json(
-                    $order->load(['orderItems']),
+                    $order->orderItem,
                     201
                 );
             }, 3);
@@ -93,8 +93,20 @@ class OrderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateOrderRequest $request, Order $order)
+    public function update(UpdateOrderRequest $request, string $id, Authenticatable $user)
     {
-        //
+        return DB::transaction(function () use ($id, $request, $user) {
+            $order = $this->findById($id);
+
+            if (!$order || $user['id'] !== $order->user_id) {
+                return null;
+            }
+
+            $order->update([
+                'status' => $request['status'] ?? $order->status,
+            ]);
+
+            return $order->fresh();
+        }, 3);
     }
 }

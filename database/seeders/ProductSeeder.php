@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use Database\Factories\ProductFactory;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use MerakiShop\Models\Product;
 
 class ProductSeeder extends Seeder
 {
@@ -13,6 +13,12 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        ProductFactory::factory()->count(50)->create();
+        Product::truncate();
+
+        $factory = new ProductFactory();
+        $products = $factory->getProducts();
+        foreach ($products as $product) {
+            Product::create($product);
+        }
     }
 }
