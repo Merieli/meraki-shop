@@ -1,8 +1,7 @@
+import { useApiToken } from '@/utils/apiTokenStore';
 import axios from 'axios';
-import { getApiToken } from './cookies';
 
-// Endpoints protegidos que precisam de token
-const protectedEndpoints = ['/users', '/address', '/credit-card', '/token'];
+const protectedEndpoints = ['/users', '/address', '/credit-card', '/token', '/order'];
 
 const api = axios.create({
     baseURL: '/api',
@@ -25,12 +24,10 @@ api.interceptors.request.use((config) => {
     const isProtectedEndpoint = protectedEndpoints.some((endpoint) => url === endpoint || url.startsWith(`${endpoint}/`));
 
     const useToken = config.useToken === true || isProtectedEndpoint;
-    console.log('useToken', useToken);
     if (useToken) {
-        const apiToken = getApiToken();
-        console.log('apiToken', apiToken);
-        if (apiToken) {
-            config.headers['Authorization'] = `Bearer ${apiToken}`;
+        const { apiToken } = useApiToken();
+        if (apiToken.value) {
+            config.headers['Authorization'] = `Bearer ${apiToken.value}`;
         }
     }
 

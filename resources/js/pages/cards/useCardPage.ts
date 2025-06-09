@@ -111,8 +111,6 @@ export function useCardPage() {
                 card_brand: formData.card_brand,
             };
 
-            console.log('Enviando para API:', apiData);
-
             return await apiService.create<CardResponse>('credit-card', apiData, true);
         } catch (err: unknown) {
             handleApiError(err);

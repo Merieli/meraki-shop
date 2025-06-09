@@ -13,7 +13,9 @@ Route::middleware([
     ValidateSessionWithWorkOS::class,
 ])->group(function () {
     Route::get('dashboard', function () {
-        return Inertia::render('Dashboard');
+        return Inertia::render('Dashboard', [
+            'api_token' => session('api_token'),
+        ]);
     })->name('dashboard');
 
     Route::get('products/create', function () {
@@ -29,7 +31,7 @@ Route::middleware([
     })->name('cards.create');
 
     Route::get('orders', function () {
-        return Inertia::render('orders/OrdersIndex');
+        return Inertia::render(component: 'orders/CreateOrders');
     })->name('orders.index');
 });
 

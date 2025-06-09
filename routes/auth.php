@@ -28,11 +28,19 @@ Route::get('authenticate', function (AuthKitAuthenticationRequest $request) {
         Auth::login($user);
 
         $token = $user->createToken('api-token')->plainTextToken;
-        $cookie = cookie('X-API-TOKEN', $token, 60 * 24, null, null, false, false);
+        $cookie = cookie(
+            'X-API-TOKEN',
+            $token,
+            60 * 24,
+            null,
+            null,
+            config('session.secure'),
+            true
+        );
 
-        Logger::critical('token ->>', [$token, $cookie]);
-
-        return redirect()->route('dashboard')->withCookie($cookie);
+        return redirect()->route('dashboard')
+            ->withCookie($cookie)
+            ->with('api_token', $token);
     } catch (\Exception $e) {
         Logger::critical('Erro de autenticação: ' . $e->getMessage());
         return redirect()->route('login');

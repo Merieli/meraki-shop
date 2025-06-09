@@ -17,12 +17,6 @@ const breadcrumbItems: BreadcrumbItem[] = [
 const { isSubmitting, error, success, formKey, createCard } = useCardPage();
 
 const handleSubmit = async (cardData: CardApiData) => {
-    console.log('Form submitted with card data:', {
-        card_token: cardData.card_number,
-        card_last4: cardData.card_last4,
-        card_brand: cardData.card_brand,
-    });
-
     await createCard(cardData);
 };
 

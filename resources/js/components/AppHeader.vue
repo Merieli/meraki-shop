@@ -29,7 +29,6 @@ const isCurrentRoute = computed(() => (url: string) => page.url === url);
 const handleSearch = () => {
     if (searchQuery.value.trim()) {
         // TODO: Implementar a lógica de pesquisa aqui
-        console.log('Pesquisando por:', searchQuery.value);
         isSearchOpen.value = false;
     }
 };

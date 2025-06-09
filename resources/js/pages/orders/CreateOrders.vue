@@ -1,37 +1,55 @@
 <script setup lang="ts">
-import AddressForm from '@/components/addresses/AddressForm.vue';
+import type { OrderData } from '@/components/orders/OrderCard.vue';
+import OrdersList from '@/components/orders/OrdersList.vue';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { Head, router } from '@inertiajs/vue3';
-import { useAddressPage, type AddressApiData } from './useAddressPage';
+import { apiService } from '@/utils/api';
+import { Head } from '@inertiajs/vue3';
+import { onMounted, ref } from 'vue';
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
-        title: 'Register Address',
-        href: '/addresses/create',
+        title: 'Meus Pedidos',
+        href: '/orders',
     },
 ];
 
-const { isSubmitting, error, success, formKey, createAddress } = useAddressPage();
+const orders = ref<OrderData[]>([]);
+const isLoading = ref(true);
+const error = ref<string | null>(null);
+const success = ref<string | null>(null);
 
-const handleSubmit = async (addressData: AddressApiData) => {
-    await createAddress(addressData);
+const fetchOrders = async () => {
+    isLoading.value = true;
+    error.value = null;
+
+    try {
+        const response = await apiService.list<OrderData[]>('order', {}, true);
+        orders.value = response;
+        success.value = 'Pedidos carregados com sucesso!';
+    } catch (err: any) {
+        console.error('Erro ao buscar pedidos:', err);
+        error.value = err.response?.data?.message || 'Ocorreu um erro ao buscar seus pedidos. Tente novamente.';
+        orders.value = [];
+    } finally {
+        isLoading.value = false;
+    }
 };
 
-const handleCancel = () => {
-    router.visit('/addresses');
-};
+onMounted(() => {
+    fetchOrders();
+});
 </script>
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbItems">
-        <Head title="Register Address" />
+        <Head title="Meus Pedidos" />
 
         <div class="space-y-6 p-6 pb-16">
             <div class="space-y-0.5">
-                <h2 class="text-2xl font-bold tracking-tight">Register Address</h2>
-                <p class="text-muted-foreground">Fill in the information below to register a new address</p>
+                <h2 class="text-2xl font-bold tracking-tight">Meus Pedidos</h2>
+                <p class="text-muted-foreground">Visualize e acompanhe todos os seus pedidos</p>
             </div>
 
             <!-- Mensagens de erro/sucesso -->
@@ -43,7 +61,7 @@ const handleCancel = () => {
                         clip-rule="evenodd"
                     />
                 </svg>
-                <AlertTitle>Error</AlertTitle>
+                <AlertTitle>Erro</AlertTitle>
                 <AlertDescription>{{ error }}</AlertDescription>
             </Alert>
 
@@ -55,19 +73,13 @@ const handleCancel = () => {
                         clip-rule="evenodd"
                     />
                 </svg>
-                <AlertTitle>Success</AlertTitle>
+                <AlertTitle>Sucesso</AlertTitle>
                 <AlertDescription>{{ success }}</AlertDescription>
             </Alert>
 
             <div class="flex flex-col space-y-8 lg:flex-row lg:space-y-0 lg:space-x-12">
-                <div class="flex-1 lg:max-w-3xl">
-                    <AddressForm
-                        :key="formKey"
-                        submit-endpoint="/api/address"
-                        @submit="handleSubmit"
-                        @cancel="handleCancel"
-                        :disabled="isSubmitting"
-                    />
+                <div class="flex-1">
+                    <OrdersList :orders="orders" :loading="isLoading" />
                 </div>
             </div>
         </div>
