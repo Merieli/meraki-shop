@@ -38,7 +38,7 @@ Route::get('authenticate', function (AuthKitAuthenticationRequest $request) {
             true
         );
 
-        return redirect()->route('dashboard')
+        return redirect()->route('orders')
             ->withCookie($cookie)
             ->with('api_token', $token);
     } catch (\Exception $e) {

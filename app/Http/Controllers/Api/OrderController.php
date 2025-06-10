@@ -23,20 +23,29 @@ class OrderController extends Controller
     public function index(Request $request, Authenticatable $user)
     {
         try {
-            $user = User::find($user['id']);
-            if (!$user) {
-                return response()->json(['message' => 'Usuário não encontrado'], 404);
+            if ($request->input('scope') === 'all') {
+                $orders = Order::with(['orderItems', 'user'])
+                    ->latest()
+                    ->take(5)
+                    ->get();
+
+                Logger::info('Recent orders found for dashboard', ['count' => $orders->count()]);
+            } else {
+                $user = User::find($user['id']);
+                if (!$user) {
+                    return response()->json(['message' => 'Usuário não encontrado'], 404);
+                }
+
+                $orders = Order::where('user_id', $user['id'])
+                    ->with(['orderItems.product'])
+                    ->get();
+
+                if ($orders->isEmpty()) {
+                    return response()->json(['message' => 'Nenhum pedido existente'], 404);
+                }
+
+                Logger::info('Orders found for user', ['user_id' => $user['id'], 'count' => $orders->count()]);
             }
-
-            $orders = Order::where('user_id', $user['id'])
-                ->with(['orderItems.product'])
-                ->get();
-
-            if ($orders->isEmpty()) {
-                return response()->json(['message' => 'Nenhum pedido existente'], 404);
-            }
-
-            Logger::info('Orders found for user', ['user_id' => $user['id'], 'count' => $orders->count()]);
             return response()->json($orders);
         } catch (\Throwable $e) {
             Logger::error('Erro ao buscar pedidos', [$e]);
@@ -77,7 +86,7 @@ class OrderController extends Controller
                 ]);
 
                 return response()->json(
-                    $order->orderItem,
+                    $orderItem,
                     201
                 );
             }, 3);

@@ -1,76 +1,106 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Product } from '@/types/product';
-import { formatCurrency } from '@/utils/money';
+import { apiService } from '@/utils/api';
+import { formatCurrency, toCents } from '@/utils/money';
 import { usePage } from '@inertiajs/vue3';
-import { LogIn } from 'lucide-vue-next';
-import { computed } from 'vue';
+import { LogIn, ShoppingCart } from 'lucide-vue-next';
+import { computed, ref } from 'vue';
 
-defineProps<{
+const props = defineProps<{
     product: Product;
 }>();
 
-const isLoggedIn = computed(() => {
-    // @ts-ignore - Acessando a propriedade dinamicamente
-    return !!usePage().props.auth && !!usePage().props.auth.user;
-});
+const page = usePage<{ auth?: { user: any } }>();
+const isLoggedIn = computed(() => !!page.props.auth?.user);
 
-const formatPrice = (price: number): string => {
-    return formatCurrency(price);
-};
+const isCreatingOrder = ref(false);
+const orderStatusMessage = ref<string | null>(null);
+const orderStatusType = ref<'success' | 'error' | null>(null);
 
-const handleBuyClick = (e: Event) => {
+const handleBuyClick = async (e: Event) => {
     if (!isLoggedIn.value) {
         e.preventDefault();
         window.location.href = route('login');
+        return;
+    }
+
+    isCreatingOrder.value = true;
+    orderStatusMessage.value = null;
+    orderStatusType.value = null;
+
+    try {
+        const orderData = {
+            product_id: props.product.id,
+            unit_price: toCents(props.product.price),
+            status: 'pending',
+            payment_method: 'Credit Card', // Placeholder
+        };
+
+        await apiService.create('order', orderData, true);
+
+        orderStatusType.value = 'success';
+        orderStatusMessage.value = 'Pedido criado! Verifique em "Meus Pedidos".';
+    } catch (err: any) {
+        orderStatusType.value = 'error';
+        orderStatusMessage.value = err.response?.data?.message || 'Falha ao criar pedido.';
+        console.error('Error creating order:', err);
+    } finally {
+        isCreatingOrder.value = false;
     }
 };
 </script>
 
 <template>
-    <Card class="flex h-full flex-col overflow-hidden">
+    <Card class="flex flex-col overflow-hidden">
         <div class="aspect-square w-full overflow-hidden">
             <img :src="product.thumbnail" :alt="product.name" class="h-full w-full object-cover transition-transform duration-300 hover:scale-105" />
         </div>
         <CardHeader class="p-4">
-            <CardTitle class="text-lg font-medium text-[#1b1b18] dark:text-white">{{ product.name }}</CardTitle>
+            <CardTitle class="text-lg">{{ product.name }}</CardTitle>
         </CardHeader>
         <CardContent class="flex-grow p-4 pt-0">
-            <div class="flex flex-col">
-                <p class="text-xl font-semibold text-[#1b1b18] dark:text-white">{{ formatPrice(product.price) }}</p>
-                <p class="text-xs text-neutral-500 dark:text-neutral-400">Shipping included</p>
-                <p v-if="!product.inStock" class="mt-1 text-sm text-red-500 dark:text-red-400">Out of stock</p>
-            </div>
+            <p class="text-muted-foreground text-sm">{{ product.shortDescription }}</p>
         </CardContent>
-        <CardFooter class="mt-auto flex justify-center p-4 pt-0">
-            <HoverCard v-if="!isLoggedIn">
-                <HoverCardTrigger asChild>
-                    <Button
-                        size="sm"
-                        :disabled="!product.inStock"
-                        class="w-full bg-[#1b1b18] text-white hover:bg-[#333] dark:bg-[#f0f0f0] dark:text-[#1b1b18] dark:hover:bg-white"
-                        @click="handleBuyClick"
-                    >
-                        Buy with 1-Click
-                    </Button>
-                </HoverCardTrigger>
-                <HoverCardContent class="w-auto">
-                    <div class="flex items-center gap-2">
-                        <LogIn class="text-primary h-4 w-4" />
-                        <span class="text-sm">Login required</span>
+        <CardFooter class="mt-auto flex flex-col items-start gap-4 p-4 pt-0">
+            <div class="w-full">
+                <div class="flex w-full items-center justify-between">
+                    <span class="text-2xl font-bold">{{ formatCurrency(product.price) }}</span>
+                    <div class="flex items-center gap-1">
+                        <span class="text-sm">{{ product.rating }}</span>
+                        <svg class="h-4 w-4 fill-yellow-500" viewBox="0 0 20 20">
+                            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                        </svg>
                     </div>
-                </HoverCardContent>
-            </HoverCard>
+                </div>
+                <p class="text-xs text-neutral-500 dark:text-neutral-400">Shipping included</p>
+            </div>
 
-            <Button
-                v-else
-                size="sm"
-                :disabled="!product.inStock"
-                class="w-full bg-[#1b1b18] text-white hover:bg-[#333] dark:bg-[#f0f0f0] dark:text-[#1b1b18] dark:hover:bg-white"
+            <!-- Order Status Message -->
+            <div
+                v-if="orderStatusMessage"
+                :class="[
+                    'w-full rounded-md p-3 text-sm',
+                    orderStatusType === 'success' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : '',
+                    orderStatusType === 'error' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' : '',
+                ]"
             >
-                Buy with 1-Click
+                {{ orderStatusMessage }}
+            </div>
+
+            <Button @click="handleBuyClick" class="w-full" :disabled="isCreatingOrder">
+                <template v-if="isCreatingOrder">
+                    <div class="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                </template>
+                <template v-else-if="isLoggedIn">
+                    <ShoppingCart class="mr-2 h-4 w-4" />
+                    Buy with click
+                </template>
+                <template v-else>
+                    <LogIn class="mr-2 h-4 w-4" />
+                    Entrar para Comprar
+                </template>
             </Button>
         </CardFooter>
     </Card>
