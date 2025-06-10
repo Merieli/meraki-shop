@@ -4,36 +4,49 @@ import AppHeader from '@/components/AppHeader.vue';
 import CustomerTestimonials from '@/components/CustomerTestimonials.vue';
 import ProductCard from '@/components/ProductCard.vue';
 import TopBanner from '@/components/TopBanner.vue';
+import { useTopBannerData } from '@/composables/useTopBannerData';
 import { ApiProduct, Product } from '@/types/product';
+import { apiService } from '@/utils/api';
 import { fromCents } from '@/utils/money';
 import { Head, usePage } from '@inertiajs/vue3';
-import axios from 'axios';
 import { computed, onMounted, ref } from 'vue';
 
-const isLoggedIn = computed(() => {
-    // @ts-ignore - Acessando a propriedade dinamicamente
-    return !!usePage().props.auth && !!usePage().props.auth.user;
-});
+// Types
+interface Address {
+    street: string;
+    number: string;
+    city: string;
+}
+
+interface CreditCard {
+    card_last4: string;
+}
+
+const page = usePage<{ auth?: { user: any } }>();
+const isLoggedIn = computed(() => !!page.props.auth?.user);
 
 const products = ref<Product[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
+
+// Use o composable para os dados do TopBanner
+const { address, creditCard, fetchTopBannerData } = useTopBannerData();
 
 const fetchProducts = async () => {
     loading.value = true;
     error.value = null;
 
     try {
-        const response = await axios.get('/api/products');
+        const response = await apiService.list<{ data: ApiProduct[] }>('products');
 
-        if (response.data && Array.isArray(response.data.data)) {
-            products.value = response.data.data.map((item: ApiProduct) => ({
+        if (response && Array.isArray(response.data)) {
+            products.value = response.data.map((item: ApiProduct) => ({
                 id: item.id,
                 name: item.name,
                 price: fromCents(Number(item.price)),
                 shortDescription: item.short_description || '',
                 thumbnail: item.thumbnail || 'https://via.placeholder.com/150',
-                inStock: item.stock && item.stock > 0,
+                inStock: !!item.stock && item.stock > 0,
                 rating: item.rating || 0,
             }));
         } else {
@@ -81,6 +94,7 @@ const fetchProducts = async () => {
 
 onMounted(() => {
     fetchProducts();
+    fetchTopBannerData();
 });
 </script>
 
@@ -91,7 +105,7 @@ onMounted(() => {
     </Head>
 
     <div v-if="isLoggedIn" class="fixed top-0 left-0 z-50 w-full">
-        <TopBanner cardLastDigits="2345" addressRaw="Pennsylvania" addressNumber="1500" addressCity="San Francisco" />
+        <TopBanner :address="address" :credit-card="creditCard" />
     </div>
 
     <div
