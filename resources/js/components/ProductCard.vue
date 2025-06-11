@@ -41,10 +41,10 @@ const handleBuyClick = async (e: Event) => {
         await apiService.create('order', orderData, true);
 
         orderStatusType.value = 'success';
-        orderStatusMessage.value = 'Pedido criado! Verifique em "Meus Pedidos".';
+        orderStatusMessage.value = 'Order created! Check "My Orders" for details.';
     } catch (err: any) {
         orderStatusType.value = 'error';
-        orderStatusMessage.value = err.response?.data?.message || 'Falha ao criar pedido.';
+        orderStatusMessage.value = err.response?.data?.message || 'Failed to create order.';
         console.error('Error creating order:', err);
     } finally {
         isCreatingOrder.value = false;
@@ -99,7 +99,7 @@ const handleBuyClick = async (e: Event) => {
                 </template>
                 <template v-else>
                     <LogIn class="mr-2 h-4 w-4" />
-                    Entrar para Comprar
+                    Login to Buy
                 </template>
             </Button>
         </CardFooter>

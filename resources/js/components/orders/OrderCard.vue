@@ -2,7 +2,7 @@
 import { formatDate } from '@/utils/formatters';
 import { formatCurrency } from '@/utils/money';
 import { ChevronDown, ChevronUp } from 'lucide-vue-next';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import type { OrderItemData } from './OrderItem.vue';
 import OrderItem from './OrderItem.vue';
 
@@ -24,7 +24,11 @@ const toggleExpand = () => {
     isExpanded.value = !isExpanded.value;
 };
 
+const hasItems = computed(() => props.order.items && props.order.items.length > 0);
+
 const getTotalAmount = (): number => {
+    if (!hasItems.value) return 0;
+
     return props.order.items.reduce((total, item) => {
         return total + item.unit_price * item.quantity;
     }, 0);
@@ -72,11 +76,14 @@ const getStatusText = (): string => {
                 <div>{{ order.payment_method }}</div>
             </div>
 
-            <div class="mb-4">
+            <div v-if="hasItems" class="mb-4">
                 <div class="text-muted-foreground mb-2 text-sm">Order Items</div>
                 <div class="space-y-1">
                     <OrderItem v-for="item in order.items" :key="item.id" :item="item" />
                 </div>
+            </div>
+            <div v-else class="text-muted-foreground mb-4 text-center">
+                <p>No items in this order</p>
             </div>
 
             <div class="flex justify-between border-t pt-2 font-semibold">

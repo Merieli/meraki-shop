@@ -38,6 +38,9 @@ Route::get('authenticate', function (AuthKitAuthenticationRequest $request) {
             true
         );
 
+        // Também armazena o token na sessão para que o JavaScript possa acessá-lo
+        session(['api_token' => $token]);
+
         return redirect()->route('orders')
             ->withCookie($cookie)
             ->with('api_token', $token);
@@ -48,7 +51,10 @@ Route::get('authenticate', function (AuthKitAuthenticationRequest $request) {
 })->middleware(['web', 'guest'])->name('authenticate');
 
 Route::match(['get', 'post'], 'logout', function (Request $request) {
-    // Limpa o cookie do token
+    if (Auth::check()) {
+        Auth::user()->tokens()->delete();
+    }
+    
     $cookie = cookie('X-API-TOKEN', '', -1);
     
     Auth::logout();

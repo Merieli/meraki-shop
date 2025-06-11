@@ -11,17 +11,6 @@ import { fromCents } from '@/utils/money';
 import { Head, usePage } from '@inertiajs/vue3';
 import { computed, onMounted, ref } from 'vue';
 
-// Types
-interface Address {
-    street: string;
-    number: string;
-    city: string;
-}
-
-interface CreditCard {
-    card_last4: string;
-}
-
 const page = usePage<{ auth?: { user: any } }>();
 const isLoggedIn = computed(() => !!page.props.auth?.user);
 
@@ -29,7 +18,6 @@ const products = ref<Product[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
 
-// Use o composable para os dados do TopBanner
 const { address, creditCard, fetchTopBannerData } = useTopBannerData();
 
 const fetchProducts = async () => {
@@ -55,38 +43,6 @@ const fetchProducts = async () => {
     } catch (err) {
         console.error('Error fetching products:', err);
         error.value = 'Failed to load products. Please try again later.';
-        if (import.meta.env.DEV) {
-            products.value = [
-                {
-                    id: 1,
-                    name: 'Pro Sports Sneakers',
-                    price: 299.9,
-                    thumbnail: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff',
-                    shortDescription: 'Professional sports sneakers with advanced cushioning.',
-                    rating: 4.5,
-                    inStock: true,
-                },
-                {
-                    id: 2,
-                    name: 'Basic T-Shirt',
-                    price: 79.9,
-                    thumbnail: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab',
-                    shortDescription: 'Comfortable cotton t-shirt for everyday use.',
-                    rating: 4.0,
-                    inStock: true,
-                },
-                {
-                    id: 3,
-                    name: 'Smart Watch',
-                    price: 499.9,
-                    thumbnail: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12',
-                    image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12',
-                    shortDescription: 'Advanced smartwatch with health tracking features.',
-                    rating: 4.8,
-                    inStock: true,
-                },
-            ];
-        }
     } finally {
         loading.value = false;
     }

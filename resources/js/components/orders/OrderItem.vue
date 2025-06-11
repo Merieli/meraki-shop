@@ -20,7 +20,7 @@ defineProps<{
     <div class="flex items-center justify-between border-b py-3 last:border-b-0">
         <div class="flex-1">
             <h4 class="font-medium">{{ item.product_name }}</h4>
-            <p class="text-muted-foreground text-sm">Variation: {{ item.variation_name }}</p>
+            <p class="text-muted-foreground text-sm">Variant: {{ item.variation_name }}</p>
         </div>
         <div class="flex flex-col items-end">
             <span class="font-medium">{{ formatCurrency(item.unit_price, 'USD', true) }}</span>

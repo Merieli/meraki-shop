@@ -10,7 +10,7 @@ import { onMounted, ref } from 'vue';
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
-        title: 'Meus Pedidos',
+        title: 'My Orders',
         href: '/orders',
     },
 ];
@@ -27,10 +27,10 @@ const fetchOrders = async () => {
     try {
         const response = await apiService.list<OrderData[]>('order', {}, true);
         orders.value = response;
-        success.value = 'Pedidos carregados com sucesso!';
+        success.value = 'Orders loaded successfully!';
     } catch (err: any) {
-        console.error('Erro ao buscar pedidos:', err);
-        error.value = err.response?.data?.message || 'Ocorreu um erro ao buscar seus pedidos. Tente novamente.';
+        console.error('Error fetching orders:', err);
+        error.value = err.response?.data?.message || 'An error occurred while fetching your orders. Please try again.';
         orders.value = [];
     } finally {
         isLoading.value = false;
@@ -44,15 +44,15 @@ onMounted(() => {
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbItems">
-        <Head title="Meus Pedidos" />
+        <Head title="My Orders" />
 
         <div class="space-y-6 p-6 pb-16">
             <div class="space-y-0.5">
-                <h2 class="text-2xl font-bold tracking-tight">Meus Pedidos</h2>
-                <p class="text-muted-foreground">Visualize e acompanhe todos os seus pedidos</p>
+                <h2 class="text-2xl font-bold tracking-tight">My Orders</h2>
+                <p class="text-muted-foreground">View and track all your orders</p>
             </div>
 
-            <!-- Mensagens de erro/sucesso -->
+            <!-- Error/Success messages -->
             <Alert v-if="error" variant="destructive">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path
@@ -61,7 +61,7 @@ onMounted(() => {
                         clip-rule="evenodd"
                     />
                 </svg>
-                <AlertTitle>Erro</AlertTitle>
+                <AlertTitle>Error</AlertTitle>
                 <AlertDescription>{{ error }}</AlertDescription>
             </Alert>
 
@@ -73,7 +73,7 @@ onMounted(() => {
                         clip-rule="evenodd"
                     />
                 </svg>
-                <AlertTitle>Sucesso</AlertTitle>
+                <AlertTitle>Success</AlertTitle>
                 <AlertDescription>{{ success }}</AlertDescription>
             </Alert>
 

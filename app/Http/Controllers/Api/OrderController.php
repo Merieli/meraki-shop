@@ -14,6 +14,7 @@ use MerakiShop\Models\{
 };
 use MerakiShop\Facades\Logger;
 use Illuminate\Support\Facades\DB;
+use MerakiShop\Models\Product;
 
 class OrderController extends Controller
 {
@@ -24,7 +25,7 @@ class OrderController extends Controller
     {
         try {
             if ($request->input('scope') === 'all') {
-                $orders = Order::with(['orderItems', 'user'])
+                $orders = Order::with(['orderItem.product', 'user'])
                     ->latest()
                     ->take(5)
                     ->get();
@@ -33,24 +34,50 @@ class OrderController extends Controller
             } else {
                 $user = User::find($user['id']);
                 if (!$user) {
-                    return response()->json(['message' => 'Usuário não encontrado'], 404);
+                    return response()->json(['message' => 'User not found'], 404);
                 }
 
                 $orders = Order::where('user_id', $user['id'])
-                    ->with(['orderItems.product'])
+                    ->with(['orderItem.product'])
                     ->get();
 
                 if ($orders->isEmpty()) {
-                    return response()->json(['message' => 'Nenhum pedido existente'], 404);
+                    return response()->json(['message' => 'No existing orders'], 404);
                 }
 
                 Logger::info('Orders found for user', ['user_id' => $user['id'], 'count' => $orders->count()]);
             }
-            return response()->json($orders);
+
+            // Transform orders data to match frontend expectations
+            $formattedOrders = $orders->map(function ($order) {
+                $item = $order->orderItem;
+                $product = $item ? $item->product : null;
+
+                return [
+                    'id' => $order->id,
+                    'status' => $order->status,
+                    'payment_method' => $order->payment_method,
+                    'created_at' => $order->created_at,
+                    'updated_at' => $order->updated_at,
+                    'items' => $item ? [
+                        [
+                            'id' => $item->id,
+                            'product_id' => $item->product_id,
+                            'variation_id' => $item->variation_id,
+                            'product_name' => $product ? $product->name : 'Unknown Product',
+                            'variation_name' => $item->variation ? $item->variation->name : 'Standard',
+                            'quantity' => $item->quantity,
+                            'unit_price' => $item->unit_price
+                        ]
+                    ] : []
+                ];
+            });
+
+            return response()->json($formattedOrders);
         } catch (\Throwable $e) {
-            Logger::error('Erro ao buscar pedidos', [$e]);
+            Logger::error('Error fetching orders', [$e]);
             return response()->json(
-                ['message' => 'Erro ao buscar pedidos'],
+                ['message' => 'Error fetching orders'],
                 500
             );
         }
@@ -63,7 +90,7 @@ class OrderController extends Controller
     {
         try {
             if (empty($user['id'])) {
-                return response()->json(['message' => 'Usuário não encontrado'], 401);
+                return response()->json(['message' => 'User not found'], 401);
             }
 
             return DB::transaction(function () use ($request, $user) {
@@ -76,24 +103,43 @@ class OrderController extends Controller
                 $orderItem = OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $request->product_id,
-                    'quantity' => 1,
+                    'variation_id' => $request->variation_id ?? null,
+                    'quantity' => $request->quantity ?? 1,
                     'unit_price' => $request->unit_price,
                 ]);
 
-                Logger::error('Order created successfully', [
+                Logger::info('Order created successfully', [
                     'order_id' => $order->id,
                     'user_id' => $user['id']
                 ]);
 
-                return response()->json(
-                    $orderItem,
-                    201
-                );
+                $product = Product::find($request->product_id);
+
+                $response = [
+                    'id' => $order->id,
+                    'status' => $order->status,
+                    'payment_method' => $order->payment_method,
+                    'created_at' => $order->created_at,
+                    'updated_at' => $order->updated_at,
+                    'items' => [
+                        [
+                            'id' => $orderItem->id,
+                            'product_id' => $orderItem->product_id,
+                            'variation_id' => $orderItem->variation_id,
+                            'product_name' => $product ? $product->name : 'Unknown Product',
+                            'variation_name' => 'Standard',
+                            'quantity' => $orderItem->quantity,
+                            'unit_price' => $orderItem->unit_price
+                        ]
+                    ]
+                ];
+
+                return response()->json($response, 201);
             }, 3);
         } catch (\Throwable $e) {
-            Logger::error('Failed to create order', [$e]);
+            Logger::error('Failed to create order', [$e->getMessage()]);
             return response()->json(
-                ['message' => 'Erro ao criar pedido'],
+                ['message' => 'Failed to create order: ' . $e->getMessage()],
                 500
             );
         }
@@ -104,18 +150,30 @@ class OrderController extends Controller
      */
     public function update(UpdateOrderRequest $request, string $id, Authenticatable $user)
     {
-        return DB::transaction(function () use ($id, $request, $user) {
-            $order = $this->findById($id);
+        try {
+            return DB::transaction(function () use ($id, $request, $user) {
+                $order = Order::find($id);
 
-            if (!$order || $user['id'] !== $order->user_id) {
-                return null;
-            }
+                if (!$order) {
+                    return response()->json(['message' => 'Order not found'], 404);
+                }
 
-            $order->update([
-                'status' => $request['status'] ?? $order->status,
-            ]);
+                if ($user['id'] !== $order->user_id) {
+                    return response()->json(['message' => 'Unauthorized'], 403);
+                }
 
-            return $order->fresh();
-        }, 3);
+                $order->update([
+                    'status' => $request['status'] ?? $order->status,
+                ]);
+
+                return response()->json($order->fresh());
+            }, 3);
+        } catch (\Throwable $e) {
+            Logger::error('Failed to update order', [$e->getMessage()]);
+            return response()->json(
+                ['message' => 'Failed to update order: ' . $e->getMessage()],
+                500
+            );
+        }
     }
 }
