@@ -58,18 +58,10 @@ const validateRating = (value: any) => {
             <FormItem>
                 <FormLabel>Rating</FormLabel>
                 <FormControl>
-                    <Input
-                        v-model="formData.rating"
-                        @blur="validateField('rating', formData.rating)"
-                        type="number"
-                        min="1"
-                        max="5"
-                        step="1"
-                        placeholder="1"
-                    />
+                    <Input v-model="formData.rating" @blur="validateRating(formData.rating)" type="number" min="1" max="5" step="1" placeholder="1" />
                 </FormControl>
                 <FormDescription>Set the initial rating for the product (1-5).</FormDescription>
-                <FormMessage v-if="errors.rating">{{ errors.rating }}</FormMessage>
+                <FormMessage />
             </FormItem>
         </FormField>
     </div>
