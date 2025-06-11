@@ -8,7 +8,6 @@ import { Head } from '@inertiajs/vue3';
 import { DollarSign, ShoppingBag, TrendingUp } from 'lucide-vue-next';
 import { onMounted, ref } from 'vue';
 
-// Types
 type OrderStatus = 'completed' | 'processing' | 'pending' | 'cancelled';
 
 interface TableOrder {
@@ -40,9 +39,9 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const totalRevenue = ref(12845000); // $128,450.00
-const totalOrders = ref(432);
-const totalProfit = ref(5432000); // $54,320.00
+const totalRevenue = ref(0);
+const totalOrders = ref(0);
+const totalProfit = ref(0);
 const recentOrders = ref<TableOrder[]>([]);
 const isLoading = ref(true);
 const error = ref<string | null>(null);
@@ -53,13 +52,28 @@ const fetchRecentOrders = async () => {
     try {
         const ordersFromApi = await apiService.list<ApiOrder[]>('order', { scope: 'all' }, true);
 
-        recentOrders.value = ordersFromApi.map((order) => ({
-            id: order.id,
-            customer_name: order.user.name,
-            date: order.created_at,
-            amount: order.order_items.reduce((total, item) => total + item.unit_price * item.quantity, 0),
-            status: order.status,
-        }));
+        // Calcular métricas baseadas nos dados reais
+        totalOrders.value = ordersFromApi.length;
+
+        let revenue = 0;
+        ordersFromApi.forEach((order) => {
+            const orderTotal = order.order_items.reduce((total, item) => total + item.unit_price * item.quantity, 0);
+            revenue += orderTotal;
+        });
+
+        totalRevenue.value = revenue;
+        // Considerar lucro como 30% da receita (ajustar conforme necessário)
+        totalProfit.value = Math.round(revenue * 0.3);
+
+        recentOrders.value = ordersFromApi
+            .map((order) => ({
+                id: order.id,
+                customer_name: order.user.name,
+                date: order.created_at,
+                amount: order.order_items.reduce((total, item) => total + item.unit_price * item.quantity, 0),
+                status: order.status,
+            }))
+            .slice(0, 5); // Limit to 5 most recent orders for display
     } catch (err) {
         error.value = 'Could not load recent orders. Please try again later.';
         console.error(err);

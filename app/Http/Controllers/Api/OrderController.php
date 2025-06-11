@@ -27,10 +27,9 @@ class OrderController extends Controller
             if ($request->input('scope') === 'all') {
                 $orders = Order::with(['orderItem.product', 'user'])
                     ->latest()
-                    ->take(5)
                     ->get();
 
-                Logger::info('Recent orders found for dashboard', ['count' => $orders->count()]);
+                Logger::info('All orders found for dashboard', ['count' => $orders->count()]);
             } else {
                 $user = User::find($user['id']);
                 if (!$user) {
@@ -53,24 +52,49 @@ class OrderController extends Controller
                 $item = $order->orderItem;
                 $product = $item ? $item->product : null;
 
-                return [
-                    'id' => $order->id,
-                    'status' => $order->status,
-                    'payment_method' => $order->payment_method,
-                    'created_at' => $order->created_at,
-                    'updated_at' => $order->updated_at,
-                    'items' => $item ? [
-                        [
-                            'id' => $item->id,
-                            'product_id' => $item->product_id,
-                            'variation_id' => $item->variation_id,
-                            'product_name' => $product ? $product->name : 'Unknown Product',
-                            'variation_name' => $item->variation ? $item->variation->name : 'Standard',
-                            'quantity' => $item->quantity,
-                            'unit_price' => $item->unit_price
-                        ]
-                    ] : []
-                ];
+                if ($order->user) {
+                    // Format for dashboard view (includes user and order_items)
+                    return [
+                        'id' => $order->id,
+                        'status' => $order->status,
+                        'payment_method' => $order->payment_method,
+                        'created_at' => $order->created_at,
+                        'updated_at' => $order->updated_at,
+                        'user' => [
+                            'id' => $order->user->id,
+                            'name' => $order->user->name,
+                        ],
+                        'order_items' => $item ? [
+                            [
+                                'id' => $item->id,
+                                'product_id' => $item->product_id,
+                                'variation_id' => $item->variation_id,
+                                'quantity' => $item->quantity,
+                                'unit_price' => $item->unit_price
+                            ]
+                        ] : []
+                    ];
+                } else {
+                    // Format for user orders view
+                    return [
+                        'id' => $order->id,
+                        'status' => $order->status,
+                        'payment_method' => $order->payment_method,
+                        'created_at' => $order->created_at,
+                        'updated_at' => $order->updated_at,
+                        'items' => $item ? [
+                            [
+                                'id' => $item->id,
+                                'product_id' => $item->product_id,
+                                'variation_id' => $item->variation_id,
+                                'product_name' => $product ? $product->name : 'Unknown Product',
+                                'variation_name' => $item->variation ? $item->variation->name : 'Standard',
+                                'quantity' => $item->quantity,
+                                'unit_price' => $item->unit_price
+                            ]
+                        ] : []
+                    ];
+                }
             });
 
             return response()->json($formattedOrders);
