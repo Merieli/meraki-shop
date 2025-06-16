@@ -92,6 +92,17 @@ class ProductFactory extends Factory
                     'rating' => 5,
                     'sku' => 'DC85280'
                 ],
+                [
+                    'name' => 'Rocket Raccoon - Guardians of the Galaxy 3 - Art Scale 1/10',
+                    'price' => 9999,
+                    'cost_price' => 3999,
+                    'stock' => 1,
+                    'thumbnail' => 'https://cdn.statically.io/gh/Merieli/meraki-shop/main/.images-cdn/products/rocket-raccoon.png',
+                    'short_description' => 'Iron Studios',
+                    'description' => 'Sitting on a wall of electronic components inside the mobile research complex Arête Laboratories, the most sarcastic, foul-mouthed and cynical raccoon in the galaxy holds a blaster pistol in his right hand while in the other he carries his improvised keycard made from scrap metal to open the cages in Arête Laboratories. Dressed in his blue uniform with red accents, he joins his friends and allies to face his nemesis, and free innocent prisoners from a tragic fate at the hands of their creator, a madman obsessed with creating the perfect species from what he considered inferior life forms, and building his own utopia. Revealed first-hand at San Diego Comic Con 2023 at its stand, Iron Studios brings the statue "Rocket Raccoon - Guardians of the Galaxy Vol. 3 - Art Scale 1/10", the future new leader of the Guardians of the Galaxy on a diorama base that refers to the interior of the villain High Evolutionary\'s mobile research complex, in a new series where the statues of Groot and Star-Lord complete the scene.',
+                    'rating' => 5,
+                    'sku' => '250398_0_0_U'
+                ],
             ]);
         }
     }
