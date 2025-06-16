@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use MerakiShop\Models\Product;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\MerakiShop\Models\Product>
@@ -102,6 +101,49 @@ class ProductFactory extends Factory
                     'description' => 'Sitting on a wall of electronic components inside the mobile research complex Arête Laboratories, the most sarcastic, foul-mouthed and cynical raccoon in the galaxy holds a blaster pistol in his right hand while in the other he carries his improvised keycard made from scrap metal to open the cages in Arête Laboratories. Dressed in his blue uniform with red accents, he joins his friends and allies to face his nemesis, and free innocent prisoners from a tragic fate at the hands of their creator, a madman obsessed with creating the perfect species from what he considered inferior life forms, and building his own utopia. Revealed first-hand at San Diego Comic Con 2023 at its stand, Iron Studios brings the statue "Rocket Raccoon - Guardians of the Galaxy Vol. 3 - Art Scale 1/10", the future new leader of the Guardians of the Galaxy on a diorama base that refers to the interior of the villain High Evolutionary\'s mobile research complex, in a new series where the statues of Groot and Star-Lord complete the scene.',
                     'rating' => 5,
                     'sku' => '250398_0_0_U'
+                ],
+                [
+                    'name' => 'Shuri Black Panther - Black Panther Wakanda Forever - Sixth Scale',
+                    'price' => 39999,
+                    'cost_price' => 19999,
+                    'stock' => 1,
+                    'thumbnail' => 'https://cdn.statically.io/gh/Merieli/meraki-shop/main/.images-cdn/products/shuri-black-panther.png',
+                    'short_description' => 'Hot Toys',
+                    'rating' => 5,
+                    'sku' => '312595_0_0_U'
+                ],
+                [
+                    'name' => 'Old Logan - Wolverine - X-Men',
+                    'price' => 39999,
+                    'cost_price' => 19999,
+                    'stock' => 1,
+                    'thumbnail' => 'https://cdn.statically.io/gh/Merieli/meraki-shop/main/.images-cdn/products/old-logan.png',
+                    'short_description' => 'Art Scale 1/10 - Iron Studios',
+                    'description' => 'In a possible future where his enemies have prevailed and most of his allies have fallen, an old mutant warrior is unable to let go of his traumatic past and once again uses his claws in search of revenge and justice, hunting down those responsible for destroying his new life and deciding to eliminate all the villains of the new world and bring peace to Earth. On a base in the arid territory known as Hulkland, setting off on his mission with his luggage on his back, the reluctant hero continues wearing boots with iron toes, and wearing a leather overcoat over his worn-out t-shirt and jeans, and covering his head with a wide hat. Thus, Iron Studios presents its statue "Old Man Logan (Wolverine 50th Anniversary) - Marvel Comics - Art Scale 1/10", featuring the most popular X-Men superhero in his acclaimed aged alternative version from the 2008 Wolverine story arc written by Mark Millar and illustrated by Steve McNiven.',
+                    'rating' => 5,
+                    'sku' => '312595_0_0_U'
+                ],
+                [
+                    'name' => 'Obi-Wan Kenobi',
+                    'price' => 59999,
+                    'cost_price' => 9999,
+                    'stock' => 1,
+                    'thumbnail' => 'https://cdn.statically.io/gh/Merieli/meraki-shop/main/.images-cdn/products/obi-wan-kenobi_star-wars_scale_6.png',
+                    'short_description' => 'Star Wars - Sixth Scale Figure by Hot Toys',
+                    'description' => 'During the reign of the Galactic Empire, former Jedi™ Master, Obi-Wan Kenobi, embarked on a crucial mission. The once legendary Jedi must confront Darth Vader™ and face the wrath of the Empire… After witnessing the climactic finale of the Obi-Wan Kenobi live-action series, Sideshow and Hot Toys are thrilled to officially introduce the new Obi-Wan Kenobi Sixth Scale Collectible Figure from the DX series!  ',
+                    'rating' => 5,
+                    'sku' => '9114112'
+                ],
+                [
+                    'name' => 'Iron Man Mark V',
+                    'price' => 79999,
+                    'cost_price' => 39999,
+                    'stock' => 1,
+                    'thumbnail' => 'https://cdn.statically.io/gh/Merieli/meraki-shop/main/.images-cdn/products/iron-man.png',
+                    'short_description' => 'Sixth Scale Figure by Hot Toys',
+                    'description' => 'Sideshow and Hot Toys present the reissued Iron Man Mark V Sixth Scale Collectible Figure for fans who had missed its first release! Inspired by the signature appearance of Iron Man Mark V in Iron Man 2, the truly detailed "Suitcase Armor" figure in diecast has articulated armor pieces and highly poseable structure to recreate the film scenes.',
+                    'rating' => 5,
+                    'sku' => '907514'
                 ],
             ]);
         }
