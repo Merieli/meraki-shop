@@ -59,6 +59,39 @@ class ProductFactory extends Factory
                     'rating' => 2,
                     'sku' => 'FU87QV65344EE'
                 ],
+                [
+                    'name' => 'Star Wars The Vintage Collection IG-12, Grogu & Anzellan Deluxe',
+                    'price' => 2499,
+                    'cost_price' => 1199,
+                    'stock' => 1,
+                    'thumbnail' => 'https://cdn.statically.io/gh/Merieli/meraki-shop/main/.images-cdn/products/star-wars/grogu-anzellan-deluxe.png',
+                    'short_description' => 'Star Wars The Vintage Collection IG-12, Grogu & Anzellan Deluxe 3 3/4-Inch',
+                    'description' => 'Celebrate the legacy of Star Wars with premium vehicles, playsets, and action figures from Star Wars The Vintage Collection. (Additional products each sold separately. Subject to availability.) Based on IG-12, Grogu & an Anzellan from Star Wars: The Mandalorian, these 3 3/4-inch-scale figures make a great addition to any fan’s collection. Inspired by the original line, these collectibles feature premium detail and design across product and packaging, as well as collector-grade deco that fans have come to know and love. May the Force be with you! Ages 4 and up.',
+                    'rating' => 2,
+                    'sku' => 'HSG0670'
+                ],
+                [
+                    'name' => 'Star Wars: The Mandalorian Ashigaru Outer Rim Remnant Stormtrooper Meisho Movie Realization Action Figure',
+                    'price' => 11499,
+                    'cost_price' => 4999,
+                    'stock' => 1,
+                    'thumbnail' => 'https://cdn.statically.io/gh/Merieli/meraki-shop/main/.images-cdn/products/star-wars/mandalorian-ashigaru.jpg',
+                    'short_description' => 'The foot soldiers of the Empire return to the Meisho Movie Realization series, this time in the form of the Outer Rim Remnant Stormtroopers as seen on',
+                    'description' => ' With armor weathered and battered by countless battles, this version of the Ashigaru Stormtrooper also includes a Camtono container with Beskar ingots rendered in the Meisho style similar to what was seen held by the Stormtroopers guarding The Client\'s stronghold on Navarro. Figure is made of plastic and stands slightly over 7-inches tall.',
+                    'rating' => 4,
+                    'sku' => 'BLFBAS65072'
+                ],
+                [
+                    'name' => 'Star Wars Gallery Clone Wars Ahsoka Statue',
+                    'price' => 8699,
+                    'cost_price' => 4999,
+                    'stock' => 1,
+                    'thumbnail' => 'https://cdn.statically.io/gh/Merieli/meraki-shop/main/.images-cdn/products/star-wars/ahsoka.jpg',
+                    'short_description' => 'Star Wars Diamond Select Statues and Busts',
+                    'description' => 'The Padawan attacks! Ahsoka Tano swings her two lightsabers in front of an explosion as this Star Wars Gallery plastic statue!Made of high-quality plastic, this approximately 8-inch tall statue features interchangeable blades that appear to be moving or non-moving. The perfect companion to the Obi-WanGallery Statue, it comes packaged in a full-color windowbox.',
+                    'rating' => 5,
+                    'sku' => 'DC85280'
+                ],
             ]);
         }
     }
