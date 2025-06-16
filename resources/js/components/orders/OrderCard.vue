@@ -12,7 +12,7 @@ export interface OrderData {
     payment_method: string;
     created_at: string;
     updated_at: string;
-    items: OrderItemData[];
+    order_items: OrderItemData[];
 }
 
 const props = defineProps<{
@@ -24,12 +24,12 @@ const toggleExpand = () => {
     isExpanded.value = !isExpanded.value;
 };
 
-const hasItems = computed(() => props.order.items && props.order.items.length > 0);
+const hasItems = computed(() => props.order.order_items && props.order.order_items.length > 0);
 
 const getTotalAmount = (): number => {
     if (!hasItems.value) return 0;
 
-    return props.order.items.reduce((total, item) => {
+    return props.order.order_items.reduce((total, item) => {
         return total + item.unit_price * item.quantity;
     }, 0);
 };
@@ -79,7 +79,7 @@ const getStatusText = (): string => {
             <div v-if="hasItems" class="mb-4">
                 <div class="text-muted-foreground mb-2 text-sm">Order Items</div>
                 <div class="space-y-1">
-                    <OrderItem v-for="item in order.items" :key="item.id" :item="item" />
+                    <OrderItem v-for="item in order.order_items" :key="item.id" :item="item" />
                 </div>
             </div>
             <div v-else class="text-muted-foreground mb-4 text-center">

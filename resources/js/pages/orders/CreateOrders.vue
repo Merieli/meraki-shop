@@ -18,7 +18,6 @@ const breadcrumbItems: BreadcrumbItem[] = [
 const orders = ref<OrderData[]>([]);
 const isLoading = ref(true);
 const error = ref<string | null>(null);
-const success = ref<string | null>(null);
 
 const fetchOrders = async () => {
     isLoading.value = true;
@@ -27,7 +26,6 @@ const fetchOrders = async () => {
     try {
         const response = await apiService.list<OrderData[]>('order', {}, true);
         orders.value = response;
-        success.value = 'Orders loaded successfully!';
     } catch (err: any) {
         console.error('Error fetching orders:', err);
         error.value = err.response?.data?.message || 'An error occurred while fetching your orders. Please try again.';
@@ -63,18 +61,6 @@ onMounted(() => {
                 </svg>
                 <AlertTitle>Error</AlertTitle>
                 <AlertDescription>{{ error }}</AlertDescription>
-            </Alert>
-
-            <Alert v-if="success" variant="success">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path
-                        fill-rule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clip-rule="evenodd"
-                    />
-                </svg>
-                <AlertTitle>Success</AlertTitle>
-                <AlertDescription>{{ success }}</AlertDescription>
             </Alert>
 
             <div class="flex flex-col space-y-8 lg:flex-row lg:space-y-0 lg:space-x-12">

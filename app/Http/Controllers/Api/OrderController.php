@@ -25,7 +25,7 @@ class OrderController extends Controller
     {
         try {
             if ($request->input('scope') === 'all') {
-                $orders = Order::with(['orderItem.product', 'user'])
+                $orders = Order::with(['orderItems.product', 'user'])
                     ->latest()
                     ->get();
 
@@ -37,7 +37,7 @@ class OrderController extends Controller
                 }
 
                 $orders = Order::where('user_id', $user['id'])
-                    ->with(['orderItem.product'])
+                    ->with(['orderItems.product'])
                     ->get();
 
                 if ($orders->isEmpty()) {
@@ -49,11 +49,10 @@ class OrderController extends Controller
 
             // Transform orders data to match frontend expectations
             $formattedOrders = $orders->map(function ($order) {
-                $item = $order->orderItem;
-                $product = $item ? $item->product : null;
+                $items = $order->orderItems;
 
                 if ($order->user) {
-                    // Format for dashboard view (includes user and order_items)
+                    // Format for dashboard view
                     return [
                         'id' => $order->id,
                         'status' => $order->status,
@@ -64,15 +63,15 @@ class OrderController extends Controller
                             'id' => $order->user->id,
                             'name' => $order->user->name,
                         ],
-                        'order_items' => $item ? [
-                            [
+                        'order_items' => $items->map(function ($item) {
+                            return [
                                 'id' => $item->id,
                                 'product_id' => $item->product_id,
                                 'variation_id' => $item->variation_id,
                                 'quantity' => $item->quantity,
                                 'unit_price' => $item->unit_price
-                            ]
-                        ] : []
+                            ];
+                        })->toArray()
                     ];
                 } else {
                     // Format for user orders view
@@ -82,8 +81,9 @@ class OrderController extends Controller
                         'payment_method' => $order->payment_method,
                         'created_at' => $order->created_at,
                         'updated_at' => $order->updated_at,
-                        'items' => $item ? [
-                            [
+                        'items' => $items->map(function ($item) {
+                            $product = $item->product;
+                            return [
                                 'id' => $item->id,
                                 'product_id' => $item->product_id,
                                 'variation_id' => $item->variation_id,
@@ -91,8 +91,8 @@ class OrderController extends Controller
                                 'variation_name' => $item->variation ? $item->variation->name : 'Standard',
                                 'quantity' => $item->quantity,
                                 'unit_price' => $item->unit_price
-                            ]
-                        ] : []
+                            ];
+                        })->toArray()
                     ];
                 }
             });
