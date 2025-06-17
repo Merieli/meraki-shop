@@ -11,6 +11,26 @@ Meraki Shop é uma plataforma de e-commerce para colecionadores de figuras de a�
 Com o propósito de agilizar a experiência de compra, a plataforma foi desenhada para ser direta e eficiente. O usuário pode finalizar a compra em um clique, desde que o endereço e cartão de crédito estejam cadastrados, sem a necessidade de longos cadastros ou processos complicados. Para maior conveniência, todos os preços exibidos já incluem o valor do frete, eliminando surpresas no checkout e garantindo transparência total.
 
 
+## 🔭 Visão do Sistema
+
+A plataforma Meraki Shop é um e-commerce especializado para colecionadores, construído com uma arquitetura moderna que separa o backend do frontend, garantindo escalabilidade e manutenibilidade.
+
+O fluxo do usuário é projetado para ser simples e direto: após o cadastro e login (facilitado pelo WorkOS), o cliente pode salvar seu endereço e cartão de crédito para habilitar a funcionalidade de "compra com um clique", agilizando o processo de aquisição de itens colecionáveis. O sistema também diferencia usuários comuns de administradores, onde estes últimos possuem acesso a funcionalidades de gerenciamento de produtos e a um dashboard com métricas de vendas.
+
+
+## 🏗️ Arquitetura da Aplicação
+
+O projeto adota o padrão arquitetural **Model-View-Controller (MVC)** no backend com Laravel, complementado por um frontend desacoplado em Vue.js. Essa abordagem organiza o código de forma clara e eficiente.
+
+-   **Model (Modelo):** Representa a estrutura de dados e a lógica de negócio. Em Laravel, são as classes Eloquent localizadas em `app/Models/`. Elas são responsáveis por interagir com as tabelas do banco de dados. Por exemplo, o modelo `Product` gerencia os dados na tabela `products`.
+
+-   **View (Visão):** Camada responsável pela apresentação da interface do usuário. Neste projeto, a abordagem é híbrida. O Laravel serve uma view principal (`resources/views/app.blade.php`), que atua como um contêiner para a aplicação frontend. A renderização da interface e a interatividade são totalmente gerenciadas pelo Vue.js, cujos componentes e páginas estão em `resources/js/`.
+
+-   **Controller (Controlador):** Atua como o intermediário entre o Model e a View. Localizados em `app/Http/Controllers/`, os controladores recebem as requisições HTTP (enviadas pelo frontend Vue), utilizam os Models para consultar ou manipular dados e retornam uma resposta. Em vez de retornar uma view HTML completa, eles geralmente devolvem dados em formato JSON, que são consumidos pela aplicação Vue para atualizar a interface.
+
+Essa arquitetura, conhecida como "headless" ou API-driven, permite que o backend e o frontend sejam desenvolvidos e mantidos de forma independente, oferecendo maior flexibilidade e uma experiência de usuário mais fluida.
+
+
 ## ✨ Funcionalidades
 
 -   **Design Responsivo:** Interface adaptada para uma ótima experiência em desktops e dispositivos móveis.
@@ -36,6 +56,9 @@ O projeto é construído com uma stack moderna, aproveitando o poder do Laravel 
 -   **Frontend:** [Vue.js](https://vuejs.org/) - Integrado ao Laravel através de um starter kit, o Vue.js é responsável por criar uma interface de usuário interativa e dinâmica com o [TypeScript](https://www.typescriptlang.org/) para adicionar tipagem estática ao código do frontend, aumentando a segurança e a manutenibilidade.
 -   **Banco de Dados:** [PostgreSQL](https://www.postgresql.org/) - Um sistema de banco de dados objeto-relacional de código aberto, escolhido por sua confiabilidade e robustez.
 -   **Autenticação:** [WorkOS](https://workos.com/) - Serviço utilizado para gerenciar a autenticação de usuários de forma segura, incluindo login com provedores como o Google.
+
+
+## Diagrama do banco de dados
 
 
 ## 🖼️ Telas da Aplicação
