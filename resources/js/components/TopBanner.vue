@@ -24,10 +24,10 @@ const page = usePage();
 const isLoggedIn = computed(() => !!(page.props.auth as any).user);
 
 const formatAddress = (address: string): string => {
-    if (address.length > 15) {
+    if (address && address.length > 15) {
         return address.substring(0, 15) + '...';
     }
-    return address;
+    return address || '';
 };
 
 const goToRegisterCard = () => {

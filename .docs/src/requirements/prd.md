@@ -10,12 +10,12 @@ lastUpdated: true
 
 ## 🎯 Visão Geral
 
-Este projeto consiste na criação de um MVP de ecommerce simplificado, com funcionalidades básicas para cadastro de produtos, realização de compras e consulta de vendas. O objetivo é validar o modelo de negócio e testar a usabilidade da funcionalidade de compra rápida (1 clique) com usuários autenticados. O painel administrativo permitirá o gerenciamento básico de produtos, vendas e usuários.
+Este projeto consiste na criação de um MVP de ecommerce simplificado, com funcionalidades básicas para cadastro de produtos, realização de compras e consulta de vendas. O objetivo é validar o modelo de negócio e testar a usabilidade da funcionalidade de compra rápida (1 clique) com usuários autenticados. O painel administrativo permitirá o gerenciamento básico de produtos, pedidos, endereço e registro de cartão de crédito para o cliente e para o adiministrador também permitirá a criação de produtos e o controle de métricas de todos pedidos efetuados na loja.
 
 
 ## 📌 Objetivos
 
-- Permitir a venda de produtos online com experiência simples e eficiente.
+- Permitir a venda de produtos online com experiência simples e eficiente para compra de um clique.
 - Validar a funcionalidade de compra rápida via cartão de crédito cadastrado.
 - Disponibilizar painel administrativo mínimo para manutenção do catálogo e vendas.
 - Garantir que apenas usuários logados possam realizar compras.
@@ -54,8 +54,7 @@ Este projeto consiste na criação de um MVP de ecommerce simplificado, com func
 | RNF-001 | API deve responder em menos de 500ms                                    | Alta       |
 | RNF-002 | Aplicação deve estar disponível 99,9% do tempo                          | Alta       |
 | RNF-003 | Sistema responsivo (mobile first)                                       | Alta       |
-| RNF-004 | Autenticação segura com Google e JWT                                    | Alta       |
-| RNF-005 | Compra 1 clique deve simular integração com API de pagamentos (sandbox) | Média      |
+| RNF-004 | Autenticação segura com Google                                          | Alta       |
 
 
 ## 🚧 Restrições de Tecnologia

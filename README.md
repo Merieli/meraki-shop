@@ -77,6 +77,9 @@ composer install
 
 # Node.js Dependencies
 npm install
+
+# Build the dependencies to generate manifest
+npm run build
 ```
 
 **🖥️ Development**
