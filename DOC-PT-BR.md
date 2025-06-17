@@ -144,6 +144,12 @@ Abaixo estão algumas telas que demonstram o fluxo da aplicação.
 > Erro que é exibido ao tentar comprar sem um endereço e cartão de crédito cadastrados
 
 
+<div style="display: flex; justify-content:center" >
+    <img src=".prints/product-buy-with-success.png" width="1000px" >
+</div>
+
+> Compra do produto com sucesso quando todos os dados estão corretos
+
 ## 🚀 Como Utilizar
 
 1.  **Navegue pelos Produtos:** Na página inicial, você pode ver a lista de produtos disponíveis.
