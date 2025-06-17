@@ -2,6 +2,9 @@
 
 Meraki Shop é uma plataforma de e-commerce especializada para colecionadores de action figures raras e itens únicos. Nossa missão é oferecer um espaço seguro e exclusivo para que entusiastas possam encontrar e adquirir colecionáveis autenticados. O projeto foi desenvolvido com o objetivo de proporcionar uma experiência de compra fluida e segura, desde a visualização dos produtos até o gerenciamento de pedidos. Por ser um e-commerce com foco no mercado americano, toda a interface da aplicação está em inglês.
 
+A Meraki Shop é uma ecommerce de bonecos de figuras de ação, super-heróis e personagens de filmes e séries, com foco em colecionadores, com venda de peças únicas e limitadas, permitindo a compra de um boneco por vez, com entrega rápida e segura.
+
+
 ## ✨ Funcionalidades
 
 -   **Design Responsivo:** Interface adaptada para uma ótima experiência em desktops e dispositivos móveis.
