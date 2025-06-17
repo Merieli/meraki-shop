@@ -42,10 +42,6 @@ export default defineConfig({
                     { text: 'Diagrama ER', link: route.designArch + '/diagram-er' }
                 ],
             },
-            {
-                text: '⚙️ Decisões Técnicas',
-                collapsed: true,
-            },
         ],
 
         footer: {

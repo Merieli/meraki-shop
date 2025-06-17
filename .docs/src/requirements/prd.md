@@ -49,12 +49,12 @@ Este projeto consiste na criação de um MVP de ecommerce simplificado, com func
 
 ## 📑 Requisitos Não-Funcionais
 
-| ID      | Requisito                                                               | Prioridade |
-| :------ | :---------------------------------------------------------------------- | :--------- |
-| RNF-001 | API deve responder em menos de 500ms                                    | Alta       |
-| RNF-002 | Aplicação deve estar disponível 99,9% do tempo                          | Alta       |
-| RNF-003 | Sistema responsivo (mobile first)                                       | Alta       |
-| RNF-004 | Autenticação segura com Google                                          | Alta       |
+| ID      | Requisito                                      | Prioridade |
+| :------ | :--------------------------------------------- | :--------- |
+| RNF-001 | API deve responder em menos de 500ms           | Alta       |
+| RNF-002 | Aplicação deve estar disponível 99,9% do tempo | Alta       |
+| RNF-003 | Sistema responsivo (mobile first)              | Alta       |
+| RNF-004 | Autenticação segura com Google                 | Alta       |
 
 
 ## 🚧 Restrições de Tecnologia
@@ -76,7 +76,7 @@ Este projeto consiste na criação de um MVP de ecommerce simplificado, com func
 
 ## 📈 Métricas de Sucesso
 
-- Tempo médio de resposta da API abaixo de 500ms.
+- Tempo médio de resposta da API abaixo de 1500ms.
 - 100% de cobertura das funcionalidades propostas.
 - Zero compras realizadas sem autenticação.
 - Usuários conseguem realizar compra com 1 clique sem erros.
@@ -89,9 +89,8 @@ Este projeto consiste na criação de um MVP de ecommerce simplificado, com func
 | 2025-05-20 | Aprovação do PRD                            |
 | 2025-05-14 | Início da implementação                     |
 | 2025-06-02 | Catálogo, Cadastro/Login                    |
-| 2025-06-22 | Compra padrão e compra com 1 clique         |
-| 2025-07-12 | Consulta de compras e Painel Administrativo |
-| 2025-08-01 | Testes, ajustes finais e deploy             |
+| 2025-06-10 | Compra padrão e compra com 1 clique         |
+| 2025-06-10 | Consulta de compras e Painel Administrativo |
 
 
 ## 📎 Anexos e Referências

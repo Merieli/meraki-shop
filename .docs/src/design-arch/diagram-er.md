@@ -2,98 +2,6 @@
 
 [Ver no DrawDB](https://www.drawdb.app/editor?shareId=77b2549df4fc14594615fc9ca2adaca2)
 
-```mermaid
-erDiagram
-	product_attributes ||--|| products : references
-	product_attributes ||--|| attributes : references
-	variation_attributes ||--|| attributes : references
-	variation_attributes ||--|| variations : references
-	orders ||--|| users : references
-	order_items ||--|| orders : references
-	order_items ||--|| products : references
-	order_items ||--|| variations : references
-	customer_cards ||--|| users : references
-
-	users {
-		INTEGER id
-		VARCHAR(255) name
-		VARCHAR(255) email
-		TIMESTAMP email_verified_at
-		VARCHAR(255) workos_id
-		TEXT avatar
-		CHAR(1) role
-	}
-
-	products {
-		INTEGER id
-		VARCHAR(150) name
-		INTEGER price
-		INTEGER cost_price
-		INTEGER stock
-		TEXT thumbnail
-		TEXT images
-		VARCHAR(255) short_description
-		TEXT description
-		SMALLINT rating
-		VARCHAR(50) SKU
-		TIMESTAMP updated_at
-		TIMESTAMP created_at
-	}
-
-	product_attributes {
-		INTEGER id
-		INTEGER product_id
-		INTEGER attribute_id
-	}
-
-	attributes {
-		INTEGER id
-		VARCHAR(50) name
-		INTEGER product_ids
-	}
-
-	variation_attributes {
-		INTEGER id
-		INTEGER variation_id
-		INTEGER attribute_id
-	}
-
-	variations {
-		INTEGER id
-		VARCHAR(255) name
-		TEXT image_url
-		INTEGER price
-		INTEGER stock
-		VARCHAR(50) sku
-		SMALLINT available
-	}
-
-	orders {
-		INTEGER id
-		INTEGER user_id
-		TIMESTAMP created_at
-		VARCHAR(255) status
-	}
-
-	order_items {
-		INTEGER id
-		INTEGER order_id
-		INTEGER product_id
-		INTEGER variation_id
-		INTEGER quantity
-		INTEGER unit_price
-	}
-
-	customer_cards {
-		INTEGER id
-		INTEGER user_id
-		VARCHAR(255) card_token
-		CHAR(4) card_last4
-		VARCHAR(50) card_brand
-		TIMESTAMP created_at
-	}
-```
-
 ## Summary
 
 - [Diagrama de Entidade Relacionamento  ](#diagrama-de-entidade-relacionamento--)
@@ -110,26 +18,29 @@ erDiagram
     - [orders](#orders)
     - [order\_items](#order_items)
     - [customer\_cards](#customer_cards)
+    - [addresses](#addresses)
   - [Relationships](#relationships)
-
+  - [Database Diagram](#database-diagram)
 
 
 ## Database type
 
 - **Database system:** PostgreSQL
+  
 ## Table structure
 
 ### users
 
-| Name                  | Type         | Settings                              | References | Note                                                               |
-| --------------------- | ------------ | ------------------------------------- | ---------- | ------------------------------------------------------------------ |
-| **id**                | INTEGER      | 🔑 PK, not null, unique, autoincrement |            |                                                                    |
-| **name**              | VARCHAR(255) | not null                              |            |                                                                    |
-| **email**             | VARCHAR(255) | not null, unique                      |            |                                                                    |
-| **email_verified_at** | TIMESTAMP    | null                                  |            |                                                                    |
-| **workos_id**         | VARCHAR(255) | not null, unique                      |            |                                                                    |
-| **avatar**            | TEXT         | not null                              |            |                                                                    |
-| **role**              | CHAR(1)      | not null, default: c                  |            | Valores disponíveis "c" para clientes ou "a" para administradores. |
+| Name                  | Type         | Settings                              | References         | Note                                                               |
+| --------------------- | ------------ | ------------------------------------- | ------------------ | ------------------------------------------------------------------ |
+| **id**                | BIGINT       | 🔑 PK, not null, unique, autoincrement | fk_users_id_orders |                                                                    |
+| **name**              | VARCHAR(255) | not null                              |                    |                                                                    |
+| **email**             | VARCHAR(320) | not null, unique                      |                    |                                                                    |
+| **email_verified_at** | TIMESTAMP    | null                                  |                    |                                                                    |
+| **workos_id**         | VARCHAR(255) | not null, unique                      |                    | ID do workOS                                                       |
+| **avatar**            | TEXT         | not null                              |                    |                                                                    |
+| **role**              | CHAR(1)      | not null, default: c                  |                    | Valores disponíveis "c" para clientes ou "a" para administradores. |
+| **phone**             | VARCHAR(25)  | null                                  |                    |                                                                    |
 
 
 ### products
@@ -166,15 +77,14 @@ Vinculo entre atributos e produtos
 
 ### attributes
 
-| Name            | Type        | Settings                              | References | Note |
-| --------------- | ----------- | ------------------------------------- | ---------- | ---- |
-| **id**          | INTEGER     | 🔑 PK, not null, unique, autoincrement |            |      |
-| **name**        | VARCHAR(50) | not null                              |            |      |
-| **product_ids** | INTEGER     | null                                  |            |      |
+| Name     | Type        | Settings                              | References | Note |
+| -------- | ----------- | ------------------------------------- | ---------- | ---- |
+| **id**   | INTEGER     | 🔑 PK, not null, unique, autoincrement |            |      |
+| **name** | VARCHAR(50) | not null                              |            |      |
 
 
 ### variation_attributes
-
+Tabela de relação entre um atributo e uma variação
 | Name             | Type    | Settings                              | References                                      | Note |
 | ---------------- | ------- | ------------------------------------- | ----------------------------------------------- | ---- |
 | **id**           | INTEGER | 🔑 PK, not null, unique, autoincrement |                                                 |      |
@@ -192,25 +102,27 @@ Vinculo entre atributos e produtos
 | **price**     | INTEGER      | null                                  |            |                                                            |
 | **stock**     | INTEGER      | null                                  |            |                                                            |
 | **sku**       | VARCHAR(50)  | null                                  |            |                                                            |
-| **available** | SMALLINT     | not null, default: 0                  |            | O campo de disponibilidade é usado para produtos virtuais. |
+| **available** | SMALLINT     | null, default: 0                      |            | O campo de disponibilidade é usado para produtos virtuais. |
 
 
 ### orders
 
-| Name           | Type         | Settings                              | References              | Note |
-| -------------- | ------------ | ------------------------------------- | ----------------------- | ---- |
-| **id**         | INTEGER      | 🔑 PK, not null, unique, autoincrement |                         |      |
-| **user_id**    | INTEGER      | not null                              | fk_orders_user_id_users |      |
-| **created_at** | TIMESTAMP    | not null                              |                         |      |
-| **status**     | VARCHAR(255) | not null, default: pending            |                         |      |
+| Name               | Type        | Settings                              | References | Note                                                                                            |
+| ------------------ | ----------- | ------------------------------------- | ---------- | ----------------------------------------------------------------------------------------------- |
+| **id**             | BIGINT      | 🔑 PK, not null, unique, autoincrement |            |                                                                                                 |
+| **user_id**        | BIGINT      | not null                              |            |                                                                                                 |
+| **created_at**     | TIMESTAMP   | not null                              |            |                                                                                                 |
+| **status**         | VARCHAR(20) | not null, default: pending            |            | `pending`, `processing`, `shipped` , `delivered`, `cancelled`, `refunded`, `failed`, `on_hold`, |
+| `completed`        |
+| **payment_method** | VARCHAR(50) | not null                              |            |                                                                                                 |
 
 
 ### order_items
 
 | Name             | Type    | Settings                              | References                             | Note |
 | ---------------- | ------- | ------------------------------------- | -------------------------------------- | ---- |
-| **id**           | INTEGER | 🔑 PK, not null, unique, autoincrement |                                        |      |
-| **order_id**     | INTEGER | not null                              | fk_order_items_order_id_orders         |      |
+| **id**           | BIGINT  | 🔑 PK, not null, unique, autoincrement |                                        |      |
+| **order_id**     | BIGINT  | not null                              | fk_order_items_order_id_orders         |      |
 | **product_id**   | INTEGER | not null                              | fk_order_items_product_id_products     |      |
 | **variation_id** | INTEGER | not null                              | fk_order_items_variation_id_variations |      |
 | **quantity**     | INTEGER | not null                              |                                        |      |
@@ -222,11 +134,29 @@ Vinculo entre atributos e produtos
 | Name           | Type         | Settings                              | References                      | Note |
 | -------------- | ------------ | ------------------------------------- | ------------------------------- | ---- |
 | **id**         | INTEGER      | 🔑 PK, not null, unique, autoincrement |                                 |      |
-| **user_id**    | INTEGER      | not null                              | fk_customer_cards_user_id_users |      |
+| **user_id**    | BIGINT       | not null                              | fk_customer_cards_user_id_users |      |
 | **card_token** | VARCHAR(255) | not null                              |                                 |      |
 | **card_last4** | CHAR(4)      | not null                              |                                 |      |
 | **card_brand** | VARCHAR(50)  | not null                              |                                 |      |
 | **created_at** | TIMESTAMP    | not null                              |                                 |      |
+
+
+### addresses
+
+| Name               | Type         | Settings                              | References               | Note                   |
+| ------------------ | ------------ | ------------------------------------- | ------------------------ | ---------------------- |
+| **id**             | INTEGER      | 🔑 PK, not null, unique, autoincrement |                          |                        |
+| **user_id**        | BIGINT       | not null                              | fk_address_user_id_users |                        |
+| **label**          | VARCHAR(20)  | not null                              |                          | Ex: "Casa", "Trabalho" |
+| **recipient_name** | VARCHAR(100) | not null                              |                          |                        |
+| **street**         | VARCHAR(150) | not null                              |                          |                        |
+| **number**         | VARCHAR(20)  | null                                  |                          |                        |
+| **neighborhood**   | VARCHAR(80)  | not null                              |                          |                        |
+| **complement**     | VARCHAR(50)  | null                                  |                          |                        |
+| **city**           | VARCHAR(80)  | not null                              |                          |                        |
+| **state**          | VARCHAR(50)  | not null                              |                          |                        |
+| **country**        | VARCHAR(80)  | not null                              |                          |                        |
+| **postal_code**    | VARCHAR(20)  | not null                              |                          |                        |
 
 
 ## Relationships
@@ -235,9 +165,120 @@ Vinculo entre atributos e produtos
 - **product_attributes to attributes**: one_to_one
 - **variation_attributes to attributes**: one_to_one
 - **variation_attributes to variations**: one_to_one
-- **orders to users**: one_to_one
 - **order_items to orders**: one_to_one
 - **order_items to products**: one_to_one
 - **order_items to variations**: one_to_one
 - **customer_cards to users**: one_to_one
+- **addresses to users**: one_to_one
+- **users to orders**: one_to_many
 
+## Database Diagram
+
+```mermaid
+erDiagram
+	product_attributes ||--|| products : references
+	product_attributes ||--|| attributes : references
+	variation_attributes ||--|| attributes : references
+	variation_attributes ||--|| variations : references
+	order_items ||--|| orders : references
+	order_items ||--|| products : references
+	order_items ||--|| variations : references
+	customer_cards ||--|| users : references
+	addresses ||--|| users : references
+	users ||--o{ orders : references
+
+	users {
+		BIGINT id
+		VARCHAR(255) name
+		VARCHAR(320) email
+		TIMESTAMP email_verified_at
+		VARCHAR(255) workos_id
+		TEXT avatar
+		CHAR(1) role
+		VARCHAR(25) phone
+	}
+
+	products {
+		INTEGER id
+		VARCHAR(150) name
+		INTEGER price
+		INTEGER cost_price
+		INTEGER stock
+		TEXT thumbnail
+		TEXT images
+		VARCHAR(255) short_description
+		TEXT description
+		SMALLINT rating
+		VARCHAR(50) SKU
+		TIMESTAMP updated_at
+		TIMESTAMP created_at
+	}
+
+	product_attributes {
+		INTEGER id
+		INTEGER product_id
+		INTEGER attribute_id
+	}
+
+	attributes {
+		INTEGER id
+		VARCHAR(50) name
+	}
+
+	variation_attributes {
+		INTEGER id
+		INTEGER variation_id
+		INTEGER attribute_id
+	}
+
+	variations {
+		INTEGER id
+		VARCHAR(255) name
+		TEXT image_url
+		INTEGER price
+		INTEGER stock
+		VARCHAR(50) sku
+		SMALLINT available
+	}
+
+	orders {
+		BIGINT id
+		BIGINT user_id
+		TIMESTAMP created_at
+		VARCHAR(20) status
+		VARCHAR(50) payment_method
+	}
+
+	order_items {
+		BIGINT id
+		BIGINT order_id
+		INTEGER product_id
+		INTEGER variation_id
+		INTEGER quantity
+		INTEGER unit_price
+	}
+
+	customer_cards {
+		INTEGER id
+		BIGINT user_id
+		VARCHAR(255) card_token
+		CHAR(4) card_last4
+		VARCHAR(50) card_brand
+		TIMESTAMP created_at
+	}
+
+	addresses {
+		INTEGER id
+		BIGINT user_id
+		VARCHAR(20) label
+		VARCHAR(100) recipient_name
+		VARCHAR(150) street
+		VARCHAR(20) number
+		VARCHAR(80) neighborhood
+		VARCHAR(50) complement
+		VARCHAR(80) city
+		VARCHAR(50) state
+		VARCHAR(80) country
+		VARCHAR(20) postal_code
+	}
+```
