@@ -74,7 +74,7 @@ class ProductFactory extends Factory
                     'price' => 11499,
                     'cost_price' => 4999,
                     'stock' => 1,
-                    'thumbnail' => 'https://cdn.statically.io/gh/Merieli/meraki-shop/main/.images-cdn/products/star-wars/mandalorian-ashigaru.jpg',
+                    'thumbnail' => 'https://cdn.statically.io/gh/Merieli/meraki-shop/main/.images-cdn/products/star-wars/mandaloriam-ashigaru.jpg',
                     'short_description' => 'The foot soldiers of the Empire return to the Meisho Movie Realization series, this time in the form of the Outer Rim Remnant Stormtroopers as seen on',
                     'description' => ' With armor weathered and battered by countless battles, this version of the Ashigaru Stormtrooper also includes a Camtono container with Beskar ingots rendered in the Meisho style similar to what was seen held by the Stormtroopers guarding The Client\'s stronghold on Navarro. Figure is made of plastic and stands slightly over 7-inches tall.',
                     'rating' => 4,
