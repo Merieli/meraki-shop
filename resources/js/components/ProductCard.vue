@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { useTopBannerData } from '@/composables/useTopBannerData';
 import { Product } from '@/types/product';
 import { apiService } from '@/utils/api';
 import { formatCurrency, toCents } from '@/utils/money';
 import { usePage } from '@inertiajs/vue3';
 import { LogIn, ShoppingCart } from 'lucide-vue-next';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 const props = defineProps<{
     product: Product;
@@ -19,10 +20,24 @@ const isCreatingOrder = ref(false);
 const orderStatusMessage = ref<string | null>(null);
 const orderStatusType = ref<'success' | 'error' | null>(null);
 
+const { address, creditCard, fetchTopBannerData } = useTopBannerData();
+
+onMounted(() => {
+    if (isLoggedIn.value) {
+        fetchTopBannerData();
+    }
+});
+
 const handleBuyClick = async (e: Event) => {
     if (!isLoggedIn.value) {
         e.preventDefault();
         window.location.href = route('login');
+        return;
+    }
+
+    if (!address.value || !creditCard.value) {
+        orderStatusType.value = 'error';
+        orderStatusMessage.value = 'Please, register an address and credit card before purchasing.';
         return;
     }
 

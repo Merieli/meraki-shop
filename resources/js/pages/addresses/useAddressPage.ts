@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { apiService } from '@/utils/api';
 import { ref } from 'vue';
 
 export interface AddressApiData {
@@ -26,7 +26,7 @@ export function useAddressPage() {
         success.value = null;
 
         try {
-            await axios.post('/api/address', addressData);
+            await apiService.create('address', addressData, true);
             success.value = 'Endereço cadastrado com sucesso!';
             formKey.value++;
         } catch (err: any) {

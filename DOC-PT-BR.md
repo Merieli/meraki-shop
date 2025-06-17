@@ -60,6 +60,14 @@ Abaixo estão algumas telas que demonstram o fluxo da aplicação.
 
 > Nessa tela o usuário havia cadastrado apenas o cartão de crédito, por isso há um botão no topo para registro do endereço.
 
+
+### Página de Login
+
+<div style="display: flex; justify-content:center" >
+    <img src=".prints/login.png" width="1000px" >
+</div>
+
+
 ### Páginas do painel Administrativo
 
 #### Meus pedidos
@@ -118,6 +126,22 @@ Abaixo estão algumas telas que demonstram o fluxo da aplicação.
 <div style="display: flex; justify-content:center" >
     <img src=".prints/apparence.png" width="1000px" >
 </div>
+
+
+#### Registro de cartão de crédito com sucesso 
+
+<div style="display: flex; justify-content:center" >
+    <img src=".prints/register-card-success.png" width="1000px" >
+</div>
+
+
+#### Tentativa de compra do produto 
+
+<div style="display: flex; justify-content:center" >
+    <img src=".prints/products-buy-with-error.png" width="1000px" >
+</div>
+
+> Erro que é exibido ao tentar comprar sem um endereço e cartão de crédito cadastrados
 
 
 ## 🚀 Como Utilizar
