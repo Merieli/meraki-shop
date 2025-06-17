@@ -87,14 +87,21 @@ Abaixo estão algumas telas que demonstram o fluxo da aplicação.
 > O administrador é o usuário que controla os produtos do ecommerce, por isso pode ver os além das funcionalidades comuns, o registro de produtos e o Dashboard, com métricas de vendas e os pedidos mais recentes realizados pelos clientes.
 
 
-#### Registro de endereço
+#### Cadastro de Produto
+
+<div style="display: flex; justify-content:center" >
+    <img src=".prints/register-products.png" width="1000px" >
+</div>
+
+
+#### Cadastro de endereço
 
 <div style="display: flex; justify-content:center" >
     <img src=".prints/register-address.png" width="1000px" >
 </div>
 
 
-#### Registro de cartão de crédito
+#### Cadastro de cartão de crédito
 
 <div style="display: flex; justify-content:center" >
     <img src=".prints/register-card.png" width="1000px" >
