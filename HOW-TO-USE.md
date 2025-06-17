@@ -15,7 +15,14 @@ Meraki Shop é uma plataforma de e-commerce especializada para colecionadores de
 Para administradores:
 - **Registro de Produtos:** Gerencie a criação de novos produtos para loja
 
+## 🛠️ Stack de Tecnologias
 
+O projeto é construído com uma stack moderna, aproveitando o poder do Laravel para o backend e a reatividade do Vue.js para o frontend.
+
+-   **Backend:** [Laravel](https://laravel.com/) - Um framework PHP robusto e elegante, utilizado para construir toda a lógica de negócio e a API da aplicação.
+-   **Frontend:** [Vue.js](https://vuejs.org/) - Integrado ao Laravel através de um starter kit, o Vue.js é responsável por criar uma interface de usuário interativa e dinâmica.
+-   **Banco de Dados:** [PostgreSQL](https://www.postgresql.org/) - Um sistema de banco de dados objeto-relacional de código aberto, escolhido por sua confiabilidade e robustez.
+-   **Autenticação:** [WorkOS](https://workos.com/) - Serviço utilizado para gerenciar a autenticação de usuários de forma segura, incluindo login com provedores como o Google.
 
 ## 🖼️ Telas da Aplicação
 
@@ -68,4 +75,107 @@ meraki-shop/
 └── ...     # Outros diretórios de configuração do Laravel
 ```
 
+## 📖 Guia de Instalação
 
+### ✅ Pré-requisitos
+
+- Docker
+- Docker Compose
+- Git
+- Conta no [WorkOS](https://workos.com/)
+
+### 🏳️ Configuração e Desenvolvimento com Docker
+
+1.  Clone o repositório e entre no diretório:
+
+```sh
+git clone <repository-url>
+cd meraki-shop
+```
+
+2.  Copie o arquivo de ambiente:
+
+```sh
+cp .env.example .env
+```
+
+> 💡 Prepare as chaves necessárias para o projeto:
+> - Todas que começam com `WORKOS`, depois `DB_PASSWORD` e `DB_USERNAME` que devem ser o usuário da sua máquina.
+
+3.  Inicie uma sessão interativa do Docker para configurar o projeto:
+
+```sh
+docker compose build
+docker compose up -d
+docker exec -it meraki-shop-dev-php-fpm sh
+```
+
+4.  Dentro do contêiner Docker, instale as dependências e configure o projeto:
+
+```sh
+# Instale as dependências do PHP
+cmp install
+
+# Instale as dependências do Node.js
+npm install
+
+# Gere o manifesto do Vite
+npm run build
+
+# Gere a chave da aplicação
+php artisan key:generate
+
+# Execute as migrações
+php artisan migrate
+```
+
+### 🛠️ Comandos Comuns de Desenvolvimento
+
+Estes são os comandos padrão usados no desenvolvimento:
+
+**📦 Gerenciamento de Pacotes**
+```sh
+# Dependências do PHP
+composer install
+
+# Dependências do Node.js
+npm install
+
+# Compile as dependências para gerar o manifesto
+npm run build
+```
+
+**🖥️ Desenvolvimento**
+```sh
+# Inicia o servidor de desenvolvimento do Laravel, o ouvinte da fila, o observador de logs e o Vite
+cmp dev
+
+# Inicia o servidor de desenvolvimento da documentação
+npm run docs:dev
+```
+
+**🧹 Qualidade de Código**
+```sh
+# Formata o código PHP
+cmp lint:pint
+
+# Executa a análise do PHPStan
+cmp check
+
+# Executa todas as validações
+cmp valid
+
+# Formata o código do frontend
+npm run format
+```
+
+**🧪 Testes**
+```sh
+cmp test
+```
+
+### Acessando a Aplicação
+
+-   🏠 Aplicação principal: http://localhost:8086
+-   📖 Documentação da API: http://localhost:8086/docs/api
+-   📚 Documentação do Projeto no Vitepress: http://localhost:5175
