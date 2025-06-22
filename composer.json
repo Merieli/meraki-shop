@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/vue-starter-kit",
+    "name": "merieli/meraki-shop",
     "type": "project",
     "authors": [
         {
