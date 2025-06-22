@@ -1,12 +1,24 @@
-# 🛍️ Meraki Shop
+<div style="display: flex; justify-content:center" >
+    <img src=".images-cdn/meraki-shop-logo.png" width="250px" >
+</div>
+<br>
 
-> Meraki é uma palavra grega que significa "fazer algo com alma, criatividade ou amor"
+> Meraki is a Greek word that means "to do something with soul, creativity or love"
 
-## Stack do Projeto
 
-- Laravel 12 Starter Kit com Vue 3
+## 📝 Project Description
+
+Meraki Shop is an e-commerce platform for collectors of action figures, superheroes, and characters from movies and series, focused on collectors, selling unique and limited pieces, allowing the purchase of one figure at a time. The mission is to offer a safe and exclusive space for enthusiasts to find and acquire collectibles. The project was developed with the goal of providing a fluid and safe shopping experience, from viewing products to managing orders.
+
+
+## Stack
+
+- [Laravel 12](https://laravel.com/)
+- [Vue.js 3](https://vuejs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [WorkOS](https://workos.com/)
 - [CDN para imagens com Statically](https://statically.io/)
-https://cdn.statically.io/gh/Merieli/meraki-shop/main/.images-cdn/
 
 ## 📖  Installation Guide
 
