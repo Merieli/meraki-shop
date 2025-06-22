@@ -1,6 +1,6 @@
-<div style="display: flex; justify-content:center" >
-    <img src=".images-cdn/meraki-shop-logo.png" width="250px" >
-</div>
+ <p align="center">
+  <img src=".images-cdn/meraki-shop-logo.png" width="250px" >
+</p>
 <br>
 
 > Meraki is a Greek word that means "to do something with soul, creativity or love"
