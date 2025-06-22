@@ -28,19 +28,23 @@ export default defineConfig({
                 link: '/docs-how-prepare',
             },
             {
+                text: 'Pages of app',
+                link: '/pages-of-app',
+            },
+            {
                 text: '📄 Requisitos',
                 collapsed: true,
                 link: route.requirements + '/prd',
-                items: [
-                    { text: 'PRD', link: route.requirements + '/prd' }
-                ],
+                items: [{ text: 'PRD', link: route.requirements + '/prd' }],
             },
             {
                 text: '🎨 Design e Arq.',
                 collapsed: true,
-                items: [
-                    { text: 'Diagrama ER', link: route.designArch + '/diagram-er' }
-                ],
+                items: [{ text: 'Diagrama ER', link: route.designArch + '/diagram-er' }],
+            },
+            {
+                text: '⚙️ Decisões Técnicas',
+                collapsed: true,
             },
         ],
 

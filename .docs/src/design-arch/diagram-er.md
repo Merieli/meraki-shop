@@ -1,26 +1,34 @@
-# Diagrama de Entidade Relacionamento  <Badge type="warning" text="em andamento" />
+# Diagrama de Entidade Relacionamento  
 
 [Ver no DrawDB](https://www.drawdb.app/editor?shareId=77b2549df4fc14594615fc9ca2adaca2)
 
+Este projeto foi estruturado com um banco de dados relacional, utilizando o PostgreSQL. Abaixo está o diagrama entidade-relacionamento (ER) que ilustra as principais entidades e seus relacionamentos.
+
+<div style="display: flex; justify-content:center" >
+    <img src="../.prints/meraki-shop-er.png" width="1000px" >
+</div>
+
+Apesar do banco de dados comportar produtos com variação, a ideia inicial desse MVP é de que cada produto seja único, ou seja, não há variações de tamanho ou cor. Cada produto é representado por uma única entrada na tabela `products`, e o relacionamento com as tabelas `orders` e `order_items` permite que cada pedido contenha apenas um item por vez, reforçando a ideia de exclusividade e raridade dos produtos oferecidos. No futuro o sistema poderá ser expandido para suportar variações de produtos sem grandes mudanças na estrutura do banco de dados, mantendo a flexibilidade e escalabilidade da aplicação.
+
 ## Summary
 
-- [Diagrama de Entidade Relacionamento  ](#diagrama-de-entidade-relacionamento--)
-  - [Summary](#summary)
-  - [Database type](#database-type)
-  - [Table structure](#table-structure)
-    - [users](#users)
-    - [products](#products)
-      - [Indexes](#indexes)
-    - [product\_attributes](#product_attributes)
-    - [attributes](#attributes)
-    - [variation\_attributes](#variation_attributes)
-    - [variations](#variations)
-    - [orders](#orders)
-    - [order\_items](#order_items)
-    - [customer\_cards](#customer_cards)
-    - [addresses](#addresses)
-  - [Relationships](#relationships)
-  - [Database Diagram](#database-diagram)
+- [Diagrama de Entidade Relacionamento](#diagrama-de-entidade-relacionamento)
+	- [Summary](#summary)
+	- [Database type](#database-type)
+	- [Table structure](#table-structure)
+		- [users](#users)
+		- [products](#products)
+			- [Indexes](#indexes)
+		- [product\_attributes](#product_attributes)
+		- [attributes](#attributes)
+		- [variation\_attributes](#variation_attributes)
+		- [variations](#variations)
+		- [orders](#orders)
+		- [order\_items](#order_items)
+		- [customer\_cards](#customer_cards)
+		- [addresses](#addresses)
+	- [Relationships](#relationships)
+	- [Database Diagram](#database-diagram)
 
 
 ## Database type

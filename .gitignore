@@ -22,4 +22,7 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Vitepress
 .docs/.vitepress/cache
+.docs/.vitepress/dist
