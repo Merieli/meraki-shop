@@ -34,6 +34,5 @@ export default defineConfig({
         hmr: {
             host: 'localhost',
         },
-        allowedHosts: ['host.docker.internal'],
     },
 });
