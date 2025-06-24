@@ -21,8 +21,8 @@ class ProductServiceTest extends MockeryTestCase
     {
         parent::setUp();
 
-        if (!defined('Logger')) {
-            define(Logger::class, 'Logger');
+        if (!class_exists('Logger')) {
+            class_alias(Logger::class, 'Logger');
         }
 
         $this->repository = Mockery::mock(ProductRepositoryInterface::class);
