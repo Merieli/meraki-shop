@@ -2,12 +2,15 @@
 
 namespace MerakiShop\Services;
 
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use MerakiShop\Contracts\ProductRepositoryInterface;
 use MerakiShop\Contracts\Services\ProductServiceInterface;
+use MerakiShop\Facades\Logger;
 use MerakiShop\Http\Requests\ProductFormRequest;
 use MerakiShop\Models\Product;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductService implements ProductServiceInterface
 {
@@ -16,7 +19,26 @@ class ProductService implements ProductServiceInterface
 
     public function getProducts(Request $request): Builder
     {
-        return $this->repository->list($request);
+        try {
+            Logger::info('Get Products', [
+                'request' => $request
+            ]);
+            
+            return $this->repository->list($request);
+        } catch  (Exception $e) {
+            Logger::error('Get Products', [
+                'exception' => $e,
+                'request' => $request
+            ]);
+
+            return response()
+                ->json(
+                    [
+                        'message' => 'Não foi possível obter os produtos'
+                    ],
+                    $e->getCode()
+                );
+        }
     }
 
     public function findProduct(string $id): Product | null
