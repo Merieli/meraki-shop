@@ -10,7 +10,6 @@ use MerakiShop\Contracts\Services\ProductServiceInterface;
 use MerakiShop\Facades\Logger;
 use MerakiShop\Http\Requests\ProductFormRequest;
 use MerakiShop\Models\Product;
-use Symfony\Component\HttpFoundation\Response;
 
 class ProductService implements ProductServiceInterface
 {

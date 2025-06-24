@@ -18,25 +18,14 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        try {
-            $query = ProductService::getProducts($request);
+        $query = ProductService::getProducts($request);
 
-            $size = 25;
-            if ($request->has('size')) {
-                $size = $request->size;
-            }
-
-            return $query->paginate($size);
-        } catch (\Throwable $e) {
-            $statusText = Response::$statusTexts[Response::HTTP_UNPROCESSABLE_ENTITY];
-            return response()
-                ->json(
-                    [
-                        'message' => $statusText
-                    ],
-                    Response::HTTP_UNPROCESSABLE_ENTITY
-                );
+        $size = 25;
+        if ($request->has('size')) {
+            $size = $request->size;
         }
+
+        return $query->paginate($size);
     }
 
 
