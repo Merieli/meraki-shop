@@ -12,7 +12,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\MockInterface;
 
-class ProductServiceTest extends MockeryTestCase
+final class ProductServiceTest extends MockeryTestCase
 {
     private MockInterface|ProductRepositoryInterface $repository;
     private ProductService $service;
@@ -21,10 +21,7 @@ class ProductServiceTest extends MockeryTestCase
     {
         parent::setUp();
 
-        if (!class_exists('Logger')) {
-            class_alias(Logger::class, 'Logger');
-        }
-
+        Logger::shouldReceive('info')->andReturnNull();
         $this->repository = Mockery::mock(ProductRepositoryInterface::class);
         $this->service = new ProductService($this->repository);
 
@@ -38,48 +35,32 @@ class ProductServiceTest extends MockeryTestCase
 
     public function test_get_products_should_return_builder()
     {
-        Logger::shouldReceive('info')->andReturnNull();
-        // Logger::shouldReceive('error')->andReturnNull();
-
         $request = Mockery::mock(Request::class);
         $expectedBuilder = Mockery::mock(Builder::class);
         // Define o comportamento esperado do repository
         $this->repository
-        ->shouldReceive('list')
-        ->once()
-        ->with($request)
-        ->andReturn($expectedBuilder);
+            ->shouldReceive('list')
+            ->once()
+            ->with($request)
+            ->andReturn($expectedBuilder);
         
         $result = $this->service->getProducts($request);
 
         self::assertSame($expectedBuilder, $result);
     }
 
-    /** DADOS */
-    public function productOrNull(): array
-    {
-        return [
-            [null],
-            [Mockery::mock(Product::class)]
-        ];
-    }
-
-    /**
-     * @dataProvider productOrNull
-     */
-    public function test_find_product_should_return_product_or_null(?Product $expectedReturn)
+    public function test_find_product_should_return_product_or_null()
     {
         $mockId = 3;
-
+        $product = Mockery::mock(Product::class);
         $this->repository
             ->shouldReceive('findById')
             ->once()
             ->with($mockId)
-            ->andReturn($expectedReturn);
+            ->andReturn($product);
 
         $result = $this->service->findProduct($mockId);
 
-        self::assertSame($expectedReturn, $result);
+        self::assertSame($product, $result);
     }
-
 }

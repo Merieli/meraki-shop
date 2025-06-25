@@ -34,20 +34,7 @@ class ProductController extends Controller
      */
     public function store(ProductFormRequest $request)
     {
-        try {
-            $product = ProductService::createProduct($request);
-
-            return response()->json($product, Response::HTTP_CREATED);
-        } catch (\Throwable $e) {
-            Logger::error('Falha ao salvar o produto', [$e]);
-
-            $statusText = Response::$statusTexts[Response::HTTP_UNPROCESSABLE_ENTITY];
-
-            return response()
-                ->json([
-                    'message' => $statusText
-                ], status: Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        return ProductService::createProduct($request->validated());
     }
 
     /**
@@ -55,23 +42,7 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        try {
-            $product = ProductService::findProduct($id);
-
-            if (!$product) {
-                return response()->json([
-                    'message' => 'Produto não encontrado'
-                ], Response::HTTP_NOT_FOUND);
-            }
-
-            return response()->json($product);
-        } catch (\Throwable $e) {
-            Logger::error('Falha ao buscar produto ->', [$e]);
-
-            return response()->json([
-                'message' => Response::$statusTexts[Response::HTTP_INTERNAL_SERVER_ERROR]
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return ProductService::findProduct($id);
     }
 
     /**
@@ -79,23 +50,7 @@ class ProductController extends Controller
      */
     public function update(ProductFormRequest $request, string $id)
     {
-        try {
-            $product = ProductService::updateProduct( $request, $id);
-
-            if (!$product) {
-                return response()->json([
-                    'message' => 'Produto não encontrado'
-                ], Response::HTTP_NOT_FOUND);
-            }
-
-            return response()->json($product);
-        } catch (\Throwable $e) {
-            Logger::error('Falha ao atualizar produto', [$e]);
-
-            return response()->json([
-                'message' => Response::$statusTexts[Response::HTTP_UNPROCESSABLE_ENTITY]
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        return ProductService::updateProduct( $request->validated(), $id);
     }
 
     /**
@@ -103,22 +58,6 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        try {
-            $deleted = ProductService::deleteProduct($id);
-
-            if (!$deleted) {
-                return response()->json([
-                    'message' => 'Produto não encontrado'
-                ], Response::HTTP_NOT_FOUND);
-            }
-
-            return response()->json(null, Response::HTTP_NO_CONTENT);
-        } catch (\Throwable $e) {
-            Logger::error('Falha ao excluir produto', [$e]);
-
-            return response()->json([
-                'message' => Response::$statusTexts[Response::HTTP_INTERNAL_SERVER_ERROR]
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return ProductService::deleteProduct($id);
     }
 }

@@ -8,8 +8,8 @@ use Illuminate\Http\Request;
 use MerakiShop\Contracts\ProductRepositoryInterface;
 use MerakiShop\Contracts\Services\ProductServiceInterface;
 use MerakiShop\Facades\Logger;
-use MerakiShop\Http\Requests\ProductFormRequest;
 use MerakiShop\Models\Product;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductService implements ProductServiceInterface
 {
@@ -40,31 +40,88 @@ class ProductService implements ProductServiceInterface
         }
     }
 
+    public function createProduct(array $request): Product
+    {   
+        try {   
+            $newProduct = $this->repository
+                ->create($request);
+            
+                return response()->json($newProduct, Response::HTTP_CREATED);
+        } catch (\Throwable $e) {
+            Logger::error('Falha ao salvar o produto', [$e]);
+            
+            $statusText = Response::$statusTexts[Response::HTTP_UNPROCESSABLE_ENTITY];
+
+            return response()
+                ->json([
+                    'message' => $statusText
+                ], status: Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+    }
+
     public function findProduct(string $id): Product | null
     {
-        return $this->repository
-            ->findById($id);
+        try {
+            $product = $this->repository
+                ->findById($id);
+
+            if (!$product) {
+                return response()->json([
+                    'message' => 'Produto não encontrado'
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            return response()->json($product);
+        } catch (\Throwable $e) {
+            Logger::error('Falha ao buscar produto ->', [$e]);
+
+            return response()->json([
+                'message' => Response::$statusTexts[Response::HTTP_INTERNAL_SERVER_ERROR]
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
-    public function createProduct(ProductFormRequest $request): Product
+    public function updateProduct(array $request, string $id): Product | null
     {
-        $validated = $request->validated();
+        try {
+            $product = $this->repository
+                ->update($id, $request);
 
-        return $this->repository
-            ->create($validated);
-    }
+            if (!$product) {
+                return response()->json([
+                    'message' => 'Produto não encontrado'
+                ], Response::HTTP_NOT_FOUND);
+            }
 
-    public function updateProduct(ProductFormRequest $request, string $id): Product | null
-    {
-        $validated = $request->validated();
+            return response()->json($product);
+        } catch (\Throwable $e) {
+            Logger::error('Falha ao atualizar produto', [$e]);
 
-        return $this->repository
-            ->update($id, $validated);
+            return response()->json([
+                'message' => Response::$statusTexts[Response::HTTP_UNPROCESSABLE_ENTITY]
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
     }
 
     public function deleteProduct(string $id): bool
     {
-        return $this->repository
-            ->delete($id);
+        try {
+            $deleted = $this->repository
+                ->delete($id);
+
+            if (!$deleted) {
+                return response()->json([
+                    'message' => 'Produto não encontrado'
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            return response()->json(null, Response::HTTP_NO_CONTENT);
+        } catch (\Throwable $e) {
+            Logger::error('Falha ao excluir produto', [$e]);
+
+            return response()->json([
+                'message' => Response::$statusTexts[Response::HTTP_INTERNAL_SERVER_ERROR]
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }

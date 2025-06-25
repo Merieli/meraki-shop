@@ -2,6 +2,7 @@
 
 namespace MerakiShop\Providers;
 
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 use MerakiShop\Helpers\Logger;
 
@@ -12,7 +13,10 @@ class LoggerProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind('Logger', fn() => new Logger);
+        $loader = AliasLoader::getInstance();
+        $loader->alias('Logger', Logger::class);
+        
+        $this->app->bind('Logger',  Logger::class);
     }
 
     /**
