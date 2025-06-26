@@ -24,7 +24,7 @@ class ProductService implements ProductServiceInterface
             ]);
             
             return $this->repository->list($request);
-        } catch  (Exception $e) {
+        } catch (Exception $e) {
             Logger::error('Get Products', [
                 'exception' => $e,
                 'request' => $request
@@ -47,7 +47,7 @@ class ProductService implements ProductServiceInterface
                 ->create($request);
             
                 return response()->json($newProduct, Response::HTTP_CREATED);
-        } catch (\Throwable $e) {
+        } catch (Exception $e) {
             Logger::error('Falha ao salvar o produto', [$e]);
             
             $statusText = Response::$statusTexts[Response::HTTP_UNPROCESSABLE_ENTITY];
@@ -72,7 +72,7 @@ class ProductService implements ProductServiceInterface
             }
 
             return response()->json($product);
-        } catch (\Throwable $e) {
+        } catch (Exception $e) {
             Logger::error('Falha ao buscar produto ->', [$e]);
 
             return response()->json([
@@ -94,7 +94,7 @@ class ProductService implements ProductServiceInterface
             }
 
             return response()->json($product);
-        } catch (\Throwable $e) {
+        } catch (Exception $e) {
             Logger::error('Falha ao atualizar produto', [$e]);
 
             return response()->json([
@@ -116,7 +116,7 @@ class ProductService implements ProductServiceInterface
             }
 
             return response()->json(null, Response::HTTP_NO_CONTENT);
-        } catch (\Throwable $e) {
+        } catch (Exception $e) {
             Logger::error('Falha ao excluir produto', [$e]);
 
             return response()->json([

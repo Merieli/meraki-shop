@@ -37,7 +37,6 @@ final class ProductServiceTest extends MockeryTestCase
     {
         $request = Mockery::mock(Request::class);
         $expectedBuilder = Mockery::mock(Builder::class);
-        // Define o comportamento esperado do repository
         $this->repository
             ->shouldReceive('list')
             ->once()
@@ -49,7 +48,12 @@ final class ProductServiceTest extends MockeryTestCase
         self::assertSame($expectedBuilder, $result);
     }
 
-    public function test_find_product_should_return_product_or_null()
+    public function test_create_product_should_return_product()
+    {
+        
+    }
+
+    public function test_find_product_should_return_product()
     {
         $mockId = 3;
         $product = Mockery::mock(Product::class);
@@ -63,4 +67,6 @@ final class ProductServiceTest extends MockeryTestCase
 
         self::assertSame($product, $result);
     }
+
+
 }
