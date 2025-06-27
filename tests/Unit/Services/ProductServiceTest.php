@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use MerakiShop\Contracts\ProductRepositoryInterface;
 use MerakiShop\Facades\Logger;
 use MerakiShop\Models\Product;
+use MerakiShop\Repositories\ProductRepository;
 use MerakiShop\Services\ProductService;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -22,7 +23,8 @@ final class ProductServiceTest extends MockeryTestCase
         parent::setUp();
 
         Logger::shouldReceive('info')->andReturnNull();
-        $this->repository = Mockery::mock(ProductRepositoryInterface::class);
+        Logger::shouldReceive('error')->andReturnNull();
+        $this->repository = Mockery::mock(ProductRepository::class);
         $this->service = new ProductService($this->repository);
 
     }
@@ -48,7 +50,7 @@ final class ProductServiceTest extends MockeryTestCase
         self::assertSame($expectedBuilder, $result);
     }
 
-    public function test_create_product_should_return_product()
+    public function skip_test_create_product_should_return_product()
     {
         
     }
@@ -57,13 +59,15 @@ final class ProductServiceTest extends MockeryTestCase
     {
         $mockId = 3;
         $product = Mockery::mock(Product::class);
+
         $this->repository
             ->shouldReceive('findById')
             ->once()
             ->with($mockId)
             ->andReturn($product);
 
-        $result = $this->service->findProduct($mockId);
+        $result = $this->service
+            ->findProduct($mockId);
 
         self::assertSame($product, $result);
     }

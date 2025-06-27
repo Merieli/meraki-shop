@@ -10,6 +10,7 @@ use MerakiShop\Contracts\Services\ProductServiceInterface;
 use MerakiShop\Facades\Logger;
 use MerakiShop\Models\Product;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class ProductService implements ProductServiceInterface
 {
@@ -18,66 +19,32 @@ class ProductService implements ProductServiceInterface
 
     public function getProducts(Request $request): Builder
     {
-        try {
-            Logger::info('Get Products', [
-                'request' => $request
-            ]);
-            
-            return $this->repository->list($request);
-        } catch (Exception $e) {
-            Logger::error('Get Products', [
-                'exception' => $e,
-                'request' => $request
-            ]);
-
-            return response()
-                ->json(
-                    [
-                        'message' => 'Não foi possível obter os produtos'
-                    ],
-                    $e->getCode()
-                );
-        }
+        Logger::info('Get Products', [
+            'request' => $request
+        ]);
+        
+        return $this->repository->list($request);
     }
 
     public function createProduct(array $request): Product
     {   
-        try {   
-            $newProduct = $this->repository
-                ->create($request);
-            
-                return response()->json($newProduct, Response::HTTP_CREATED);
-        } catch (Exception $e) {
-            Logger::error('Falha ao salvar o produto', [$e]);
-            
-            $statusText = Response::$statusTexts[Response::HTTP_UNPROCESSABLE_ENTITY];
-
-            return response()
-                ->json([
-                    'message' => $statusText
-                ], status: Response::HTTP_UNPROCESSABLE_ENTITY);
-            }
+        return $this->repository
+            ->create($request);
     }
 
-    public function findProduct(string $id): Product | null
+    public function findProduct(string $id): Product | null | array
     {
         try {
             $product = $this->repository
                 ->findById($id);
 
-            if (!$product) {
-                return response()->json([
-                    'message' => 'Produto não encontrado'
-                ], Response::HTTP_NOT_FOUND);
-            }
-
-            return response()->json($product);
-        } catch (Exception $e) {
+            return $product;
+        } catch (Throwable $e) {
             Logger::error('Falha ao buscar produto ->', [$e]);
 
-            return response()->json([
+            return [
                 'message' => Response::$statusTexts[Response::HTTP_INTERNAL_SERVER_ERROR]
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            ];
         }
     }
 
@@ -94,7 +61,7 @@ class ProductService implements ProductServiceInterface
             }
 
             return response()->json($product);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             Logger::error('Falha ao atualizar produto', [$e]);
 
             return response()->json([
@@ -103,25 +70,15 @@ class ProductService implements ProductServiceInterface
         }
     }
 
-    public function deleteProduct(string $id): bool
+    public function deleteProduct(string $id): bool | null
     {
         try {
-            $deleted = $this->repository
+            return $this->repository
                 ->delete($id);
-
-            if (!$deleted) {
-                return response()->json([
-                    'message' => 'Produto não encontrado'
-                ], Response::HTTP_NOT_FOUND);
-            }
-
-            return response()->json(null, Response::HTTP_NO_CONTENT);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             Logger::error('Falha ao excluir produto', [$e]);
 
-            return response()->json([
-                'message' => Response::$statusTexts[Response::HTTP_INTERNAL_SERVER_ERROR]
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return null;
         }
     }
 }

@@ -10,8 +10,8 @@ use MerakiShop\Models\Product;
 interface ProductServiceInterface
 {
     public function getProducts(Request $request): Builder;
-    public function findProduct(string $id):  Product | null;
+    public function findProduct(string $id):  Product | null | array;
     public function createProduct(array $request): Product;
     public function updateProduct(array $request, string $id): Product | null;
-    public function deleteProduct(string $id): bool;
+    public function deleteProduct(string $id): bool | null;
 }

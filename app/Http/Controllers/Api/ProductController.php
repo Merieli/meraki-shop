@@ -8,6 +8,7 @@ use MerakiShop\Facades\ProductService;
 use Symfony\Component\HttpFoundation\Response;
 use MerakiShop\Http\Controllers\Controller;
 use MerakiShop\Http\Requests\ProductFormRequest;
+use Throwable;
 
 class ProductController extends Controller
 {
@@ -18,14 +19,29 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = ProductService::getProducts($request);
+        try {
+            $query = ProductService::getProducts($request);
 
-        $size = 25;
-        if ($request->has('size')) {
-            $size = $request->size;
+            $size = 25;
+            if ($request->has('size')) {
+                $size = $request->size;
+            }
+
+            return $query->paginate($size);
+        } catch (Throwable $e) {
+            Logger::error('Get Products', [
+                'exception' => $e,
+                'request' => $request
+            ]);
+
+            return response()
+                ->json(
+                    [
+                        'message' => 'Não foi possível obter os produtos'
+                    ],
+                    $e->getCode()
+                );
         }
-
-        return $query->paginate($size);
     }
 
 
@@ -34,7 +50,20 @@ class ProductController extends Controller
      */
     public function store(ProductFormRequest $request)
     {
-        return ProductService::createProduct($request->validated());
+        try {   
+            $newProduct = ProductService::createProduct($request->validated());
+            
+            return response()->json($newProduct, Response::HTTP_CREATED);
+        } catch (Throwable $e) {
+            Logger::error('Falha ao salvar o produto', [$e]);
+            
+            $statusText = Response::$statusTexts[Response::HTTP_UNPROCESSABLE_ENTITY];
+
+            return response()
+                ->json([
+                    'message' => $statusText
+                ], status: Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
     }
 
     /**
@@ -42,7 +71,15 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        return ProductService::findProduct($id);
+        $product = ProductService::findProduct($id);
+
+        if (!$product) {
+            return response()->json([
+                'message' => 'Produto não encontrado'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        return response()->json($product);
     }
 
     /**
@@ -58,6 +95,21 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        return ProductService::deleteProduct($id);
+        $deleted = ProductService::deleteProduct($id);
+
+        if ($deleted === null) {
+            return response()->json([
+                'message' => Response::$statusTexts[Response::HTTP_INTERNAL_SERVER_ERROR]
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        if (!$deleted) {
+            return response()->json([
+                'message' => 'Produto não encontrado'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        return response()->json(null, Response::HTTP_NO_CONTENT);
+
     }
 }
