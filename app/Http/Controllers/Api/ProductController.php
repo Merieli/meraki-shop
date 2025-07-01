@@ -2,6 +2,7 @@
 
 namespace MerakiShop\Http\Controllers\Api;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use MerakiShop\Facades\Logger;
 use MerakiShop\Facades\ProductService;
@@ -71,23 +72,47 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        $product = ProductService::findProduct($id);
+        try {
+            $product = ProductService::findProduct($id);
 
-        if (!$product) {
+            if (!$product) {
+                return response()->json([
+                    'message' => 'Produto não encontrado'
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            return response()->json($product);
+        } catch (Throwable $e) {
+            Logger::error('Falha ao buscar produto ->', [$e]);
+
             return response()->json([
-                'message' => 'Produto não encontrado'
-            ], Response::HTTP_NOT_FOUND);
+                    'message' => Response::$statusTexts[Response::HTTP_INTERNAL_SERVER_ERROR]
+                ], Response::HTTP_NOT_FOUND);
         }
-
-        return response()->json($product);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProductFormRequest $request, string $id)
+    public function update(ProductFormRequest $request, string $id): JsonResponse
     {
-        return ProductService::updateProduct( $request->validated(), $id);
+        try {
+            $product = ProductService::updateProduct( $request->validated(), $id);
+
+            if (!$product) {
+                return response()->json([
+                    'message' => 'Produto não encontrado'
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            return response()->json($product);
+        } catch (Throwable $e) {
+            Logger::error('Falha ao atualizar produto', [$e]);
+
+            return response()->json([
+                'message' => Response::$statusTexts[Response::HTTP_UNPROCESSABLE_ENTITY]
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
     }
 
     /**
@@ -95,21 +120,22 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        $deleted = ProductService::deleteProduct($id);
+        try {
+            $deleted = ProductService::deleteProduct($id);
+            
+            if (!$deleted) {
+                return response()->json([
+                    'message' => 'Produto não encontrado'
+                ], Response::HTTP_NOT_FOUND);
+            }
 
-        if ($deleted === null) {
+            return response()->json([], 204);
+        } catch (Throwable $e) {
+            Logger::error('Falha ao excluir produto', [$e]);
+
             return response()->json([
-                'message' => Response::$statusTexts[Response::HTTP_INTERNAL_SERVER_ERROR]
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                    'message' => Response::$statusTexts[Response::HTTP_INTERNAL_SERVER_ERROR]
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-        if (!$deleted) {
-            return response()->json([
-                'message' => 'Produto não encontrado'
-            ], Response::HTTP_NOT_FOUND);
-        }
-
-        return response()->json(null, Response::HTTP_NO_CONTENT);
-
     }
 }

@@ -32,53 +32,19 @@ class ProductService implements ProductServiceInterface
             ->create($request);
     }
 
-    public function findProduct(string $id): Product | null | array
+    public function findProduct(string $id): Product | null
     {
-        try {
-            $product = $this->repository
-                ->findById($id);
-
-            return $product;
-        } catch (Throwable $e) {
-            Logger::error('Falha ao buscar produto ->', [$e]);
-
-            return [
-                'message' => Response::$statusTexts[Response::HTTP_INTERNAL_SERVER_ERROR]
-            ];
-        }
+        return $this->repository->findById($id);
     }
 
     public function updateProduct(array $request, string $id): Product | null
     {
-        try {
-            $product = $this->repository
-                ->update($id, $request);
-
-            if (!$product) {
-                return response()->json([
-                    'message' => 'Produto não encontrado'
-                ], Response::HTTP_NOT_FOUND);
-            }
-
-            return response()->json($product);
-        } catch (Throwable $e) {
-            Logger::error('Falha ao atualizar produto', [$e]);
-
-            return response()->json([
-                'message' => Response::$statusTexts[Response::HTTP_UNPROCESSABLE_ENTITY]
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        return $this->repository
+            ->update($id, $request);
     }
 
     public function deleteProduct(string $id): bool | null
     {
-        try {
-            return $this->repository
-                ->delete($id);
-        } catch (Throwable $e) {
-            Logger::error('Falha ao excluir produto', [$e]);
-
-            return null;
-        }
+        return $this->repository->delete($id);
     }
 }
