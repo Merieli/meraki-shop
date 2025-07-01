@@ -2,15 +2,12 @@
 
 namespace MerakiShop\Services;
 
-use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use MerakiShop\Contracts\ProductRepositoryInterface;
 use MerakiShop\Contracts\Services\ProductServiceInterface;
 use MerakiShop\Facades\Logger;
 use MerakiShop\Models\Product;
-use Symfony\Component\HttpFoundation\Response;
-use Throwable;
 
 class ProductService implements ProductServiceInterface
 {
