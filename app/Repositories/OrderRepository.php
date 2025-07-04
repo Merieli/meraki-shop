@@ -6,5 +6,8 @@ use MerakiShop\Http\Controllers\Controller;
 
 class OrderRepository extends Controller
 {
-
+    public function list()
+    {
+        
+    }
 }
