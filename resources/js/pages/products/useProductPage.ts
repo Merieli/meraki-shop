@@ -74,6 +74,7 @@ export function useProductPage() {
     };
 
     const handleProductCreationSuccess = (response: ProductResponse) => {
+        console.info('Response: ', response);
         setSuccessMessage('Produto criado com sucesso! Você pode criar outro produto se desejar.');
         resetForm();
     };

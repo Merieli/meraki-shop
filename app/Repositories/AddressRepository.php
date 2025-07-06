@@ -2,7 +2,7 @@
 
 namespace MerakiShop\Repositories;
 
-use Illuminate\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use MerakiShop\Contracts\Repositories\AddressRepositoryInterface;
@@ -26,15 +26,16 @@ class AddressRepository implements AddressRepositoryInterface
                 'country' => $request['country'],
                 'postal_code' => $request['postal_code'],
             ]);
+
         }, 3);
     }
 
-    public function update(Request $request, string $id, Authenticatable $user): Address|null
+    public function update(Request $request, string $id, Authenticatable $user): ?Address
     {
         return DB::transaction(function () use ($id, $request, $user) {
             $address = $this->findById($id);
 
-            if (!$address || $user->id !== $address->user_id) {
+            if (! $address || $user->id !== $address->user_id) {
                 return null;
             }
 

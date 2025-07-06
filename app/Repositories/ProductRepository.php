@@ -38,7 +38,7 @@ class ProductRepository implements ProductRepositoryInterface
                 'short_description' => $request['short_description'],
                 'description' => $request['description'] ?? null,
                 'rating' => $request['rating'],
-                'sku' => $request['sku'] ?? null
+                'sku' => $request['sku'] ?? null,
             ]);
         }, 3);
     }
@@ -53,7 +53,7 @@ class ProductRepository implements ProductRepositoryInterface
         return DB::transaction(function () use ($id, $data) {
             $product = $this->findById($id);
 
-            if (!$product) {
+            if (! $product) {
                 return null;
             }
 
@@ -67,7 +67,7 @@ class ProductRepository implements ProductRepositoryInterface
                 'short_description' => $data['short_description'],
                 'description' => $data['description'] ?? $product->description,
                 'rating' => $data['rating'],
-                'sku' => $data['sku'] ?? $product->sku
+                'sku' => $data['sku'] ?? $product->sku,
             ]);
 
             return $product->fresh();
@@ -79,7 +79,7 @@ class ProductRepository implements ProductRepositoryInterface
         return DB::transaction(function () use ($id) {
             $product = $this->findById($id);
 
-            if (!$product) {
+            if (! $product) {
                 return false;
             }
 

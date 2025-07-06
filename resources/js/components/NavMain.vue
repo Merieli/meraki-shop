@@ -15,11 +15,8 @@ const page = usePage<SharedData>();
         <SidebarGroupLabel>Ecommerce Platform</SidebarGroupLabel>
         <SidebarMenu>
             <template v-for="item in items" :key="item.title">
-                <SidebarMenuItem v-if="(item.admin && $page.props.auth.user?.is_admin ) || !item.admin">
-                    <SidebarMenuButton
-                        as-child :is-active="item.href === page.url"
-                        :tooltip="item.title"
-                    >
+                <SidebarMenuItem v-if="(item.admin && $page.props.auth.user?.is_admin) || !item.admin">
+                    <SidebarMenuButton as-child :is-active="item.href === page.url" :tooltip="item.title">
                         <Link :href="item.href">
                             <component :is="item.icon" />
                             <span>{{ item.title }}</span>

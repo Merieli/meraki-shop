@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use MerakiShop\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use MerakiShop\Models\User;
 use Tests\TestCase;
 
 class DashboardTest extends TestCase

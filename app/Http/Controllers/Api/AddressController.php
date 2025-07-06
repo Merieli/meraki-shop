@@ -4,7 +4,6 @@ namespace MerakiShop\Http\Controllers\Api;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use MerakiShop\Contracts\Repositories\AddressRepositoryInterface;
 use MerakiShop\Contracts\Repositories\UserRepositoryInterface;
 use MerakiShop\Http\Controllers\Controller;
@@ -25,11 +24,11 @@ class AddressController extends Controller
         try {
             $user = $this->userRepository->findById($user['id']);
 
-            if (!$user) {
-                return response()->json([ 'message' => 'Nenhum endereço existente'], 404);
+            if (! $user) {
+                return response()->json(['message' => 'Nenhum endereço existente'], 404);
             }
 
-            return response()->json( $user->address);
+            return response()->json($user->address);
         } catch (\Throwable $e) {
 
         }

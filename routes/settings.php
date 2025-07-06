@@ -1,9 +1,9 @@
 <?php
 
-use MerakiShop\Http\Controllers\Settings\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\WorkOS\Http\Middleware\ValidateSessionWithWorkOS;
+use MerakiShop\Http\Controllers\Settings\ProfileController;
 
 Route::middleware([
     'auth',

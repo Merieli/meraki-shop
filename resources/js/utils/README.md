@@ -44,8 +44,8 @@ const { hasToken, checkAuthentication, requireAuth } = useAuth();
 
 // Verificar se tem token
 if (hasToken.value) {
-  // Tem token, mas ainda precisa verificar se é válido
-  const isAuthenticated = await checkAuthentication();
+    // Tem token, mas ainda precisa verificar se é válido
+    const isAuthenticated = await checkAuthentication();
 }
 
 // Verificar e redirecionar se não estiver autenticado
@@ -80,4 +80,4 @@ import { useAuth } from '@/composables/useAuth';
 
 const { logout } = useAuth();
 logout(); // Remove o cookie e faz logout via API
-``` 
+```

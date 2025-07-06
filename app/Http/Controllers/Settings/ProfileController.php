@@ -2,13 +2,13 @@
 
 namespace MerakiShop\Http\Controllers\Settings;
 
-use MerakiShop\Http\Controllers\Controller;
-use MerakiShop\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use Laravel\WorkOS\Http\Requests\AuthKitAccountDeletionRequest;
+use MerakiShop\Http\Controllers\Controller;
+use MerakiShop\Models\User;
 
 class ProfileController extends Controller
 {
@@ -42,7 +42,7 @@ class ProfileController extends Controller
     public function destroy(AuthKitAccountDeletionRequest $request): RedirectResponse
     {
         return $request->delete(
-            using: fn(User $user) => $user->delete()
+            using: fn (User $user) => $user->delete()
         );
     }
 }

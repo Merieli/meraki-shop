@@ -14,7 +14,7 @@ interface Props {
     validateField: (field: string, value: any) => boolean;
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 </script>
 
 <template>

@@ -1,11 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Laravel\WorkOS\Http\Requests\AuthKitAuthenticationRequest;
 use Laravel\WorkOS\Http\Requests\AuthKitLoginRequest;
 use MerakiShop\Facades\Logger;
-use Illuminate\Http\Request;
 use MerakiShop\Models\User;
 
 Route::get('login', function (AuthKitLoginRequest $request) {
@@ -19,7 +19,7 @@ Route::get('authenticate', function (AuthKitAuthenticationRequest $request) {
         $user = User::firstOrCreate(
             ['email' => $workosUser->email],
             [
-                'name' => $workosUser->firstName . ' ' . $workosUser->lastName,
+                'name' => $workosUser->firstName.' '.$workosUser->lastName,
                 'workos_id' => $workosUser->id ?? null,
                 'avatar' => $workosUser->profilePictureUrl ?? '',
             ]
@@ -45,7 +45,8 @@ Route::get('authenticate', function (AuthKitAuthenticationRequest $request) {
             ->withCookie($cookie)
             ->with('api_token', $token);
     } catch (\Exception $e) {
-        Logger::critical('Erro de autenticação: ' . $e->getMessage());
+        Logger::critical('Erro de autenticação: '.$e->getMessage());
+
         return redirect()->route('login');
     }
 })->middleware(['web', 'guest'])->name('authenticate');
@@ -54,12 +55,12 @@ Route::match(['get', 'post'], 'logout', function (Request $request) {
     if (Auth::check()) {
         Auth::user()->tokens()->delete();
     }
-    
+
     $cookie = cookie('X-API-TOKEN', '', -1);
-    
+
     Auth::logout();
     $request->session()->invalidate();
     $request->session()->regenerateToken();
-    
+
     return redirect('/')->withCookie($cookie);
 })->middleware(['auth'])->name('logout');

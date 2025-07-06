@@ -6,11 +6,8 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use MerakiShop\Http\Controllers\Controller;
-use MerakiShop\Models\{
-    CustomerCard,
-    User
-};
-
+use MerakiShop\Models\CustomerCard;
+use MerakiShop\Models\User;
 
 class CustomerCardController extends Controller
 {
@@ -22,8 +19,8 @@ class CustomerCardController extends Controller
         try {
             $user = User::find($user['id']);
 
-            if (!$user || empty($user->customerCard)) {
-                return response()->json([ 'message' => 'Nenhum endereço existente'], 404);
+            if (! $user || empty($user->customerCard)) {
+                return response()->json(['message' => 'Nenhum endereço existente'], 404);
             }
 
             return response()->json($user->customerCard);
@@ -38,7 +35,7 @@ class CustomerCardController extends Controller
     public function store(Request $request, Authenticatable $user)
     {
         if (empty($user['id'])) {
-            return response()->json([ 'message' => 'Usuário não encontrado'], 401);
+            return response()->json(['message' => 'Usuário não encontrado'], 401);
         }
 
         return DB::transaction(function () use ($request, $user) {
@@ -59,7 +56,7 @@ class CustomerCardController extends Controller
         return DB::transaction(function () use ($id, $request, $user) {
             $customerCard = $this->findById($id);
 
-            if (!$customerCard || $user['id'] !== $customerCard->user_id) {
+            if (! $customerCard || $user['id'] !== $customerCard->user_id) {
                 return null;
             }
 

@@ -2,8 +2,6 @@
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import type { FormErrors } from '@/utils/formValidation';
-import { formatCurrency } from '@/utils/money';
-import { computed } from 'vue';
 
 interface Props {
     formData: {
@@ -15,11 +13,7 @@ interface Props {
     errors: FormErrors;
     validateField: (field: string, value: any) => boolean;
 }
-
-const props = defineProps<Props>();
-
-const formattedPrice = computed(() => formatCurrency(props.formData.price));
-const formattedCostPrice = computed(() => formatCurrency(props.formData.cost_price));
+defineProps<Props>();
 </script>
 
 <template>

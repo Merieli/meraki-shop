@@ -8,9 +8,8 @@ use MerakiShop\Contracts\Services\ProductServiceInterface;
 class ProductService extends Facade
 {
     /**
-    *
-    * @return string
-    */
+     * @return string
+     */
     public static function getFacadeAccessor()
     {
         return ProductServiceInterface::class;

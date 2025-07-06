@@ -65,7 +65,7 @@ const validationSchema = {
     },
 };
 
-const onSubmit = (values: any) => {
+const onSubmit = () => {
     if (!validateAll(formData.value)) return;
 
     isSubmitting.value = true;

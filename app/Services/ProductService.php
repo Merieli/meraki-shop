@@ -12,35 +12,36 @@ use MerakiShop\Models\Product;
 class ProductService implements ProductServiceInterface
 {
     public function __construct(private ProductRepositoryInterface $repository)
-    {}
+    {
+    }
 
     public function getProducts(Request $request): Builder
     {
         Logger::info('Get Products', [
-            'request' => $request
+            'request' => $request,
         ]);
-        
+
         return $this->repository->list($request);
     }
 
     public function createProduct(array $request): Product
-    {   
+    {
         return $this->repository
             ->create($request);
     }
 
-    public function findProduct(string $id): Product | null
+    public function findProduct(string $id): ?Product
     {
         return $this->repository->findById($id);
     }
 
-    public function updateProduct(array $request, string $id): Product | null
+    public function updateProduct(array $request, string $id): ?Product
     {
         return $this->repository
             ->update($id, $request);
     }
 
-    public function deleteProduct(string $id): bool | null
+    public function deleteProduct(string $id): ?bool
     {
         return $this->repository->delete($id);
     }

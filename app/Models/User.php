@@ -5,17 +5,19 @@ namespace MerakiShop\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Support\Str;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
-
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens;
+    use HasFactory;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -37,9 +39,8 @@ class User extends Authenticatable
     protected $hidden = [
         'workos_id',
         'remember_token',
-        'role'
+        'role',
     ];
-
 
     protected $appends = ['first_name', 'last_name', 'is_admin'];
 
@@ -89,7 +90,6 @@ class User extends Authenticatable
             }
         );
     }
-
 
     /**
      * Get the addres associated with the user

@@ -10,7 +10,7 @@ use MerakiShop\Services\ProductService;
 class ProductServiceProvider extends ServiceProvider
 {
     public array $bindings = [
-        ProductServiceInterface::class => ProductService::class
+        ProductServiceInterface::class => ProductService::class,
     ];
 
     /**
@@ -19,7 +19,7 @@ class ProductServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(
-            ProductServiceInterface::class, 
+            ProductServiceInterface::class,
             function ($app) {
                 return new ProductService(
                     $app->make(ProductRepositoryInterface::class)

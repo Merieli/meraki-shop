@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use MerakiShop\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use MerakiShop\Models\User;
 
 class DatabaseSeeder extends Seeder
 {

@@ -4,17 +4,15 @@ namespace MerakiShop\Http\Controllers\Api;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use MerakiShop\Facades\Logger;
+use MerakiShop\Http\Controllers\Controller;
 use MerakiShop\Http\Requests\StoreOrderRequest;
 use MerakiShop\Http\Requests\UpdateOrderRequest;
-use MerakiShop\Http\Controllers\Controller;
-use MerakiShop\Models\{
-    Order,
-    OrderItem,
-    User
-};
-use MerakiShop\Facades\Logger;
-use Illuminate\Support\Facades\DB;
+use MerakiShop\Models\Order;
+use MerakiShop\Models\OrderItem;
 use MerakiShop\Models\Product;
+use MerakiShop\Models\User;
 
 class OrderController extends Controller
 {
@@ -32,7 +30,7 @@ class OrderController extends Controller
                 Logger::info('All orders found for dashboard', ['count' => $orders->count()]);
             } else {
                 $user = User::find($user['id']);
-                if (!$user) {
+                if (! $user) {
                     return response()->json(['message' => 'User not found'], 404);
                 }
 
@@ -69,9 +67,9 @@ class OrderController extends Controller
                                 'product_id' => $item->product_id,
                                 'variation_id' => $item->variation_id,
                                 'quantity' => $item->quantity,
-                                'unit_price' => $item->unit_price
+                                'unit_price' => $item->unit_price,
                             ];
-                        })->toArray()
+                        })->toArray(),
                     ];
                 } else {
                     // Format for user orders view
@@ -83,6 +81,7 @@ class OrderController extends Controller
                         'updated_at' => $order->updated_at,
                         'items' => $items->map(function ($item) {
                             $product = $item->product;
+
                             return [
                                 'id' => $item->id,
                                 'product_id' => $item->product_id,
@@ -90,9 +89,9 @@ class OrderController extends Controller
                                 'product_name' => $product ? $product->name : 'Unknown Product',
                                 'variation_name' => $item->variation ? $item->variation->name : 'Standard',
                                 'quantity' => $item->quantity,
-                                'unit_price' => $item->unit_price
+                                'unit_price' => $item->unit_price,
                             ];
-                        })->toArray()
+                        })->toArray(),
                     ];
                 }
             });
@@ -100,6 +99,7 @@ class OrderController extends Controller
             return response()->json($formattedOrders);
         } catch (\Throwable $e) {
             Logger::error('Error fetching orders', [$e]);
+
             return response()->json(
                 ['message' => 'Error fetching orders'],
                 500
@@ -134,7 +134,7 @@ class OrderController extends Controller
 
                 Logger::info('Order created successfully', [
                     'order_id' => $order->id,
-                    'user_id' => $user['id']
+                    'user_id' => $user['id'],
                 ]);
 
                 $product = Product::find($request->product_id);
@@ -153,17 +153,18 @@ class OrderController extends Controller
                             'product_name' => $product ? $product->name : 'Unknown Product',
                             'variation_name' => 'Standard',
                             'quantity' => $orderItem->quantity,
-                            'unit_price' => $orderItem->unit_price
-                        ]
-                    ]
+                            'unit_price' => $orderItem->unit_price,
+                        ],
+                    ],
                 ];
 
                 return response()->json($response, 201);
             }, 3);
         } catch (\Throwable $e) {
             Logger::error('Failed to create order', [$e->getMessage()]);
+
             return response()->json(
-                ['message' => 'Failed to create order: ' . $e->getMessage()],
+                ['message' => 'Failed to create order: '.$e->getMessage()],
                 500
             );
         }
@@ -178,7 +179,7 @@ class OrderController extends Controller
             return DB::transaction(function () use ($id, $request, $user) {
                 $order = Order::find($id);
 
-                if (!$order) {
+                if (! $order) {
                     return response()->json(['message' => 'Order not found'], 404);
                 }
 
@@ -194,8 +195,9 @@ class OrderController extends Controller
             }, 3);
         } catch (\Throwable $e) {
             Logger::error('Failed to update order', [$e->getMessage()]);
+
             return response()->json(
-                ['message' => 'Failed to update order: ' . $e->getMessage()],
+                ['message' => 'Failed to update order: '.$e->getMessage()],
                 500
             );
         }

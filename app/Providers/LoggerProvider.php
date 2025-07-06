@@ -15,8 +15,8 @@ class LoggerProvider extends ServiceProvider
     {
         $loader = AliasLoader::getInstance();
         $loader->alias('Logger', Logger::class);
-        
-        $this->app->bind('Logger',  Logger::class);
+
+        $this->app->bind('Logger', Logger::class);
     }
 
     /**

@@ -16,6 +16,7 @@ use Mockery\MockInterface;
 final class ProductServiceTest extends MockeryTestCase
 {
     private MockInterface|ProductRepositoryInterface $repository;
+
     private ProductService $service;
 
     protected function setUp(): void
@@ -44,7 +45,7 @@ final class ProductServiceTest extends MockeryTestCase
             ->once()
             ->with($request)
             ->andReturn($expectedBuilder);
-        
+
         $result = $this->service->getProducts($request);
 
         self::assertSame($expectedBuilder, $result);
@@ -52,7 +53,6 @@ final class ProductServiceTest extends MockeryTestCase
 
     public function skip_test_create_product_should_return_product()
     {
-        
     }
 
     public function test_find_product_should_return_product()
@@ -71,6 +71,4 @@ final class ProductServiceTest extends MockeryTestCase
 
         self::assertSame($product, $result);
     }
-
-
 }

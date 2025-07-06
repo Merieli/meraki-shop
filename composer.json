@@ -48,7 +48,9 @@
         }
     },
     "scripts": {
-        "lint:pint": "pint",
+        "pint": "pint",
+        "lint:fix": "@pint",
+        "lint": "@pint --test",
         "check": "phpstan analyze app",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
@@ -80,7 +82,7 @@
             "@php artisan test"
         ],
         "valid": [
-            "@lint:pint",
+            "@lint",
             "@check"
         ]
     },

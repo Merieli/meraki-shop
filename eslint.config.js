@@ -7,7 +7,16 @@ export default defineConfigWithVueTs(
     vue.configs['flat/essential'],
     vueTsConfigs.recommended,
     {
-        ignores: ['vendor', 'node_modules', 'public', 'bootstrap/ssr', 'tailwind.config.js', 'resources/js/components/ui/*', '.docs/.vitepress/cache'],
+        ignores: [
+            'vendor',
+            'node_modules',
+            'public',
+            'bootstrap/ssr',
+            'tailwind.config.js',
+            'resources/js/components/ui/*',
+            '.docs/.vitepress/cache',
+            '.docs/.vitepress/dist',
+        ],
     },
     {
         rules: {

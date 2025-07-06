@@ -14,7 +14,7 @@ interface Props {
     orders: OrderItem[];
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 
 const getStatusClass = (status: string): string => {
     switch (status) {

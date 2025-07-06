@@ -8,10 +8,10 @@ declare global {
 type PropsLaravel = {
     props: {
         auth: {
-            user: User | null
-        }
-    }
-}
+            user: User | null;
+        };
+    };
+};
 
 declare module '@vue/runtime-core' {
     interface ComponentCustomProperties {

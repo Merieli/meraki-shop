@@ -50,6 +50,7 @@ export const apiService = {
             const response = await api.get('/user', { useToken: true });
             return !!response.data;
         } catch (error) {
+            console.error('API Error:', error);
             return false;
         }
     },

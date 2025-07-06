@@ -10,7 +10,7 @@ class CustomerCard extends Model
         'user_id',
         'card_token',
         'card_last4',
-        'card_brand'
+        'card_brand',
     ];
 
     public function user()

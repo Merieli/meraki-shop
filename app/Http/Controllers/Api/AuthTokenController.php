@@ -13,7 +13,7 @@ class AuthTokenController extends Controller
     {
         $credentials = $request->only('email', 'workos_id');
 
-        if (!Auth::attempt($credentials)) {
+        if (! Auth::attempt($credentials)) {
             return abort(401, 'Invalid credentials');
         }
 

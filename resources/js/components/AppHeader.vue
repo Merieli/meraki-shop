@@ -24,8 +24,6 @@ const searchQuery = ref('');
 const isSearchOpen = ref(false);
 const isMobileMenuOpen = ref(false);
 
-const isCurrentRoute = computed(() => (url: string) => page.url === url);
-
 const handleSearch = () => {
     if (searchQuery.value.trim()) {
         // TODO: Implementar a lógica de pesquisa aqui
@@ -51,13 +49,13 @@ const handleSearch = () => {
                                 <h3 class="text-lg font-semibold">Menu</h3>
 
                                 <!-- Usuário em Mobile -->
-                                <div v-if="$page.props.auth.user" class="flex items-center gap-3 rounded-md bg-neutral-50 p-3 dark:bg-neutral-800/50">
+                                <div v-if="auth.user" class="flex items-center gap-3 rounded-md bg-neutral-50 p-3 dark:bg-neutral-800/50">
                                     <Avatar>
-                                        <AvatarImage :src="$page.props.auth.user.avatar ?? ''" alt="@unovue" />
-                                        <AvatarFallback>{{ $page.props.auth.user.name.charAt(0) }}</AvatarFallback>
+                                        <AvatarImage :src="auth.user.avatar ?? ''" alt="@unovue" />
+                                        <AvatarFallback>{{ auth.user.name.charAt(0) }}</AvatarFallback>
                                     </Avatar>
                                     <div>
-                                        <p class="text-sm font-medium">{{ $page.props.auth.user.name }}</p>
+                                        <p class="text-sm font-medium">{{ auth.user.name }}</p>
                                         <Link :href="route('dashboard')" class="text-xs text-neutral-500">Dashboard</Link>
                                     </div>
                                 </div>
@@ -127,15 +125,15 @@ const handleSearch = () => {
 
                 <!-- Usuário conectado -->
                 <Link
-                    v-if="$page.props.auth.user"
+                    v-if="auth.user"
                     :href="route('dashboard')"
                     class="flex items-center justify-center gap-2 rounded-sm px-3 py-1.5 text-sm leading-normal text-[#1b1b18] hover:bg-neutral-100 dark:text-[#EDEDEC] dark:hover:bg-neutral-800"
                 >
-                    Hello {{ $page.props.auth.user.name }}
+                    Hello {{ auth.user.name }}
 
                     <Avatar>
-                        <AvatarImage :src="$page.props.auth.user.avatar ?? ''" alt="@unovue" />
-                        <AvatarFallback>{{ $page.props.auth.user.name.charAt(0) }}</AvatarFallback>
+                        <AvatarImage :src="auth.user.avatar ?? ''" alt="@unovue" />
+                        <AvatarFallback>{{ auth.user.name.charAt(0) }}</AvatarFallback>
                     </Avatar>
                 </Link>
 

@@ -22,7 +22,7 @@ class Product extends Model
         'short_description',
         'description',
         'rating',
-        'sku'
+        'sku',
     ];
 
     protected static function booted()
@@ -31,5 +31,4 @@ class Product extends Model
             $queryBuilder->orderBy('name');
         });
     }
-
 }

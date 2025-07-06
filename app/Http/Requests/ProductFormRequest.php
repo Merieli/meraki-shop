@@ -24,7 +24,7 @@ class ProductFormRequest extends FormRequest
             'short_description' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'rating' => ['required', 'integer', 'min:1', 'max:5', 'max_digits:1'],
-            'sku' => ['nullable', 'string', 'max:50']
+            'sku' => ['nullable', 'string', 'max:50'],
         ];
     }
 }
