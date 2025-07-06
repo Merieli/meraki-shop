@@ -4,7 +4,7 @@ namespace MerakiShop\Services;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use MerakiShop\Contracts\ProductRepositoryInterface;
+use MerakiShop\Contracts\Repositories\ProductRepositoryInterface;
 use MerakiShop\Contracts\Services\ProductServiceInterface;
 use MerakiShop\Facades\Logger;
 use MerakiShop\Models\Product;

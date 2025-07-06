@@ -12,7 +12,8 @@
     "lint:fix": "eslint . --fix",
     "docs:dev": "vitepress dev .docs --host 0.0.0.0 --port 5175",
     "docs:build": "vitepress build .docs --host 0.0.0.0",
-    "docs:preview": "vitepress preview .docs --host 0.0.0.0 --port 5175"
+    "docs:preview": "vitepress preview .docs --host 0.0.0.0 --port 5175",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
@@ -21,6 +22,7 @@
     "eslint": "^9.17.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-vue": "^9.32.0",
+    "husky": "^9.1.7",
     "prettier": "^3.4.2",
     "prettier-plugin-organize-imports": "^4.1.0",
     "prettier-plugin-tailwindcss": "^0.6.11",

@@ -1,6 +1,6 @@
 <?php
 
-namespace MerakiShop\Contracts;
+namespace MerakiShop\Contracts\Repositories;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;

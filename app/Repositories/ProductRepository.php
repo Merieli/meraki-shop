@@ -5,7 +5,7 @@ namespace MerakiShop\Repositories;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use MerakiShop\Contracts\ProductRepositoryInterface;
+use MerakiShop\Contracts\Repositories\ProductRepositoryInterface;
 use MerakiShop\Models\Product;
 
 class ProductRepository implements ProductRepositoryInterface

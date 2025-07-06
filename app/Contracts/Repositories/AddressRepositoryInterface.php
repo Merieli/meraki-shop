@@ -2,18 +2,14 @@
 
 namespace MerakiShop\Contracts\Repositories;
 
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Http\Request;
 use MerakiShop\Models\Address;
+use MerakiShop\Models\User;
 
 interface AddressRepositoryInterface
 {
-    /**
-     * Get a address of user
-     */
-    public function list(Request $request): Builder;
-    public function create(array $request): Address;
-    /**
-     * Get addres byId
-     */
+    public function create(Request $request, Authenticatable $user): Address;
+    public function update(Request $request, string $id, Authenticatable $user): ?Address;
     public function findById(string $id): ?Address;
-    public function update(string $id, array $data): ?Address;
 }

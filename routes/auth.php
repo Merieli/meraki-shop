@@ -5,8 +5,8 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\WorkOS\Http\Requests\AuthKitAuthenticationRequest;
 use Laravel\WorkOS\Http\Requests\AuthKitLoginRequest;
 use MerakiShop\Facades\Logger;
-use MerakiShop\Models\User;
 use Illuminate\Http\Request;
+use MerakiShop\Models\User;
 
 Route::get('login', function (AuthKitLoginRequest $request) {
     return $request->redirect();

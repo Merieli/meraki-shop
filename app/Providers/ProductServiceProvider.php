@@ -3,7 +3,7 @@
 namespace MerakiShop\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use MerakiShop\Contracts\ProductRepositoryInterface;
+use MerakiShop\Contracts\Repositories\ProductRepositoryInterface;
 use MerakiShop\Contracts\Services\ProductServiceInterface;
 use MerakiShop\Services\ProductService;
 
