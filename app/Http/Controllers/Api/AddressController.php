@@ -3,9 +3,11 @@
 namespace MerakiShop\Http\Controllers\Api;
 
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use MerakiShop\Contracts\Repositories\AddressRepositoryInterface;
 use MerakiShop\Contracts\Repositories\UserRepositoryInterface;
+use MerakiShop\Facades\Logger;
 use MerakiShop\Http\Controllers\Controller;
 
 class AddressController extends Controller
@@ -19,7 +21,7 @@ class AddressController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, Authenticatable $user)
+    public function index(Request $request, Authenticatable $user): JsonResponse
     {
         try {
             $user = $this->userRepository->findById($user['id']);
@@ -30,7 +32,18 @@ class AddressController extends Controller
 
             return response()->json($user->address);
         } catch (\Throwable $e) {
+            Logger::error('List Address', [
+                'exception' => $e,
+                'request' => $request,
+            ]);
 
+            return response()
+                ->json(
+                    [
+                        'message' => 'Não foi possível listar o endereço',
+                    ],
+                    $e->getCode()
+                );
         }
     }
 
@@ -42,6 +55,18 @@ class AddressController extends Controller
         try {
             return $this->repository->create($request, $user);
         } catch (\Throwable $e) {
+            Logger::error('Create Address', [
+               'exception' => $e,
+               'request' => $request,
+            ]);
+
+            return response()
+                ->json(
+                    [
+                        'message' => 'Não foi possível salvar o endereço',
+                    ],
+                    $e->getCode()
+                );
         }
     }
 
@@ -53,6 +78,18 @@ class AddressController extends Controller
         try {
             return $this->repository->update($request, $id, $user);
         } catch (\Throwable $e) {
+            Logger::error('Update Address', [
+                'exception' => $e,
+                'request' => $request,
+            ]);
+
+            return response()
+                ->json(
+                    [
+                        'message' => 'Não foi possível atualizar o endereço',
+                    ],
+                    $e->getCode()
+                );
         }
     }
 }

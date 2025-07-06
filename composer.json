@@ -51,7 +51,7 @@
         "pint": "pint",
         "lint:fix": "@pint",
         "lint": "@pint --test",
-        "check": "phpstan analyze app",
+        "check": "phpstan analyze --level max app",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
@@ -83,7 +83,10 @@
         ],
         "valid": [
             "@lint",
-            "@check"
+            "@check",
+            "echo \"=================== Frontend ===================\"",
+            "npm run format",
+            "npm run lint"
         ]
     },
     "scripts-descriptions": {

@@ -2,7 +2,7 @@
 
 namespace MerakiShop\Services;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use MerakiShop\Contracts\Repositories\ProductRepositoryInterface;
 use MerakiShop\Contracts\Services\ProductServiceInterface;
@@ -15,7 +15,12 @@ class ProductService implements ProductServiceInterface
     {
     }
 
-    public function getProducts(Request $request): Builder
+    /**
+     * Summary of getProducts
+     * @param Request $request
+     * @return Collection<int, Product>
+     */
+    public function getProducts(Request $request): Collection
     {
         Logger::info('Get Products', [
             'request' => $request,

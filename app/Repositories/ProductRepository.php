@@ -2,7 +2,7 @@
 
 namespace MerakiShop\Repositories;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use MerakiShop\Contracts\Repositories\ProductRepositoryInterface;
@@ -10,7 +10,10 @@ use MerakiShop\Models\Product;
 
 class ProductRepository implements ProductRepositoryInterface
 {
-    public function list(Request $request): Builder
+    /**
+     * @inheritDoc
+     */
+    public function list(Request $request): Collection
     {
         $query = Product::query();
 
@@ -22,7 +25,7 @@ class ProductRepository implements ProductRepositoryInterface
             $query->where('stock', $request['stock']);
         }
 
-        return $query;
+        return $query->get();
     }
 
     public function create(array $request): Product

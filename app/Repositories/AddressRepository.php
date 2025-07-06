@@ -14,7 +14,7 @@ class AddressRepository implements AddressRepositoryInterface
     {
         return DB::transaction(function () use ($request, $user) {
             return Address::create([
-                'user_id' => $user->id,
+                'user_id' => $user['id'],
                 'label' => $request['label'],
                 'recipient_name' => $request['recipient_name'],
                 'street' => $request['street'],
@@ -35,7 +35,7 @@ class AddressRepository implements AddressRepositoryInterface
         return DB::transaction(function () use ($id, $request, $user) {
             $address = $this->findById($id);
 
-            if (! $address || $user->id !== $address->user_id) {
+            if (! $address || $user['id'] !== $address->user_id) {
                 return null;
             }
 
