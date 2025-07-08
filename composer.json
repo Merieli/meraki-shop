@@ -27,6 +27,7 @@
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.15",
         "fakerphp/faker": "^1.23",
+        "larastan/larastan": "^3.0",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.22",
         "laravel/sail": "^1.41",
@@ -51,7 +52,8 @@
         "pint": "pint",
         "lint:fix": "@pint",
         "lint": "@pint --test",
-        "check": "phpstan analyze --level max app",
+        "check": "phpstan analyze -c phpstan.neon app",
+        "check:dev": "phpstan analyze -c phpstan-dev.neon",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
@@ -91,7 +93,7 @@
     },
     "scripts-descriptions": {
         "test": "Run all tests",
-        "valid": "Run all linters and checks (phpstan, pint)",
+        "valid": "Run all linters and checks (phpstan, pint, prettier, eslint)",
         "dev": "Run the application in development mode acessible by docker"
     },
     "extra": {

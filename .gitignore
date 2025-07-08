@@ -26,3 +26,6 @@ yarn-error.log
 # Vitepress
 .docs/.vitepress/cache
 .docs/.vitepress/dist
+
+# PHPStan
+phpstan-dev.neon

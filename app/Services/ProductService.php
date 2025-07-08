@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use MerakiShop\Contracts\Repositories\ProductRepositoryInterface;
 use MerakiShop\Contracts\Services\ProductServiceInterface;
 use MerakiShop\Facades\Logger;
+use MerakiShop\Http\Requests\ProductFormRequest;
 use MerakiShop\Models\Product;
 
 class ProductService implements ProductServiceInterface
@@ -14,12 +15,8 @@ class ProductService implements ProductServiceInterface
     public function __construct(private ProductRepositoryInterface $repository)
     {
     }
-
-    /**
-     * Summary of getProducts
-     * @param Request $request
-     * @return Collection<int, Product>
-     */
+   
+    /** @inheritDoc */
     public function getProducts(Request $request): Collection
     {
         Logger::info('Get Products', [
@@ -29,24 +26,28 @@ class ProductService implements ProductServiceInterface
         return $this->repository->list($request);
     }
 
-    public function createProduct(array $request): Product
+    /** @inheritDoc */
+    public function createProduct(ProductFormRequest $request): Product
     {
         return $this->repository
             ->create($request);
     }
 
+    /** @inheritDoc */
     public function findProduct(string $id): ?Product
     {
         return $this->repository->findById($id);
     }
 
-    public function updateProduct(array $request, string $id): ?Product
+    /** @inheritDoc */
+    public function updateProduct(ProductFormRequest $request, string $id): ?Product
     {
         return $this->repository
             ->update($id, $request);
     }
 
-    public function deleteProduct(string $id): ?bool
+    /** @inheritDoc */
+    public function deleteProduct(string $id): bool
     {
         return $this->repository->delete($id);
     }

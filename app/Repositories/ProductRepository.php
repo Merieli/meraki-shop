@@ -6,13 +6,12 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use MerakiShop\Contracts\Repositories\ProductRepositoryInterface;
+use MerakiShop\Http\Requests\ProductFormRequest;
 use MerakiShop\Models\Product;
 
 class ProductRepository implements ProductRepositoryInterface
 {
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function list(Request $request): Collection
     {
         $query = Product::query();
@@ -28,7 +27,8 @@ class ProductRepository implements ProductRepositoryInterface
         return $query->get();
     }
 
-    public function create(array $request): Product
+    /** @inheritDoc */
+    public function create(ProductFormRequest $request): Product
     {
         return DB::transaction(function () use ($request) {
             return Product::create([
@@ -46,12 +46,14 @@ class ProductRepository implements ProductRepositoryInterface
         }, 3);
     }
 
+    /** @inheritDoc */
     public function findById(string $id): ?Product
     {
         return Product::find($id);
     }
 
-    public function update(string $id, array $data): ?Product
+    /** @inheritDoc */
+    public function update(string $id, ProductFormRequest $data): ?Product
     {
         return DB::transaction(function () use ($id, $data) {
             $product = $this->findById($id);
@@ -77,6 +79,7 @@ class ProductRepository implements ProductRepositoryInterface
         }, 3);
     }
 
+    /** @inheritDoc */
     public function delete(string $id): bool
     {
         return DB::transaction(function () use ($id) {
