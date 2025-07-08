@@ -15,7 +15,7 @@ class ProductService implements ProductServiceInterface
     public function __construct(private ProductRepositoryInterface $repository)
     {
     }
-   
+
     /** @inheritDoc */
     public function getProducts(Request $request): Collection
     {

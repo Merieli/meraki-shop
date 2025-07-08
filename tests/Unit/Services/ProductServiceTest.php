@@ -2,7 +2,7 @@
 
 namespace Tests\Services;
 
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use MerakiShop\Contracts\Repositories\ProductRepositoryInterface;
 use MerakiShop\Facades\Logger;
@@ -39,16 +39,16 @@ final class ProductServiceTest extends MockeryTestCase
     public function test_get_products_should_return_builder()
     {
         $request = Mockery::mock(Request::class);
-        $expectedBuilder = Mockery::mock(Builder::class);
+        $expected = Mockery::mock(Collection::class);
         $this->repository
             ->shouldReceive('list')
             ->once()
             ->with($request)
-            ->andReturn($expectedBuilder);
+            ->andReturn($expected);
 
         $result = $this->service->getProducts($request);
 
-        self::assertSame($expectedBuilder, $result);
+        self::assertSame($expected, $result);
     }
 
     public function skip_test_create_product_should_return_product()
