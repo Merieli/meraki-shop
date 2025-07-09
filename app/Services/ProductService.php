@@ -46,7 +46,7 @@ class ProductService implements ProductServiceInterface
     }
 
     /** @inheritDoc */
-    public function deleteProduct(string $id): bool
+    public function deleteProduct(string $id): ?bool
     {
         return $this->repository->delete($id);
     }

@@ -9,7 +9,7 @@ use MerakiShop\Repositories\UserRepository;
 class UserRepositoryProvider extends ServiceProvider
 {
     /**
-     *
+     * @var array<class-string, class-string>
      */
     public array $bindings = [
         UserRepositoryInterface::class => UserRepository::class,

@@ -2,6 +2,7 @@
 
 namespace MerakiShop\Providers;
 
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\ServiceProvider;
 use MerakiShop\Contracts\Repositories\ProductRepositoryInterface;
 use MerakiShop\Contracts\Services\ProductServiceInterface;
@@ -9,6 +10,9 @@ use MerakiShop\Services\ProductService;
 
 class ProductServiceProvider extends ServiceProvider
 {
+    /**
+     * @var array<class-string, class-string>
+     */
     public array $bindings = [
         ProductServiceInterface::class => ProductService::class,
     ];
@@ -20,7 +24,7 @@ class ProductServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             ProductServiceInterface::class,
-            function ($app) {
+            function (Container $app) {
                 return new ProductService(
                     $app->make(ProductRepositoryInterface::class)
                 );

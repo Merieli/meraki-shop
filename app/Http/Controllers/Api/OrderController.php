@@ -13,8 +13,7 @@ use MerakiShop\Http\Requests\UpdateOrderRequest;
 use MerakiShop\Models\{
     User,
     Order,
-    OrderItem,
-    Product
+    OrderItem
 };
 
 class OrderController extends Controller

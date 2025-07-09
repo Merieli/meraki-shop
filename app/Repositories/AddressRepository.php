@@ -12,9 +12,10 @@ class AddressRepository implements AddressRepositoryInterface
 {
     public function create(Request $request, Authenticatable $user): Address
     {
-        return DB::transaction(function () use ($request, $user) {
+        $userId = $user->getAuthIdentifier();
+        return DB::transaction(function () use ($request, $userId) {
             return Address::create([
-                'user_id' => $user['id'],
+                'user_id' => $userId,
                 'label' => $request['label'],
                 'recipient_name' => $request['recipient_name'],
                 'street' => $request['street'],
@@ -35,7 +36,8 @@ class AddressRepository implements AddressRepositoryInterface
         return DB::transaction(function () use ($id, $request, $user) {
             $address = $this->findById($id);
 
-            if (! $address || $user['id'] !== $address->user_id) {
+            $userId = $user->getAuthIdentifier();
+            if (! $address || $userId !== $address->user_id) {
                 return null;
             }
 

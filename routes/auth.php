@@ -14,6 +14,7 @@ Route::get('login', function (AuthKitLoginRequest $request) {
 
 Route::get('authenticate', function (AuthKitAuthenticationRequest $request) {
     try {
+        /** @var Laravel\WorkOS\User  $workosUser */
         $workosUser = $request->authenticate();
 
         $user = User::firstOrCreate(
@@ -34,7 +35,7 @@ Route::get('authenticate', function (AuthKitAuthenticationRequest $request) {
             60 * 24,
             null,
             null,
-            config('session.secure'),
+            (bool) config('session.secure', false),
             true
         );
 
@@ -53,7 +54,9 @@ Route::get('authenticate', function (AuthKitAuthenticationRequest $request) {
 
 Route::match(['get', 'post'], 'logout', function (Request $request) {
     if (Auth::check()) {
-        Auth::user()->tokens()->delete();
+        /** @var User $user */
+        $user = Auth::user();
+        $user->tokens()->delete();
     }
 
     $cookie = cookie('X-API-TOKEN', '', -1);

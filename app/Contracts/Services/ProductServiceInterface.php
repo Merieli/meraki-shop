@@ -40,7 +40,7 @@ interface ProductServiceInterface
     /**
      * Delete a product
      * @param string $id
-     * @return bool
+     * @return ?bool
      */
-    public function deleteProduct(string $id): bool;
+    public function deleteProduct(string $id): ?bool;
 }

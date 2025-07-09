@@ -7,9 +7,4 @@ parameters:
         check:
             missingCheckedExceptionInThrows: false
     paths:
-      - app/Services
-      - app/Contracts
-      - app/Models
-      - app/Facades
-      - app/Helpers
-      - app/Http
+      - routes

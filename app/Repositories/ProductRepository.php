@@ -79,7 +79,7 @@ class ProductRepository implements ProductRepositoryInterface
     }
 
     /** @inheritDoc */
-    public function delete(string $id): bool
+    public function delete(string $id): ?bool
     {
         return DB::transaction(function () use ($id) {
             $product = $this->findById($id);

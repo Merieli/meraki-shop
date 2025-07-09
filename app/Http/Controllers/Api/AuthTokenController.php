@@ -15,7 +15,7 @@ class AuthTokenController extends Controller
     {
         try {
             $credentials = $request->only('email', 'workos_id');
-    
+
             $user =  Auth::user();
             if (!isset($user) || ! Auth::attempt($credentials)) {
                 return response()->json([
@@ -25,11 +25,11 @@ class AuthTokenController extends Controller
 
             /** @var NewAccessToken $accessToken */
             $accessToken = $user->createAccessToken('api-token');
-    
+
             $token = $accessToken->plainTextToken;
-    
+
             Logger::critical('token ->>', [$token]);
-    
+
             return response()->json([
                 'token' => $token,
             ]);

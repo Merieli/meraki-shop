@@ -5,3 +5,7 @@ parameters:
     level: 6
     excludePaths:
         - tests/*
+        - config/*
+        - vendor/*
+    paths:
+      - app
