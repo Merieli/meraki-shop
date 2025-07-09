@@ -4,7 +4,6 @@ namespace MerakiShop\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use MerakiShop\Models\Order;
 
 class OrderItem extends Model
 {
