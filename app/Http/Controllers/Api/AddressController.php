@@ -93,13 +93,12 @@ class AddressController extends Controller
                 'request' => $request,
             ]);
 
-            return response()
-                ->json(
-                    [
-                        'message' => 'Não foi possível atualizar o endereço',
-                    ],
-                    $e->getCode()
-                );
+            return response()->json(
+                [
+                    'message' => 'Não foi possível atualizar o endereço',
+                ],
+                $e->getCode()
+            );
         }
     }
 }

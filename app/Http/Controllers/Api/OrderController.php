@@ -140,8 +140,6 @@ class OrderController extends Controller
                     'user_id' => $userId,
                 ]);
 
-                $product = Product::find($request->product_id);
-
                 $response = [
                     'id' => $order->id,
                     'status' => $order->status,
@@ -153,7 +151,7 @@ class OrderController extends Controller
                             'id' => $orderItem->id,
                             'product_id' => $orderItem->product_id,
                             'variation_id' => $orderItem->variation_id,
-                            'product_name' => $product ? $product->name : 'Unknown Product',
+                            'product_name' =>  $orderItem->product ? $orderItem->product->name : 'Unknown Product',
                             'variation_name' => 'Standard',
                             'quantity' => $orderItem->quantity,
                             'unit_price' => $orderItem->unit_price,

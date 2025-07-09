@@ -1,0 +1,6 @@
+{
+    "recommendations": [
+        "breezelin.phpstan",
+        "DEVSENSE.phptools-vscode"
+    ]
+}
