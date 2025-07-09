@@ -2,12 +2,11 @@
 
 namespace MerakiShop\Services;
 
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use MerakiShop\Contracts\Repositories\ProductRepositoryInterface;
 use MerakiShop\Contracts\Services\ProductServiceInterface;
 use MerakiShop\Facades\Logger;
-use MerakiShop\Http\Requests\ProductFormRequest;
 use MerakiShop\Models\Product;
 
 class ProductService implements ProductServiceInterface
@@ -17,7 +16,7 @@ class ProductService implements ProductServiceInterface
     }
 
     /** @inheritDoc */
-    public function getProducts(Request $request): Collection
+    public function getProducts(Request $request): Builder
     {
         Logger::info('Get Products', [
             'request' => $request,
@@ -27,7 +26,7 @@ class ProductService implements ProductServiceInterface
     }
 
     /** @inheritDoc */
-    public function createProduct(ProductFormRequest $request): Product
+    public function createProduct(array $request): Product
     {
         return $this->repository
             ->create($request);
@@ -40,7 +39,7 @@ class ProductService implements ProductServiceInterface
     }
 
     /** @inheritDoc */
-    public function updateProduct(ProductFormRequest $request, string $id): ?Product
+    public function updateProduct(array $request, string $id): ?Product
     {
         return $this->repository
             ->update($id, $request);

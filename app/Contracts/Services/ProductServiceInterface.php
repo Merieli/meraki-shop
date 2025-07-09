@@ -2,6 +2,7 @@
 
 namespace MerakiShop\Contracts\Services;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use MerakiShop\Http\Requests\ProductFormRequest;
@@ -12,16 +13,16 @@ interface ProductServiceInterface
     /**
      * Get all products
      * @param Request $request
-     * @return Collection<int, Product>
+     * @return Builder<Product>
      */
-    public function getProducts(Request $request): Collection;
+    public function getProducts(Request $request): Builder;
 
     /**
      * Create a product
-     * @param ProductFormRequest $request
+     * @param array<string, mixed> $request
      * @return Product
      */
-    public function createProduct(ProductFormRequest $request): Product;
+    public function createProduct(array $request): Product;
 
     /**
      * Find product by id
@@ -32,11 +33,11 @@ interface ProductServiceInterface
 
     /**
      * Update register of preoduct
-     * @param ProductFormRequest $request
+     * @param array<string, mixed> $request
      * @param string $id
      * @return Product|null
      */
-    public function updateProduct(ProductFormRequest $request, string $id): ?Product;
+    public function updateProduct(array $request, string $id): ?Product;
 
     /**
      * Delete a product

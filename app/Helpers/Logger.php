@@ -10,7 +10,7 @@ class Logger
 
     /**
      * @param string $msg
-     * @param array<string> $context
+     * @param array<mixed,mixed> $context
      * @param string $code
      * @return void
      */
@@ -21,7 +21,7 @@ class Logger
 
     /**
      * @param string $msg
-     * @param array<string> $context
+     * @param array<mixed,mixed> $context
      * @param string $code
      * @return void
      */
@@ -32,7 +32,7 @@ class Logger
 
     /**
      * @param string $msg
-     * @param array<string> $context
+     * @param array<mixed,mixed> $context
      * @param string $code
      * @return void
      */
@@ -43,7 +43,7 @@ class Logger
 
     /**
      * @param string $msg
-     * @param array<string> $context
+     * @param array<mixed,mixed> $context
      * @param string $code
      * @return void
      */

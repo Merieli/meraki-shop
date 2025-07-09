@@ -1,0 +1,16 @@
+includes:
+  - phpstan.neon
+
+parameters:
+  level: 10
+  exceptions:
+    check:
+      missingCheckedExceptionInThrows: false
+  paths:
+    - app/Services
+    - app/Contracts
+    - app/Models
+    - app/Facades
+    - app/Helpers
+    - app/Http
+

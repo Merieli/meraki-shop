@@ -2,4 +2,4 @@ includes:
   - vendor/larastan/larastan/extension.neon
 
 parameters:
-  level: 6
+  level: 10

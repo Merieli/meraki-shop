@@ -1,0 +1,3 @@
+{
+    "phpstan.configuration": "./phpstan.dev.neon",
+}

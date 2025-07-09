@@ -2,13 +2,13 @@
 
 namespace MerakiShop\Http\Controllers\Settings;
 
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use Laravel\WorkOS\Http\Requests\AuthKitAccountDeletionRequest;
 use MerakiShop\Http\Controllers\Controller;
 use MerakiShop\Models\User;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ProfileController extends Controller
 {
@@ -31,7 +31,12 @@ class ProfileController extends Controller
             'name' => ['required', 'string', 'max:255'],
         ]);
 
-        $request->user()->update(['name' => $request->name]);
+        $user = $request->user();
+        abort_if(!$user, 403);
+
+        $user->update([
+            'name' => $request->name
+        ]);
 
         return to_route('profile.edit');
     }

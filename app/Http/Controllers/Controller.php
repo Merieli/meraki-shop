@@ -6,10 +6,15 @@ use Illuminate\Routing\Controller as BaseController;
 
 abstract class Controller extends BaseController
 {
-    public function getQueries($fields = [])
+    /**
+     * Get all queries of request
+     * @param array<string> $fields
+     * @return array<mixed>
+     */
+    public function getQueries(array $fields = []): array
     {
         $fields = array_merge(['page', 'filter', 'sort'], $fields);
 
-        return $this->request()->only($fields);
+        return request()->only($fields);
     }
 }

@@ -9,9 +9,9 @@ class ProductFormRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array
+     * @return array<string, array<string>>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             // The name of the product

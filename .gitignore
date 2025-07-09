@@ -20,12 +20,11 @@ yarn-error.log
 /.fleet
 /.idea
 /.nova
-/.vscode
 /.zed
 
 # Vitepress
 .docs/.vitepress/cache
 .docs/.vitepress/dist
 
-# PHPStan
-phpstan.dev.neon
+# PHPStan - Habilitar o ignore abaixo ao usar com mais de 1 dev
+# phpstan.dev.neon

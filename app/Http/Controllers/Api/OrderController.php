@@ -3,6 +3,7 @@
 namespace MerakiShop\Http\Controllers\Api;
 
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use MerakiShop\Facades\Logger;
@@ -19,7 +20,7 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, Authenticatable $user)
+    public function index(Request $request, Authenticatable $user): JsonResponse
     {
         try {
             if ($request->input('scope') === 'all') {
@@ -29,12 +30,13 @@ class OrderController extends Controller
 
                 Logger::info('All orders found for dashboard', ['count' => $orders->count()]);
             } else {
-                $user = User::find($user['id']);
+                $userId = $user->getAuthIdentifier();
+                $user = User::find($userId);
                 if (! $user) {
                     return response()->json(['message' => 'User not found'], 404);
                 }
 
-                $orders = Order::where('user_id', $user['id'])
+                $orders = Order::where('user_id', $userId)
                     ->with(['orderItems.product'])
                     ->get();
 
@@ -110,16 +112,14 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreOrderRequest $request, Authenticatable $user)
+    public function store(StoreOrderRequest $request, Authenticatable $user): JsonResponse
     {
         try {
-            if (empty($user['id'])) {
-                return response()->json(['message' => 'User not found'], 401);
-            }
+            $userId = $user->getAuthIdentifier();
 
-            return DB::transaction(function () use ($request, $user) {
+            return DB::transaction(function () use ($request, $userId) {
                 $order = Order::create([
-                    'user_id' => $user['id'],
+                    'user_id' => $userId,
                     'status' => $request->status,
                     'payment_method' => $request->payment_method,
                 ]);
@@ -134,7 +134,7 @@ class OrderController extends Controller
 
                 Logger::info('Order created successfully', [
                     'order_id' => $order->id,
-                    'user_id' => $user['id'],
+                    'user_id' => $userId,
                 ]);
 
                 $product = Product::find($request->product_id);
@@ -173,7 +173,7 @@ class OrderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateOrderRequest $request, string $id, Authenticatable $user)
+    public function update(UpdateOrderRequest $request, string $id, Authenticatable $user): JsonResponse
     {
         try {
             return DB::transaction(function () use ($id, $request, $user) {
@@ -183,7 +183,8 @@ class OrderController extends Controller
                     return response()->json(['message' => 'Order not found'], 404);
                 }
 
-                if ($user['id'] !== $order->user_id) {
+                $userId = $user->getAuthIdentifier();
+                if ($userId !== $order->user_id) {
                     return response()->json(['message' => 'Unauthorized'], 403);
                 }
 

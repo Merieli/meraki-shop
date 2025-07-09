@@ -50,10 +50,14 @@ class AddressController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Authenticatable $user)
+    public function store(Request $request, Authenticatable $user): JsonResponse
     {
         try {
-            return $this->repository->create($request, $user);
+            $newAddress = $this->repository->create($request, $user);
+
+            return response()->json(
+                $newAddress,200
+            );
         } catch (\Throwable $e) {
             Logger::error('Create Address', [
                'exception' => $e,
@@ -73,10 +77,13 @@ class AddressController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id, Authenticatable $user)
+    public function update(Request $request, string $id, Authenticatable $user): JsonResponse
     {
         try {
-            return $this->repository->update($request, $id, $user);
+            $address = $this->repository
+                ->update($request, $id, $user);
+
+            return response()->json($address,200);
         } catch (\Throwable $e) {
             Logger::error('Update Address', [
                 'exception' => $e,

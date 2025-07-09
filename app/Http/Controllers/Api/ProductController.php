@@ -4,6 +4,8 @@ namespace MerakiShop\Http\Controllers\Api;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use MerakiShop\Models\Product;
 use MerakiShop\Facades\Logger;
 use MerakiShop\Facades\ProductService;
 use MerakiShop\Http\Controllers\Controller;
@@ -15,16 +17,16 @@ class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @response User[]
+     * @return JsonResponse|LengthAwarePaginator<int, Product>
      */
-    public function index(Request $request)
+    public function index(Request $request): JsonResponse|LengthAwarePaginator
     {
         try {
             $query = ProductService::getProducts($request);
-
+            
             $size = 25;
             if ($request->has('size')) {
+                /** @var int $size */
                 $size = $request->size;
             }
 
@@ -48,7 +50,7 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProductFormRequest $request)
+    public function store(ProductFormRequest $request): JsonResponse
     {
         try {
             $newProduct = ProductService::createProduct($request->validated());
@@ -69,7 +71,7 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id): JsonResponse
     {
         try {
             $product = ProductService::findProduct($id);
@@ -117,7 +119,7 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): JsonResponse|Response
     {
         try {
             $deleted = ProductService::deleteProduct($id);
@@ -128,7 +130,7 @@ class ProductController extends Controller
                 ], Response::HTTP_NOT_FOUND);
             }
 
-            return response()->json([], 204);
+            return response()->noContent();
         } catch (Throwable $e) {
             Logger::error('Falha ao excluir produto', [$e]);
 
