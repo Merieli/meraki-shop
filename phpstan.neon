@@ -2,4 +2,6 @@ includes:
   - vendor/larastan/larastan/extension.neon
 
 parameters:
-  level: 10
+    level: 10
+    excludePaths:
+        - tests/*
