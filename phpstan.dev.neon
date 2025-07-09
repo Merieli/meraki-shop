@@ -13,4 +13,3 @@ parameters:
       - app/Facades
       - app/Helpers
       - app/Http
-

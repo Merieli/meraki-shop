@@ -23,7 +23,7 @@ class ProductController extends Controller
     {
         try {
             $query = ProductService::getProducts($request);
-            
+
             $size = 25;
             if ($request->has('size')) {
                 /** @var int $size */

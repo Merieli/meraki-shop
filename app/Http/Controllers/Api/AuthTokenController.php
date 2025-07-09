@@ -17,7 +17,9 @@ class AuthTokenController extends Controller
             return abort(401, 'Invalid credentials');
         }
 
-        $token = $request->user()->createAccessToken('api-token')->plainTextToken;
+        $user = $request->user();
+
+        $token =  $user->createAccessToken('api-token')->plainTextToken;
 
         Logger::critical('token ->>', [$token]);
 

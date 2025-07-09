@@ -7,7 +7,7 @@ use MerakiShop\Models\User;
 
 class UserRepository implements UserRepositoryInterface
 {
-    public function findById(string $id): ?User
+    public function findById(int $id): ?User
     {
         return User::find($id);
     }

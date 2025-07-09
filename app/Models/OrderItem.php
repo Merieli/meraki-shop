@@ -4,6 +4,7 @@ namespace MerakiShop\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class OrderItem extends Model
 {
@@ -31,5 +32,14 @@ class OrderItem extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+
+    /**
+     * @return HasOne<Variation, $this>
+     */
+    public function variation(): HasOne
+    {
+        return $this->hasOne(Variation::class);
     }
 }

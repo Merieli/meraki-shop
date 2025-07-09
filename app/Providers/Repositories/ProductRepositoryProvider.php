@@ -1,6 +1,6 @@
 <?php
 
-namespace MerakiShop\Providers;
+namespace MerakiShop\Providers\Repositories;
 
 use Illuminate\Support\ServiceProvider;
 use MerakiShop\Contracts\Repositories\ProductRepositoryInterface;

@@ -47,7 +47,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'name' => config('app.name'),
             'quote' => [
-                'message' => is_string($message) ? trim($message) : '', 
+                'message' => is_string($message) ? trim($message) : '',
                 'author' => is_string($author) ? trim($author) : ''
             ],
             'auth' => [

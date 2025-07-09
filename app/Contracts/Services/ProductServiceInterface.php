@@ -3,9 +3,7 @@
 namespace MerakiShop\Contracts\Services;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
-use MerakiShop\Http\Requests\ProductFormRequest;
 use MerakiShop\Models\Product;
 
 interface ProductServiceInterface

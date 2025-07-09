@@ -14,20 +14,24 @@ class UserController extends Controller
             $user = $request->user();
 
             if (empty($user)) {
-                return response()->json([
+                return response()->json(
+                    [
                     'message' => 'Unauthorized'
-                ], 
-                401);
+                ],
+                    401
+                );
             }
 
             return response()->json(
-                 $user
+                $user
             );
         } catch (\Throwable $th) {
-            return response()->json([
+            return response()->json(
+                [
                 'message' => 'Error to get user'
-            ], 
-            $th->getCode());
+            ],
+                $th->getCode()
+            );
         }
     }
 }

@@ -24,7 +24,9 @@ class AddressController extends Controller
     public function index(Request $request, Authenticatable $user): JsonResponse
     {
         try {
-            $user = $this->userRepository->findById($user['id']);
+            /** @var int $userId */
+            $userId = $user->getAuthIdentifier();
+            $user = $this->userRepository->findById($userId);
 
             if (! $user) {
                 return response()->json(['message' => 'Nenhum endereço existente'], 404);
@@ -56,7 +58,8 @@ class AddressController extends Controller
             $newAddress = $this->repository->create($request, $user);
 
             return response()->json(
-                $newAddress,200
+                $newAddress,
+                200
             );
         } catch (\Throwable $e) {
             Logger::error('Create Address', [
@@ -83,7 +86,7 @@ class AddressController extends Controller
             $address = $this->repository
                 ->update($request, $id, $user);
 
-            return response()->json($address,200);
+            return response()->json($address, 200);
         } catch (\Throwable $e) {
             Logger::error('Update Address', [
                 'exception' => $e,

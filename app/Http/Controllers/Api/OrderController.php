@@ -10,10 +10,12 @@ use MerakiShop\Facades\Logger;
 use MerakiShop\Http\Controllers\Controller;
 use MerakiShop\Http\Requests\StoreOrderRequest;
 use MerakiShop\Http\Requests\UpdateOrderRequest;
-use MerakiShop\Models\Order;
-use MerakiShop\Models\OrderItem;
-use MerakiShop\Models\Product;
-use MerakiShop\Models\User;
+use MerakiShop\Models\{
+    User,
+    Order,
+    OrderItem,
+    Product
+};
 
 class OrderController extends Controller
 {
@@ -83,13 +85,14 @@ class OrderController extends Controller
                         'updated_at' => $order->updated_at,
                         'items' => $items->map(function ($item) {
                             $product = $item->product;
+                            $variation = $item->variation;
 
                             return [
                                 'id' => $item->id,
                                 'product_id' => $item->product_id,
                                 'variation_id' => $item->variation_id,
                                 'product_name' => $product ? $product->name : 'Unknown Product',
-                                'variation_name' => $item->variation ? $item->variation->name : 'Standard',
+                                'variation_name' => $variation->name ?? 'Standard',
                                 'quantity' => $item->quantity,
                                 'unit_price' => $item->unit_price,
                             ];

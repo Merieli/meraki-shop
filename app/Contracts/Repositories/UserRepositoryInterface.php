@@ -14,6 +14,6 @@ interface UserRepositoryInterface
     /**
      * Get addres byId
      */
-    public function findById(string $id): ?User;
+    public function findById(int $id): ?User;
     // public function update(string $id, array $data): ?User;
 }
