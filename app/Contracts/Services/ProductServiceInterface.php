@@ -26,9 +26,9 @@ interface ProductServiceInterface
     /**
      * Find product by id
      * @param string $id
-     * @return Product|null
+     * @return ?Product
      */
-    public function findProduct(string $id): Product|null|array;
+    public function findProduct(string $id): ?Product;
 
     /**
      * Update register of preoduct

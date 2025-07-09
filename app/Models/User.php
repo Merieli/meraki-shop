@@ -5,8 +5,7 @@ namespace MerakiShop\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\{HasMany,HasOne};
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -14,8 +13,10 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens;
+    /**
+     * @phpstan-use HasFactory<\Database\Factories\UserFactory>
+     */
     use HasFactory;
     use Notifiable;
 
@@ -57,6 +58,10 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Validate if is admin by role
+     * @return Attribute<string, bool>
+     */
     protected function isAdmin(): Attribute
     {
         return Attribute::make(
@@ -66,6 +71,7 @@ class User extends Authenticatable
 
     /**
      * Get the user's first name.
+     * @return Attribute<string, string>
      */
     protected function firstName(): Attribute
     {
@@ -76,6 +82,7 @@ class User extends Authenticatable
 
     /**
      * Get the user's last name.
+     * @return Attribute<string, string>
      */
     protected function lastName(): Attribute
     {
@@ -93,6 +100,7 @@ class User extends Authenticatable
 
     /**
      * Get the addres associated with the user
+     * @return HasOne<Address, $this>
      */
     public function address(): HasOne
     {
@@ -101,6 +109,7 @@ class User extends Authenticatable
 
     /**
      * Get the customer_card associated with the user
+     * @return HasOne<CustomerCard, $this>
      */
     public function customerCard(): HasOne
     {
@@ -109,6 +118,7 @@ class User extends Authenticatable
 
     /**
      * Get the customer_card associated with the user
+     * @return HasMany<Order, $this>
      */
     public function orders(): HasMany
     {

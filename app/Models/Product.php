@@ -25,7 +25,7 @@ class Product extends Model
         'sku',
     ];
 
-    protected static function booted()
+    protected static function booted(): void
     {
         self::addGlobalScope('ordered', function (Builder $queryBuilder) {
             $queryBuilder->orderBy('name');
