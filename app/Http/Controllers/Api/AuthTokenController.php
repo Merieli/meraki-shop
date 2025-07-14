@@ -8,9 +8,15 @@ use Illuminate\Support\Facades\Auth;
 use MerakiShop\Facades\Logger;
 use MerakiShop\Http\Controllers\Controller;
 use Laravel\Sanctum\NewAccessToken;
+use Throwable;
 
 class AuthTokenController extends Controller
-{
+{   
+    /**
+     * Create a token
+     * 
+     * @throws Throwable
+     */
     public function create(Request $request): JsonResponse
     {
         try {
@@ -33,7 +39,7 @@ class AuthTokenController extends Controller
             return response()->json([
                 'token' => $token,
             ]);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             Logger::error('Create Token', [
                 'exception' => $e,
                 'request' => $request,

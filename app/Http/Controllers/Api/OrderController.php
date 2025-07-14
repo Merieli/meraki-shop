@@ -15,11 +15,14 @@ use MerakiShop\Models\{
     Order,
     OrderItem
 };
+use Throwable;
 
 class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * 
+     * @throws Throwable
      */
     public function index(Request $request, Authenticatable $user): JsonResponse
     {
@@ -101,7 +104,7 @@ class OrderController extends Controller
             });
 
             return response()->json($formattedOrders);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             Logger::error('Error fetching orders', [$e]);
 
             return response()->json(
@@ -113,6 +116,8 @@ class OrderController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * 
+     * @throws Throwable
      */
     public function store(StoreOrderRequest $request, Authenticatable $user): JsonResponse
     {
@@ -160,7 +165,7 @@ class OrderController extends Controller
 
                 return response()->json($response, 201);
             }, 3);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             Logger::error('Failed to create order', [$e->getMessage()]);
 
             return response()->json(
@@ -172,6 +177,8 @@ class OrderController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * 
+     * @throws Throwable
      */
     public function update(UpdateOrderRequest $request, string $id, Authenticatable $user): JsonResponse
     {
@@ -194,7 +201,7 @@ class OrderController extends Controller
 
                 return response()->json($order->fresh());
             }, 3);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             Logger::error('Failed to update order', [$e->getMessage()]);
 
             return response()->json(

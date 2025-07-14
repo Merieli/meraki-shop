@@ -8,11 +8,14 @@ use Illuminate\Support\Facades\DB;
 use MerakiShop\Facades\Logger;
 use MerakiShop\Http\Controllers\Controller;
 use MerakiShop\Models\{CustomerCard, User};
+use Throwable;
 
 class CustomerCardController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * 
+     * @throws Throwable
      */
     public function index(Request $request, Authenticatable $user): JsonResponse
     {
@@ -25,7 +28,7 @@ class CustomerCardController extends Controller
             }
 
             return response()->json($user->customerCard);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             Logger::error('Get Customer Card', [
                 'exception' => $e,
                 'request' => $request,
@@ -42,6 +45,8 @@ class CustomerCardController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * 
+     * @throws Throwable
      */
     public function store(Request $request, Authenticatable $user): JsonResponse
     {
@@ -58,7 +63,7 @@ class CustomerCardController extends Controller
             }, 3);
 
             return response()->json($customerCard);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             Logger::error('Get Customer Card', [
                 'exception' => $e,
                 'request' => $request,
@@ -75,6 +80,8 @@ class CustomerCardController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * 
+     * @throws Throwable
      */
     public function update(Request $request, string $id, Authenticatable $user): JsonResponse
     {
@@ -98,7 +105,7 @@ class CustomerCardController extends Controller
             }, 3);
 
             return response()->json($customerCard);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             Logger::error('Get Customer Card', [
                 'exception' => $e,
                 'request' => $request,

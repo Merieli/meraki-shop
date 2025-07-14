@@ -9,6 +9,7 @@ use MerakiShop\Contracts\Repositories\AddressRepositoryInterface;
 use MerakiShop\Contracts\Repositories\UserRepositoryInterface;
 use MerakiShop\Facades\Logger;
 use MerakiShop\Http\Controllers\Controller;
+use Throwable;
 
 class AddressController extends Controller
 {
@@ -20,6 +21,8 @@ class AddressController extends Controller
 
     /**
      * Display a listing of the resource.
+     * 
+     * @throws Throwable
      */
     public function index(Request $request, Authenticatable $user): JsonResponse
     {
@@ -33,7 +36,7 @@ class AddressController extends Controller
             }
 
             return response()->json($user->address);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             Logger::error('List Address', [
                 'exception' => $e,
                 'request' => $request,
@@ -51,6 +54,8 @@ class AddressController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * 
+     * @throws Throwable
      */
     public function store(Request $request, Authenticatable $user): JsonResponse
     {
@@ -61,7 +66,7 @@ class AddressController extends Controller
                 $newAddress,
                 200
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             Logger::error('Create Address', [
                'exception' => $e,
                'request' => $request,
@@ -79,6 +84,7 @@ class AddressController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * @throws Throwable
      */
     public function update(Request $request, string $id, Authenticatable $user): JsonResponse
     {
@@ -87,7 +93,7 @@ class AddressController extends Controller
                 ->update($request, $id, $user);
 
             return response()->json($address, 200);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             Logger::error('Update Address', [
                 'exception' => $e,
                 'request' => $request,

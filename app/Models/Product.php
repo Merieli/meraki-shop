@@ -25,6 +25,9 @@ class Product extends Model
         'sku',
     ];
 
+    /**
+     * @throws \Throwable
+     */
     protected static function booted(): void
     {
         self::addGlobalScope('ordered', function (Builder $queryBuilder) {

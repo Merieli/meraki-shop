@@ -9,11 +9,14 @@ use Laravel\WorkOS\Http\Requests\AuthKitAccountDeletionRequest;
 use MerakiShop\Http\Controllers\Controller;
 use MerakiShop\Models\User;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Throwable;
 
 class ProfileController extends Controller
 {
     /**
      * Show the user's profile settings page.
+     * 
+     * @throws Throwable
      */
     public function edit(Request $request): Response
     {
@@ -24,6 +27,7 @@ class ProfileController extends Controller
 
     /**
      * Update the user's profile settings.
+     * @throws Throwable
      */
     public function update(Request $request): RedirectResponse
     {
@@ -43,6 +47,8 @@ class ProfileController extends Controller
 
     /**
      * Delete the user's account.
+     * 
+     * @throws Throwable
      */
     public function destroy(AuthKitAccountDeletionRequest $request): RedirectResponse
     {
