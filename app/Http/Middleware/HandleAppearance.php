@@ -13,6 +13,8 @@ class HandleAppearance
      * Handle an incoming request.
      *
      * @param Closure(Request): (Response)  $next
+     *
+     * @throws \RuntimeException
      */
     public function handle(Request $request, Closure $next): Response
     {

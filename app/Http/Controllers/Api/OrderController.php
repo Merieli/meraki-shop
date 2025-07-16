@@ -21,7 +21,7 @@ class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * 
+     *
      * @throws Throwable
      */
     public function index(Request $request, Authenticatable $user): JsonResponse
@@ -116,7 +116,7 @@ class OrderController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * 
+     *
      * @throws Throwable
      */
     public function store(StoreOrderRequest $request, Authenticatable $user): JsonResponse
@@ -177,7 +177,7 @@ class OrderController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * 
+     *
      * @throws Throwable
      */
     public function update(UpdateOrderRequest $request, string $id, Authenticatable $user): JsonResponse

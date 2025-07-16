@@ -11,10 +11,10 @@ use Laravel\Sanctum\NewAccessToken;
 use Throwable;
 
 class AuthTokenController extends Controller
-{   
+{
     /**
      * Create a token
-     * 
+     *
      * @throws Throwable
      */
     public function create(Request $request): JsonResponse

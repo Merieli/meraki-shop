@@ -21,7 +21,7 @@ class AddressController extends Controller
 
     /**
      * Display a listing of the resource.
-     * 
+     *
      * @throws Throwable
      */
     public function index(Request $request, Authenticatable $user): JsonResponse
@@ -54,7 +54,7 @@ class AddressController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * 
+     *
      * @throws Throwable
      */
     public function store(Request $request, Authenticatable $user): JsonResponse

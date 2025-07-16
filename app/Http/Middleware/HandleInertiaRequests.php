@@ -34,6 +34,8 @@ class HandleInertiaRequests extends Middleware
      * @see https://inertiajs.com/shared-data
      *
      * @return array<string, mixed>
+     *
+     * @throws \InvalidArgumentException
      */
     public function share(Request $request): array
     {

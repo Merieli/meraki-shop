@@ -12,6 +12,8 @@ interface ProductServiceInterface
      * Get all products
      * @param Request $request
      * @return Builder<Product>
+     *
+     * @throws \RuntimeException
      */
     public function getProducts(Request $request): Builder;
 

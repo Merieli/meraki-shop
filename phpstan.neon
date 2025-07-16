@@ -2,11 +2,14 @@ includes:
   - vendor/larastan/larastan/extension.neon
 
 parameters:
-    level: 6
+    level: 10
     excludePaths:
         - tests/*
         - config/*
         - vendor/*
     paths:
-      - app
-      - routes
+        - app
+        - routes
+    exceptions:
+        check:
+            missingCheckedExceptionInThrows: true

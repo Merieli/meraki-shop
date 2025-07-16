@@ -15,7 +15,7 @@ class ProfileController extends Controller
 {
     /**
      * Show the user's profile settings page.
-     * 
+     *
      * @throws Throwable
      */
     public function edit(Request $request): Response
@@ -47,7 +47,7 @@ class ProfileController extends Controller
 
     /**
      * Delete the user's account.
-     * 
+     *
      * @throws Throwable
      */
     public function destroy(AuthKitAccountDeletionRequest $request): RedirectResponse
