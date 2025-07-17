@@ -3,9 +3,9 @@
 namespace MerakiShop\Providers;
 
 use Dedoc\Scramble\Scramble;
-use Illuminate\Routing\Route;
+use Dedoc\Scramble\Support\Generator\OpenApi;
+use Dedoc\Scramble\Support\Generator\SecurityScheme;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Str;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,9 +22,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+
         Scramble::configure()
-            ->routes(function (Route $route) {
-                return Str::startsWith($route->uri, 'api/');
-            });
+        ->withDocumentTransformers(function (OpenApi $openApi) {
+            /** @var SecurityScheme $scheme */
+            $scheme = SecurityScheme::http('bearer');
+
+            $openApi->secure($scheme);
+        });
     }
 }
