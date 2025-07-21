@@ -25,6 +25,9 @@ Route::middleware('auth:sanctum')->group(function () {
         'order',
         OrderController::class,
     )->except(['create', 'edit', 'destroy', 'show']);
+
+    // Route::match(['post', 'put'], 'products', ProductController::class);
 });
 
+// Route::apiResource('products', ProductController::class)->except(['create', 'edit', 'store', 'upate']);
 Route::apiResource('products', ProductController::class)->except(['create', 'edit']);
