@@ -53,7 +53,6 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @unauthenticated
      * @throws Throwable
      */
     public function store(ProductFormRequest $request): JsonResponse
@@ -104,7 +103,6 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @unauthenticated
      * @throws Throwable
      */
     public function update(ProductFormRequest $request, string $id): JsonResponse
@@ -131,7 +129,6 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @unauthenticated
      * @throws Throwable
      */
     public function destroy(string $id): JsonResponse|Response
