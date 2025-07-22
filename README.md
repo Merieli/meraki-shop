@@ -94,6 +94,7 @@ npm install
 npm run build
 ```
 
+
 **🖥️ Development**
 ```sh
 # Start Laravel development server, queue listener, log watcher and Vite
@@ -102,6 +103,7 @@ cmp dev
 # Start documentation development server
 npm run docs:dev
 ```
+
 
 **🧹 Code Quality**
 ```sh
@@ -117,6 +119,7 @@ cmp valid
 # Format frontend code
 npm run format
 ```
+
 
 **🧪 Testing**
 ```sh
