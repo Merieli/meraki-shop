@@ -126,6 +126,7 @@ npm run format
 cmp test
 ```
 
+
 ### Accessing the Application
 
 - 🏠 Main application: http://localhost:8086
