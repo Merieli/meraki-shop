@@ -52,17 +52,12 @@ WORKDIR $APP_DIR
 # Instala dependências (aproveitando o cache do Docker)
 # --------------------------------------------------------------
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
-
 COPY package.json package-lock.json ./
-RUN npm install
 
 # --------------------------------------------------------------
-# Copia o código da aplicação e faz o build dos assets
+# Copia o código da aplicação
 # --------------------------------------------------------------
 COPY . .
-
-RUN npm run build
 
 # --------------------------------------------------------------
 # Finaliza a configuração
