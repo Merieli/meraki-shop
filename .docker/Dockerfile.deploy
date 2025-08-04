@@ -1,13 +1,17 @@
-ARG PHP_VERSION=8.4.9RC1-fpm-alpine3.22
-ARG PROJECT_NAME=meraki-shop
-ARG USER_NAME=$(whoami)
-
 FROM node:22-alpine AS node-stage
 
-FROM php:${PHP_VERSION}
+FROM php:8.4.9RC1-fpm-alpine3.22
+
+ARG APP_USER=meraki
 
 # Diretório da aplicação
-ENV APP_DIR="/var/www/${PROJECT_NAME}"
+ENV APP_DIR="/var/www/meraki-shop"
+
+# --------------------------------------------------------------
+# Cria um usuário não-root para rodar a aplicação
+# --------------------------------------------------------------
+RUN addgroup -g 1000 -S ${APP_USER} && \
+    adduser -u 1000 -S ${APP_USER} -G ${APP_USER}
 
 # --------------------------------------------------------------
 # Instalação de dependências do sistema operacional
@@ -27,16 +31,16 @@ RUN apk update && apk add --no-cache \
 
 # --------------------------------------------------------------
 # EXTENSÕES DO PHP
-# --------------------------------------------------------------    
+# --------------------------------------------------------------
 # Instala extensões do PHP: mysqli, pdo, pdo_mysql, pdo_pgsql, pgsql, session, xml
 RUN docker-php-ext-install mysqli pdo pdo_mysql pdo_pgsql pgsql session xml
 
 # Instala extensões do PHP: zip, simplexml, pcntl, gd, fileinfo e mbstring
 RUN docker-php-ext-install zip simplexml pcntl gd fileinfo mbstring
 
-# --------------------------------------------------------------    
+# --------------------------------------------------------------
 # Instala a última versão do Composer para o PHP
-# --------------------------------------------------------------    
+# --------------------------------------------------------------
 COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
 
 # --------------------------------------------------------------
@@ -44,28 +48,10 @@ COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
 # --------------------------------------------------------------
 COPY ./.docker/php/php.ini "$PHP_INI_DIR/conf.d/99_extra.ini"
 COPY ./.docker/php/php-fpm.conf /usr/local/etc/php-fpm.d
+COPY ./.docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # --------------------------------------------------------------
 WORKDIR $APP_DIR
-
-# Altera o proprietário e o grupo do diretório da aplicação - definido pela variável $APP_DIR
-RUN chown ${USER_NAME}:${USER_NAME} $APP_DIR
-
-# Copio tudo que está na pasta para dentro do container usando o usuário
-COPY --chown=${USER_NAME}:${USER_NAME} . .
-
-# --------------------------------------------------------------
-# Remove as dependências antigas e instala as novas do composer
-# --------------------------------------------------------------
-RUN [ -d "vendor" ] && rm -rf vendor || true
-
-# --------------------------------------------------------------
-# Cria alias para executar o comando do Composer
-# Alias `cmp` que executa o comando `composer`
-# --------------------------------------------------------------
-RUN echo '#!/bin/sh' > /usr/local/bin/cmp && \
-    echo 'composer "$@"' >> /usr/local/bin/cmp && \
-    chmod +x /usr/local/bin/cmp
 
 # --------------------------------------------------------------
 # Instala o Node para os comandos do npm
@@ -79,12 +65,19 @@ RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm && \
 
 RUN npm install -g npm@latest
 
-# --------------------------------------------------------------
-# Instala o Laravel
-# --------------------------------------------------------------
-RUN composer global require laravel/installer
+# Copia os arquivos da aplicação
+COPY --chown=${APP_USER}:${APP_USER} . .
 
-# Adiciona o diretório bin do composer ao PATH para o usuário
-ENV PATH="/home/${USER_NAME}/.composer/vendor/bin:${PATH}"
+# Muda para o usuário não-root
+USER $APP_USER
 
-USER $USER_NAME
+# --------------------------------------------------------------
+# Instala dependências do Composer e NPM
+# --------------------------------------------------------------
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+RUN npm install
+RUN npm run build
+
+# Expõe a porta 9000 e inicia o supervisor para gerenciar php-fpm
+EXPOSE 9000
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
