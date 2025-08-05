@@ -3,15 +3,14 @@ FROM php:8.4.9RC1-fpm-alpine3.22
 ENV APP_DIR="/var/www/meraki-shop"
 ENV COMPOSER_MEMORY_LIMIT=-1
 ENV COMPOSER_ALLOW_SUPERUSER=1
-# Aumenta o tempo limite do Composer e ativa logs detalhados
-ENV COMPOSER_PROCESS_TIMEOUT=2000
-ENV COMPOSER_DEBUG=1
+ENV NGINX_VERSION=1.24.0
 
 # --------------------------------------------------------------
 # Instalação de dependências do sistema e extensões PHP
 # --------------------------------------------------------------
 RUN apk update && apk add --no-cache \
     supervisor \
+    nginx \
     zlib-dev \
     libzip-dev \
     libpng-dev \
@@ -23,7 +22,6 @@ RUN apk update && apk add --no-cache \
     gnu-libiconv-dev \
     oniguruma-dev \
     shadow \
-    # Dependências adicionais que podem ser necessárias
     icu-dev \
     linux-headers \
     git \
@@ -65,20 +63,17 @@ RUN usermod -u 1000 www-data && \
 
 # Copia configurações
 COPY ./.docker/php/php.ini "$PHP_INI_DIR/conf.d/99_extra.ini"
-COPY ./.docker/php/php-fpm.conf /usr/local/etc/php-fpm.d
+COPY ./.docker/php/php-fpm.conf /usr/local/etc/php-fpm.d/
 COPY ./.docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY ./.docker/nginx/default.conf /etc/nginx/http.d/default.conf
 
 WORKDIR $APP_DIR
 
 # --------------------------------------------------------------
 # Instala dependências (aproveitando o cache do Docker)
 # --------------------------------------------------------------
-# Copia apenas os arquivos necessários para instalar dependências
 COPY --chown=www-data:www-data composer.* ./
-
-# Instala dependências do Composer com log detalhado
-RUN set -x && \
-    composer install \
+RUN composer install \
     --no-dev \
     --no-interaction \
     --prefer-dist \
@@ -88,7 +83,6 @@ RUN set -x && \
     --verbose \
     --ignore-platform-reqs
 
-# Instala dependências do NPM
 COPY --chown=www-data:www-data package*.json ./
 RUN npm ci --no-audit --no-fund
 
@@ -103,20 +97,22 @@ RUN npm run build
 # --------------------------------------------------------------
 # Finaliza a configuração
 # --------------------------------------------------------------
-# Garante permissões corretas
 RUN chown -R www-data:www-data ${APP_DIR} && \
     chmod -R 755 ${APP_DIR}/storage && \
-    chmod -R 755 ${APP_DIR}/bootstrap/cache
-
-# Limpa o cache do Composer e NPM para reduzir o tamanho da imagem
-RUN composer clear-cache && \
+    chmod -R 755 ${APP_DIR}/bootstrap/cache && \
+    # Configura permissões do Nginx
+    mkdir -p /var/log/nginx && \
+    chown -R www-data:www-data /var/log/nginx && \
+    mkdir -p /var/lib/nginx && \
+    chown -R www-data:www-data /var/lib/nginx && \
+    # Limpa caches
+    composer clear-cache && \
     npm cache clean --force
 
-# Muda para o usuário não-root
 USER www-data
 
-# Expõe a porta do servidor Laravel
+# Expõe a porta 80 para o Nginx
 EXPOSE 80
 
-# Inicia todos os serviços via supervisor
+# Inicia Nginx e PHP-FPM via supervisor
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
