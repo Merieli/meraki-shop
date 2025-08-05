@@ -2,11 +2,10 @@
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
     "builder": "DOCKERFILE",
-    "dockerfilePath": ".docker/Dockerfile.deploy"
+    "dockerfilePath": ".docker/Dockerfile.deploy",
+    "watchPatterns": ["resources/**", "app/**"]
   },
   "deploy": {
-    "startCommand": "supervisord -c /etc/supervisor/conf.d/supervisord.conf",
-    "buildCommand": "composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader && npm install && npm run build",
-    "releaseCommand": "php artisan migrate --force"
+    "startCommand": "php artisan migrate --force && supervisord -c /etc/supervisor/conf.d/supervisord.conf"
   }
 }
