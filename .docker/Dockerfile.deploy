@@ -108,12 +108,27 @@ COPY --chown=www-data:www-data . .
 # Compila assets
 RUN npm run build
 
+# --------------------------------------------------------------
+# Configuração do Laravel após copiar todos os arquivos
+# --------------------------------------------------------------
+# Garante que o arquivo .env existe antes de gerar a chave
+RUN if [ ! -f .env ]; then \
+    if [ -f .env.example ]; then \
+    cp .env.example .env; \
+    else \
+    echo "APP_NAME=Meraki Shop" > .env && \
+    echo "APP_ENV=production" >> .env && \
+    echo "APP_DEBUG=false" >> .env && \
+    echo "LOG_CHANNEL=errorlog" >> .env; \
+    fi; \
+    fi
+
+# Agora gera a chave do Laravel
+RUN php artisan key:generate --force
+
 # Limpa caches
 RUN composer clear-cache && \
     npm cache clean --force
-
-# Cria arquivo .env se não existir e gera chave da aplicação
-RUN php artisan key:generate --force
 
 # Expõe a porta 80 para o Nginx
 EXPOSE 80
