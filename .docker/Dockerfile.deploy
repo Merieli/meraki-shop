@@ -3,7 +3,6 @@ FROM php:8.4.9RC1-fpm-alpine3.22
 ENV APP_DIR="/var/www/meraki-shop"
 ENV COMPOSER_MEMORY_LIMIT=-1
 ENV COMPOSER_ALLOW_SUPERUSER=1
-ENV NGINX_VERSION=1.24.0
 
 # --------------------------------------------------------------
 # Instalação de dependências do sistema e extensões PHP
@@ -35,8 +34,7 @@ RUN docker-php-ext-install mysqli pdo pdo_mysql pdo_pgsql pgsql session xml && \
     docker-php-ext-install opcache intl
 
 # Configura o PHP para produção
-RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" && \
-    echo "memory_limit=512M" >> "$PHP_INI_DIR/php.ini"
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 # Instala Composer
 COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
@@ -55,15 +53,25 @@ RUN mkdir -p ${APP_DIR} && \
     mkdir -p ${APP_DIR}/storage/logs && \
     mkdir -p ${APP_DIR}/storage/framework/{sessions,views,cache} && \
     mkdir -p ${APP_DIR}/bootstrap/cache && \
-    chown -R www-data:www-data ${APP_DIR}
-
-# Configura usuário www-data
-RUN usermod -u 1000 www-data && \
-    groupmod -g 1000 www-data
+    mkdir -p /run && \
+    mkdir -p /var/log/nginx && \
+    mkdir -p /var/lib/nginx && \
+    mkdir -p /var/log/supervisor && \
+    mkdir -p /etc/nginx/http.d && \
+    chown -R www-data:www-data ${APP_DIR} && \
+    chown -R www-data:www-data /var/log/nginx && \
+    chown -R www-data:www-data /var/lib/nginx && \
+    chown -R www-data:www-data /run && \
+    chmod -R 755 ${APP_DIR} && \
+    chmod -R 777 ${APP_DIR}/storage && \
+    chmod -R 777 ${APP_DIR}/bootstrap/cache && \
+    chmod -R 755 /var/log/nginx && \
+    chmod -R 755 /var/lib/nginx && \
+    chmod -R 777 /run
 
 # Copia configurações
 COPY ./.docker/php/php.ini "$PHP_INI_DIR/conf.d/99_extra.ini"
-COPY ./.docker/php/php-fpm.conf /usr/local/etc/php-fpm.d/
+COPY ./.docker/php/php-fpm.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 COPY ./.docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY ./.docker/nginx/default.conf /etc/nginx/http.d/default.conf
 
@@ -94,28 +102,9 @@ COPY --chown=www-data:www-data . .
 # Compila assets
 RUN npm run build
 
-# --------------------------------------------------------------
-# Finaliza a configuração
-# --------------------------------------------------------------
-RUN chown -R www-data:www-data ${APP_DIR} && \
-    chmod -R 755 ${APP_DIR}/storage && \
-    chmod -R 755 ${APP_DIR}/bootstrap/cache && \
-    # Configura permissões do Nginx
-    mkdir -p /var/log/nginx && \
-    chown -R www-data:www-data /var/log/nginx && \
-    mkdir -p /var/lib/nginx && \
-    chown -R www-data:www-data /var/lib/nginx && \
-    # Configura permissões do Supervisor
-    mkdir -p /var/log/supervisor && \
-    chmod -R 777 /var/log/supervisor && \
-    mkdir -p /var/run && \
-    chmod -R 777 /var/run && \
-    # Limpa caches
-    composer clear-cache && \
+# Limpa caches
+RUN composer clear-cache && \
     npm cache clean --force
-
-# Removemos a mudança de usuário daqui, o Supervisor precisa iniciar como root
-# para poder depois mudar para www-data nos processos filhos
 
 # Expõe a porta 80 para o Nginx
 EXPOSE 80
