@@ -3,6 +3,9 @@ FROM php:8.4.9RC1-fpm-alpine3.22
 ENV APP_DIR="/var/www/meraki-shop"
 ENV COMPOSER_MEMORY_LIMIT=-1
 ENV COMPOSER_ALLOW_SUPERUSER=1
+# Aumenta o tempo limite do Composer e ativa logs detalhados
+ENV COMPOSER_PROCESS_TIMEOUT=2000
+ENV COMPOSER_DEBUG=1
 
 # --------------------------------------------------------------
 # Instalação de dependências do sistema e extensões PHP
@@ -19,10 +22,23 @@ RUN apk update && apk add --no-cache \
     make \
     gnu-libiconv-dev \
     oniguruma-dev \
-    shadow
+    shadow \
+    # Dependências adicionais que podem ser necessárias
+    icu-dev \
+    linux-headers \
+    git \
+    autoconf \
+    g++ \
+    openssh
 
-RUN docker-php-ext-install mysqli pdo pdo_mysql pdo_pgsql pgsql session xml
-RUN docker-php-ext-install zip simplexml pcntl gd fileinfo mbstring
+# Instala e habilita extensões do PHP
+RUN docker-php-ext-install mysqli pdo pdo_mysql pdo_pgsql pgsql session xml && \
+    docker-php-ext-install zip simplexml pcntl gd fileinfo mbstring && \
+    docker-php-ext-install opcache intl
+
+# Configura o PHP para produção
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" && \
+    echo "memory_limit=512M" >> "$PHP_INI_DIR/php.ini"
 
 # Instala Composer
 COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
@@ -31,13 +47,21 @@ COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
 COPY --from=node:22-alpine /usr/local/bin/node /usr/local/bin/
 COPY --from=node:22-alpine /usr/local/lib/node_modules /usr/local/lib/node_modules
 RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm && \
-    ln -s /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx
-RUN npm install -g npm@latest
+    ln -s /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx && \
+    npm install -g npm@latest
 
 # --------------------------------------------------------------
 # Configuração de diretórios e permissões
 # --------------------------------------------------------------
-RUN mkdir -p ${APP_DIR} && chown -R www-data:www-data ${APP_DIR}
+RUN mkdir -p ${APP_DIR} && \
+    mkdir -p ${APP_DIR}/storage/logs && \
+    mkdir -p ${APP_DIR}/storage/framework/{sessions,views,cache} && \
+    mkdir -p ${APP_DIR}/bootstrap/cache && \
+    chown -R www-data:www-data ${APP_DIR}
+
+# Configura usuário www-data
+RUN usermod -u 1000 www-data && \
+    groupmod -g 1000 www-data
 
 # Copia configurações
 COPY ./.docker/php/php.ini "$PHP_INI_DIR/conf.d/99_extra.ini"
@@ -49,27 +73,46 @@ WORKDIR $APP_DIR
 # --------------------------------------------------------------
 # Instala dependências (aproveitando o cache do Docker)
 # --------------------------------------------------------------
-COPY --chown=www-data:www-data composer.json composer.lock ./
-RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+# Copia apenas os arquivos necessários para instalar dependências
+COPY --chown=www-data:www-data composer.* ./
 
-COPY --chown=www-data:www-data package.json package-lock.json ./
-RUN npm ci && \
-    npm run build
+# Instala dependências do Composer com log detalhado
+RUN set -x && \
+    composer install \
+    --no-dev \
+    --no-interaction \
+    --prefer-dist \
+    --optimize-autoloader \
+    --no-scripts \
+    --no-progress \
+    --verbose \
+    --ignore-platform-reqs
+
+# Instala dependências do NPM
+COPY --chown=www-data:www-data package*.json ./
+RUN npm ci --no-audit --no-fund
 
 # --------------------------------------------------------------
 # Copia o código da aplicação
 # --------------------------------------------------------------
 COPY --chown=www-data:www-data . .
 
+# Compila assets
+RUN npm run build
+
 # --------------------------------------------------------------
 # Finaliza a configuração
 # --------------------------------------------------------------
 # Garante permissões corretas
-RUN chown -R www-data:www-data ${APP_DIR} \
-    && chmod -R 755 ${APP_DIR}/storage \
-    && chmod -R 755 ${APP_DIR}/bootstrap/cache
+RUN chown -R www-data:www-data ${APP_DIR} && \
+    chmod -R 755 ${APP_DIR}/storage && \
+    chmod -R 755 ${APP_DIR}/bootstrap/cache
 
-# Muda para o usuário não-root para a execução
+# Limpa o cache do Composer e NPM para reduzir o tamanho da imagem
+RUN composer clear-cache && \
+    npm cache clean --force
+
+# Muda para o usuário não-root
 USER www-data
 
 # Expõe a porta do servidor Laravel
