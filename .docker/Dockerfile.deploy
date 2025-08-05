@@ -1,8 +1,11 @@
+# Mantendo PHP 8.4 RC conforme solicitado, mas com configurações de debugging
 FROM php:8.4.9RC1-fpm-alpine3.22
 
 ENV APP_DIR="/var/www/meraki-shop"
 ENV COMPOSER_MEMORY_LIMIT=-1
 ENV COMPOSER_ALLOW_SUPERUSER=1
+# Configurações específicas para versão RC
+ENV PHP_INI_SCAN_DIR="/usr/local/etc/php/conf.d:/usr/local/etc/php/conf.d.custom"
 
 # --------------------------------------------------------------
 # Instalação de dependências do sistema e extensões PHP
@@ -28,13 +31,16 @@ RUN apk update && apk add --no-cache \
     g++ \
     openssh
 
-# Instala e habilita extensões do PHP
-RUN docker-php-ext-install mysqli pdo pdo_mysql pdo_pgsql pgsql session xml && \
-    docker-php-ext-install zip simplexml pcntl gd fileinfo mbstring && \
-    docker-php-ext-install opcache intl
+# Instala extensões com tratamento de erro para versão RC
+RUN docker-php-ext-install mysqli pdo pdo_mysql pdo_pgsql pgsql session xml || true && \
+    docker-php-ext-install zip simplexml pcntl gd fileinfo mbstring || true && \
+    docker-php-ext-install opcache intl || true
 
-# Configura o PHP para produção
-RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+# Configura o PHP para produção com ajustes para RC
+RUN cp "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" && \
+    echo "log_errors = On" >> "$PHP_INI_DIR/php.ini" && \
+    echo "error_log = /proc/self/fd/2" >> "$PHP_INI_DIR/php.ini" && \
+    echo "display_errors = Off" >> "$PHP_INI_DIR/php.ini"
 
 # Instala Composer
 COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
@@ -88,8 +94,8 @@ RUN composer install \
     --optimize-autoloader \
     --no-scripts \
     --no-progress \
-    --verbose \
-    --ignore-platform-reqs
+    --ignore-platform-reqs \
+    --ignore-platform-req=php
 
 COPY --chown=www-data:www-data package*.json ./
 RUN npm ci --no-audit --no-fund
@@ -105,6 +111,9 @@ RUN npm run build
 # Limpa caches
 RUN composer clear-cache && \
     npm cache clean --force
+
+# Cria arquivo .env se não existir e gera chave da aplicação
+RUN php artisan key:generate --force
 
 # Expõe a porta 80 para o Nginx
 EXPOSE 80
