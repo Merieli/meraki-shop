@@ -105,11 +105,17 @@ RUN chown -R www-data:www-data ${APP_DIR} && \
     chown -R www-data:www-data /var/log/nginx && \
     mkdir -p /var/lib/nginx && \
     chown -R www-data:www-data /var/lib/nginx && \
+    # Configura permissões do Supervisor
+    mkdir -p /var/log/supervisor && \
+    chmod -R 777 /var/log/supervisor && \
+    mkdir -p /var/run && \
+    chmod -R 777 /var/run && \
     # Limpa caches
     composer clear-cache && \
     npm cache clean --force
 
-USER www-data
+# Removemos a mudança de usuário daqui, o Supervisor precisa iniciar como root
+# para poder depois mudar para www-data nos processos filhos
 
 # Expõe a porta 80 para o Nginx
 EXPOSE 80
