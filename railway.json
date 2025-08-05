@@ -3,9 +3,13 @@
   "build": {
     "builder": "DOCKERFILE",
     "dockerfilePath": ".docker/Dockerfile.deploy",
-    "watchPatterns": ["resources/**", "app/**"]
+    "watchPatterns": [
+      "resources/**",
+      "app/**"
+    ]
   },
   "deploy": {
-    "startCommand": "php artisan migrate --force && supervisord -c /etc/supervisor/conf.d/supervisord.conf"
+    "releaseCommand": "php artisan migrate --force && php artisan config:cache && php artisan route:cache && php artisan view:cache",
+    "startCommand": "supervisord -c /etc/supervisor/conf.d/supervisord.conf"
   }
 }
