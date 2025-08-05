@@ -1,6 +1,5 @@
 FROM php:8.4.9RC1-fpm-alpine3.22
 
-ARG APP_USER=meraki
 ENV APP_DIR="/var/www/meraki-shop"
 # Resolve potenciais problemas de memória do Composer em ambientes de build
 ENV COMPOSER_MEMORY_LIMIT=-1
@@ -19,7 +18,8 @@ RUN apk update && apk add --no-cache \
     curl \
     make \
     gnu-libiconv-dev \
-    oniguruma-dev
+    oniguruma-dev \
+    shadow
 
 RUN docker-php-ext-install mysqli pdo pdo_mysql pdo_pgsql pgsql session xml
 RUN docker-php-ext-install zip simplexml pcntl gd fileinfo mbstring
@@ -35,11 +35,23 @@ RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm && \
 RUN npm install -g npm@latest
 
 # --------------------------------------------------------------
-# Configura o ambiente da aplicação
+# Configuração de diretórios e permissões
 # --------------------------------------------------------------
-# Cria usuário não-root
-RUN addgroup -g 1000 -S ${APP_USER} && \
-    adduser -u 1000 -S ${APP_USER} -G ${APP_USER}
+# Cria diretórios necessários com permissões adequadas
+RUN mkdir -p /usr/local/var/log \
+    && mkdir -p /usr/local/var/run \
+    && mkdir -p ${APP_DIR}/storage/logs \
+    && mkdir -p ${APP_DIR}/storage/framework/{sessions,views,cache} \
+    && mkdir -p ${APP_DIR}/bootstrap/cache \
+    && chown -R www-data:www-data /usr/local/var/log \
+    && chown -R www-data:www-data /usr/local/var/run \
+    && chmod -R 755 /usr/local/var/log \
+    && chmod -R 755 /usr/local/var/run
+
+# Configura usuário www-data
+RUN usermod -u 1000 www-data \
+    && groupmod -g 1000 www-data \
+    && chown -R www-data:www-data ${APP_DIR}
 
 # Copia configurações
 COPY ./.docker/php/php.ini "$PHP_INI_DIR/conf.d/99_extra.ini"
@@ -63,10 +75,12 @@ COPY . .
 # Finaliza a configuração
 # --------------------------------------------------------------
 # Ajusta as permissões dos arquivos para o usuário da aplicação
-RUN chown -R ${APP_USER}:${APP_USER} ${APP_DIR}
+RUN chown -R www-data:www-data ${APP_DIR} \
+    && chmod -R 755 ${APP_DIR}/storage \
+    && chmod -R 755 ${APP_DIR}/bootstrap/cache
 
 # Muda para o usuário não-root para a execução
-USER $APP_USER
+USER www-data
 
 # Expõe a porta e inicia o supervisor
 EXPOSE 9000
