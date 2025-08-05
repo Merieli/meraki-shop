@@ -36,11 +36,8 @@ RUN docker-php-ext-install mysqli pdo pdo_mysql pdo_pgsql pgsql session xml || t
     docker-php-ext-install zip simplexml pcntl gd fileinfo mbstring || true && \
     docker-php-ext-install opcache intl || true
 
-# Configura o PHP para produção com ajustes para RC
-RUN cp "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" && \
-    echo "log_errors = On" >> "$PHP_INI_DIR/php.ini" && \
-    echo "error_log = /proc/self/fd/2" >> "$PHP_INI_DIR/php.ini" && \
-    echo "display_errors = Off" >> "$PHP_INI_DIR/php.ini"
+# Configura o PHP para produção de forma simplificada
+RUN cp "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 # Instala Composer
 COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
@@ -53,7 +50,7 @@ RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm && \
     npm install -g npm@latest
 
 # --------------------------------------------------------------
-# Configuração de diretórios e permissões
+# Configuração de diretórios e permissões simplificada
 # --------------------------------------------------------------
 RUN mkdir -p ${APP_DIR} && \
     mkdir -p ${APP_DIR}/storage/logs && \
@@ -64,16 +61,9 @@ RUN mkdir -p ${APP_DIR} && \
     mkdir -p /var/lib/nginx && \
     mkdir -p /var/log/supervisor && \
     mkdir -p /etc/nginx/http.d && \
-    chown -R www-data:www-data ${APP_DIR} && \
-    chown -R www-data:www-data /var/log/nginx && \
-    chown -R www-data:www-data /var/lib/nginx && \
-    chown -R www-data:www-data /run && \
-    chmod -R 755 ${APP_DIR} && \
-    chmod -R 777 ${APP_DIR}/storage && \
-    chmod -R 777 ${APP_DIR}/bootstrap/cache && \
-    chmod -R 755 /var/log/nginx && \
-    chmod -R 755 /var/lib/nginx && \
-    chmod -R 777 /run
+    chmod -R 777 /run && \
+    chmod -R 777 /var/log && \
+    chmod -R 777 /var/lib/nginx
 
 # Copia configurações
 COPY ./.docker/php/php.ini "$PHP_INI_DIR/conf.d/99_extra.ini"
@@ -116,15 +106,22 @@ RUN if [ ! -f .env ]; then \
     if [ -f .env.example ]; then \
     cp .env.example .env; \
     else \
-    echo "APP_NAME=Meraki Shop" > .env && \
+    echo "APP_NAME=MerakiShop" > .env && \
     echo "APP_ENV=production" >> .env && \
     echo "APP_DEBUG=false" >> .env && \
     echo "LOG_CHANNEL=errorlog" >> .env; \
     fi; \
     fi
 
-# Agora gera a chave do Laravel
-RUN php artisan key:generate --force
+# Agora gera a chave do Laravel (só se não existir APP_KEY)
+RUN if ! grep -q "APP_KEY=" .env || grep -q "APP_KEY=$" .env || grep -q "APP_KEY=null" .env; then \
+    php artisan key:generate --force; \
+    fi
+
+# Configura permissões finais
+RUN chown -R www-data:www-data ${APP_DIR} && \
+    chmod -R 777 ${APP_DIR}/storage && \
+    chmod -R 777 ${APP_DIR}/bootstrap/cache
 
 # Limpa caches
 RUN composer clear-cache && \
