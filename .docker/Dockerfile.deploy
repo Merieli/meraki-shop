@@ -50,7 +50,7 @@ RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm && \
     npm install -g npm@latest
 
 # --------------------------------------------------------------
-# Configuração de diretórios e permissões simplificada
+# Configuração de diretórios e permissões completa
 # --------------------------------------------------------------
 RUN mkdir -p ${APP_DIR} && \
     mkdir -p ${APP_DIR}/storage/logs && \
@@ -61,9 +61,14 @@ RUN mkdir -p ${APP_DIR} && \
     mkdir -p /var/lib/nginx && \
     mkdir -p /var/log/supervisor && \
     mkdir -p /etc/nginx/http.d && \
+    # Cria arquivos de log com permissões corretas
+    touch /var/log/php-fpm.log && \
+    chmod 777 /var/log/php-fpm.log && \
+    # Configura permissões gerais
     chmod -R 777 /run && \
     chmod -R 777 /var/log && \
-    chmod -R 777 /var/lib/nginx
+    chmod -R 777 /var/lib/nginx && \
+    chmod -R 777 /tmp
 
 # Copia configurações
 COPY ./.docker/php/php.ini "$PHP_INI_DIR/conf.d/99_extra.ini"
