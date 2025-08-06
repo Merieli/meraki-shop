@@ -132,12 +132,14 @@ RUN if ! grep -q "APP_KEY=" .env || grep -q "APP_KEY=$" .env || grep -q "APP_KEY
     fi
 
 # Teste de configuração do PHP-FPM antes de finalizar
-RUN php-fpm -t
+RUN php-fpm -t && \
+    echo "PHP-FPM configuration test passed"
 
 # Configura permissões finais
 RUN chown -R www-data:www-data ${APP_DIR} && \
-    chmod -R 777 ${APP_DIR}/storage && \
-    chmod -R 777 ${APP_DIR}/bootstrap/cache
+    chmod -R 775 ${APP_DIR}/storage && \
+    chmod -R 775 ${APP_DIR}/bootstrap/cache && \
+    chown -R www-data:www-data /run
 
 # Limpa caches
 RUN composer clear-cache && \
