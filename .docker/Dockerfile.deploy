@@ -132,11 +132,8 @@ RUN if ! grep -q "APP_KEY=" .env || grep -q "APP_KEY=$" .env || grep -q "APP_KEY
     php artisan key:generate --force; \
     fi
 
-# Teste de configuração do PHP-FPM antes de finalizar
-COPY ./.docker/test-phpfpm.sh /tmp/test-phpfpm.sh
-RUN chmod +x /tmp/test-phpfpm.sh && \
-    /tmp/test-phpfpm.sh && \
-    rm /tmp/test-phpfpm.sh
+# Teste básico de configuração do PHP-FPM
+RUN php-fpm -t
 
 # Configura permissões finais
 RUN chown -R www-data:www-data ${APP_DIR} && \
@@ -153,5 +150,5 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 # Expõe a porta 80 para o Nginx
 EXPOSE 80
 
-# Inicia via script de entrada
-CMD ["/usr/local/bin/entrypoint.sh"]
+# Inicia Nginx e PHP-FPM via supervisor (temporário para teste)
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
