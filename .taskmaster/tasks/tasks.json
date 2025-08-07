@@ -1,0 +1,142 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Project Setup and User Authentication",
+        "description": "Initialize the Laravel and Vue 3 project. Implement core user authentication features including account creation, login, and logout.",
+        "details": "Covers functional requirements RF-001 (User can create an account) and RF-002 (User can do login/logout). Use Laravel Starter Kit as a base. Also includes setup for Google SSO as per RNF-004.",
+        "testStrategy": "Verify that a new user can register, log in, and log out successfully. Test Google SSO authentication flow.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Admin Product Management",
+        "description": "Develop the administrative panel for managing the product catalog. Admins must be able to create and edit products.",
+        "details": "Implements RF-008 (Admin can register/edit products via panel). The interface should be simple, focusing on product name, description, and price. No stock management is required.",
+        "testStrategy": "Log in as an admin, create a new product, edit its details, and verify the changes are saved to the database.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "Public Product Catalog Display",
+        "description": "Create the public-facing view where all users (authenticated or not) can see the list of available products.",
+        "details": "Fulfills RF-003 (User can view product catalog). This will be a single list view, without individual product detail pages, as per the technology constraints.",
+        "testStrategy": "Access the catalog page without being logged in and verify all active products from Task 2 are displayed correctly.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "User Profile: Credit Card Registration",
+        "description": "Implement the functionality for an authenticated user to register and save a credit card to their account.",
+        "details": "Covers RF-004 (User can register credit card). This is a prerequisite for the 1-click purchase feature. Use a simulated payment API for this.",
+        "testStrategy": "Log in, navigate to the profile/settings page, add credit card details, and verify they are securely associated with the user account.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Standard Checkout Process",
+        "description": "Build the standard purchase flow for authenticated users. This involves a basic checkout confirmation step.",
+        "details": "Implements RF-005 (Authenticated user can perform standard purchase via checkout). This flow is for users who do not have a card saved or prefer the standard method.",
+        "testStrategy": "Log in as a user, add a product to a virtual cart/checkout, and complete the purchase using the standard flow. Verify an order is created.",
+        "priority": "high",
+        "dependencies": [
+          1,
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "1-Click Purchase Feature",
+        "description": "Develop the 1-click purchase functionality for authenticated users with a saved credit card.",
+        "details": "Implements the core business goal, RF-006 (Authenticated user can perform 1-click purchase if they have a saved card). This should be an instant purchase from the catalog page.",
+        "testStrategy": "Log in as a user with a saved card (from Task 4), click the '1-Click Buy' button on a product, and verify the purchase is completed instantly without a checkout step.",
+        "priority": "high",
+        "dependencies": [
+          3,
+          4
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "User Order History Page",
+        "description": "Create a page where authenticated users can view a list of their past purchases.",
+        "details": "Fulfills RF-007 (User can consult their purchases made). The page should list all orders made through both standard and 1-click checkout.",
+        "testStrategy": "After making several purchases (via Task 5 and 6), navigate to the order history page and verify all orders are listed correctly.",
+        "priority": "high",
+        "dependencies": [
+          5,
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Admin Sales and User Dashboard",
+        "description": "Build the admin dashboard to view all sales made on the platform and to list and manage users.",
+        "details": "Covers RF-009 (Admin can view sales made) and RF-010 (Admin can list and manage users). This provides the admin with basic operational metrics and control.",
+        "testStrategy": "Log in as an admin, access the dashboard, and verify that all sales from all users are visible. Check the user management list.",
+        "priority": "medium",
+        "dependencies": [
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "API Performance and Responsiveness",
+        "description": "Optimize the application to meet non-functional requirements, focusing on API response time and a mobile-first responsive design.",
+        "details": "Addresses RNF-001 (API response < 500ms) and RNF-003 (Responsive system). This involves query optimization, caching strategies, and CSS adjustments.",
+        "testStrategy": "Use browser developer tools and API testing tools (like Postman) to measure API response times under load. Test the UI on various screen sizes (desktop, tablet, mobile).",
+        "priority": "high",
+        "dependencies": [
+          8
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Final Testing and Mock API Integration",
+        "description": "Conduct end-to-end testing of all features and handle potential instability from the simulated payment API.",
+        "details": "Focuses on mitigating the risk 'Instability in the simulated payment API'. Ensure proper error handling and user feedback for payment failures.",
+        "testStrategy": "Perform a full user journey test: register, add card, buy with 1-click, buy with standard checkout, view history. Simulate payment API failures and verify the system handles them gracefully.",
+        "priority": "high",
+        "dependencies": [
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-08-06T13:35:04.368Z",
+      "updated": "2025-08-06T13:35:04.368Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

@@ -1,3 +1,10 @@
 {
-    "phpstan.configuration": "./phpstan.dev.neon"
+    "phpstan.configuration": "./phpstan.dev.neon",
+    "chat.mcp.serverSampling": {
+        "meraki-shop/.vscode/mcp.json: task-master-ai": {
+            "allowedModels": [
+                "github.copilot-chat/gpt-4.1"
+            ]
+        }
+    }
 }

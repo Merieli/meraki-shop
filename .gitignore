@@ -23,7 +23,7 @@ yarn-error.log
 /.zed
 
 # Vitepress
-.docs/.vitepress/cache/*
+.docs/.vitepress/cache
 .docs/.vitepress/dist
 
 # PHPStan - Habilitar o ignore abaixo ao usar com mais de 1 dev
