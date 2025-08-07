@@ -3,6 +3,7 @@ import { defineConfig } from 'vitepress';
 const route = {
     requirements: '/requirements',
     designArch: '/design-arch',
+    getStarted: '/get-started',
 } as const;
 
 // https://vitepress.dev/reference/site-config
@@ -11,7 +12,7 @@ export default defineConfig({
     description: 'Um e-commerce de produtos',
     srcDir: 'src',
     themeConfig: {
-        // https://vitepress.dev/reference/default-theme-config
+        logo: 'https://cdn.statically.io/gh/Merieli/meraki-shop/main/.images-cdn/meraki-shop-only-logo.png',
 
         search: {
             provider: 'local',
@@ -24,27 +25,33 @@ export default defineConfig({
 
         sidebar: [
             {
-                text: 'Como Documentar',
-                link: '/docs-how-prepare',
+                text: 'Getting started',
+                collapsed: false,
+                link: route.requirements + '/prd',
+                items: [
+                    { text: 'Introduction', link: route.getStarted + '/introduction' },
+                    { text: 'Quick Start', link: route.getStarted + '/quick-start' },
+                    { text: 'Composition', link: route.getStarted + '/composition' },
+                    {
+                        text: 'Preview',
+                        link: route.getStarted + '/preview',
+                    },
+                ],
             },
             {
-                text: 'Pages of app',
-                link: '/pages-of-app',
-            },
-            {
-                text: '📄 Requisitos',
-                collapsed: true,
+                text: '📄 Requisitos e Produto',
+                collapsed: false,
                 link: route.requirements + '/prd',
                 items: [{ text: 'PRD', link: route.requirements + '/prd' }],
             },
             {
                 text: '🎨 Design e Arq.',
-                collapsed: true,
+                collapsed: false,
                 items: [{ text: 'Diagrama ER', link: route.designArch + '/diagram-er' }],
             },
             {
                 text: '⚙️ Decisões Técnicas',
-                collapsed: true,
+                collapsed: false,
             },
         ],
 

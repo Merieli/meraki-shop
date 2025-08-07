@@ -8,11 +8,11 @@ hero:
   tagline: Uma experiência de compra simples, rápida e sob controle total.
   actions:
     - theme: brand
-      text: Requisitos do produto
-      link: /requirements/prd
+      text: Getting Started
+      link: /get-started/introduction
     - theme: alt
-      text: Diagrama ER
-      link: /design-arch/diagram-er
+      text: Product Requirements
+      link: /requirements/prd
 
 features:
   - title: 🚀 Experiência de Compra Rápida e Descomplicada

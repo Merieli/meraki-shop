@@ -3,76 +3,32 @@ outline: deep
 lastUpdated: true
 ---
 
-# PRD (Product Requirements Document)  <Badge type="tip" text="aprovada" />
-
-- **Autor:** Meriéli  
-- **Data:** 2025-05-13
+# PRD (Product Requirements Document)
 
 ## 🎯 Visão Geral
 
-Este projeto consiste na criação de um MVP de ecommerce simplificado, com funcionalidades básicas para cadastro de produtos, realização de compras e consulta de vendas. O objetivo é validar o modelo de negócio e testar a usabilidade da funcionalidade de compra rápida (1 clique) com usuários autenticados. O painel administrativo permitirá o gerenciamento básico de produtos, pedidos, endereço e registro de cartão de crédito para o cliente e para o adiministrador também permitirá a criação de produtos e o controle de métricas de todos pedidos efetuados na loja.
+O Meraki Shop é um ecommerce especializado em figuras de ação colecionáveis, focado em proporcionar uma experiência de compra ultra-rápida através do recurso de "compra com 1 clique". O sistema visa resolver o problema comum de colecionadores perderem itens raros devido à baixa disponibilidade e processo de checkout demorado.
 
+### Público-alvo
 
-## 📌 Objetivos
+- Colecionadores de figuras de ação
+- Compradores frequentes que valorizam rapidez
+- Usuários que priorizam garantir itens raros/limitados
 
-- Permitir a venda de produtos online com experiência simples e eficiente para compra de um clique.
-- Validar a funcionalidade de compra rápida via cartão de crédito cadastrado.
-- Disponibilizar painel administrativo mínimo para manutenção do catálogo e vendas.
-- Garantir que apenas usuários logados possam realizar compras.
+### Funcionalidades Principais
 
+- **Autenticação e Perfil**: Registro de usuário com autenticação segura via Google (WorkOS), possuindo cadastro obrigatório de endereço de entrega e cartão de crédito.
+- **Catálogo de Produtos**: Listagem de produtos com informações essenciais, fotos e descrições detalhadas, filtragem por categorias.
+- **Compra com 1 Clique**: Botão de compra instantânea para usuários logados, utilizando automaticamente o cartão e endereço cadastrados, com confirmação imediata.
+- **Painel do Cliente**: Histórico de compras, gerenciamento de endereços e cartões, status dos pedidos.
+- **Painel Administrativo**: CRUD de produtos, gestão de pedidos e usuários, visualização de métricas de vendas.
 
-## 📚 Glossário
+## Stack de Tecnologia
 
-| Termo               | Definição                                                      |
-| :------------------ | :------------------------------------------------------------- |
-| Compra 1 Clique     | Compra instantânea sem passar pelo carrinho, com cartão salvo. |
-| MVP                 | Produto Mínimo Viável                                          |
-| Laravel Starter Kit | Pacote oficial do Laravel com autenticação e Vue integrado     |
-
-
-## 📑 Requisitos Funcionais
-
-| ID     | Requisito                                                                   | Prioridade |
-| :----- | :-------------------------------------------------------------------------- | :--------- |
-| RF-001 | Usuário pode criar uma conta                                                | Alta       |
-| RF-002 | Usuário pode fazer login/logout                                             | Alta       |
-| RF-003 | Usuário pode visualizar catálogo de produtos                                | Alta       |
-| RF-004 | Usuário pode cadastrar cartão de crédito ao criar uma conta                 | Alta       |
-| RF-005 | Usuário autenticado pode realizar compra padrão via checkout                | Alta       |
-| RF-006 | Usuário autenticado pode realizar compra com 1 clique se tiver cartão salvo | Alta       |
-| RF-007 | Usuário pode consultar suas compras realizadas                              | Alta       |
-| RF-008 | Admin pode cadastrar/editar produtos via painel                             | Alta       |
-| RF-009 | Admin pode visualizar vendas realizadas                                     | Média      |
-| RF-010 | Admin pode listar e gerenciar usuários                                      | Média      |
-
-
-
-## 📑 Requisitos Não-Funcionais
-
-| ID      | Requisito                                      | Prioridade |
-| :------ | :--------------------------------------------- | :--------- |
-| RNF-001 | API deve responder em menos de 500ms           | Alta       |
-| RNF-002 | Aplicação deve estar disponível 99,9% do tempo | Alta       |
-| RNF-003 | Sistema responsivo (mobile first)              | Alta       |
-| RNF-004 | Autenticação segura com Google                 | Alta       |
-
-
-## 🚧 Restrições de Tecnologia
-
-- Backend deve ser em **Laravel**.
-- Frontend deve utilizar **Vue 3**.
-- Integração simulada de pagamento (sandbox ou API mockada).
-- Sem páginas individuais de produto (apenas listagem geral).
-- Sem controle de estoque, frete ou promoções.
-
-
-## ⚠️ Riscos e Dependências
-
-| Risco/Dependência                           | Impacto | Mitigação                                                          |
-| :------------------------------------------ | :------ | :----------------------------------------------------------------- |
-| Instabilidade na API simulada de pagamentos | Média   | Definir fallback de erro e testes offline                          |
-| Demora na obtenção de dados da api          | Alto    | Definir estratégias para performance na consulta do banco de dados |
-
+- Backend: Laravel
+- Frontend: Vue.js 3 com Inertia
+- Autenticação: Google OAuth via WorkOS
+- Banco de Dados: PostgreSQL
 
 ## 📈 Métricas de Sucesso
 
@@ -80,17 +36,33 @@ Este projeto consiste na criação de um MVP de ecommerce simplificado, com func
 - 100% de cobertura das funcionalidades propostas.
 - Zero compras realizadas sem autenticação.
 - Usuários conseguem realizar compra com 1 clique sem erros.
+- Feedback visual imediato nas ações do usuário (ex: compra bem-sucedida, erro de validação).
+
+## 🚧 Restrições e Limitações
+
+- Sem páginas individuais de produto
+- Sem gestão de estoque complexa
+- Sem cálculo de frete
+- Sem sistema de promoções
+- Pagamentos simulados apenas
 
 
-## 🗺️ Roadmap (Macro)
+## Fases de Desenvolvimento
 
-| Data       | Entrega                                     |
-| :--------- | :------------------------------------------ |
-| 2025-05-20 | Aprovação do PRD                            |
-| 2025-05-14 | Início da implementação                     |
-| 2025-06-02 | Catálogo, Cadastro/Login                    |
-| 2025-06-10 | Compra padrão e compra com 1 clique         |
-| 2025-06-10 | Consulta de compras e Painel Administrativo |
+1. Setup inicial e autenticação
+2. Gestão de produtos e catálogo
+3. Fluxo de compra padrão
+4. Implementação de compra rápida
+5. Painéis administrativos
+6. Testes e otimizações
+
+### Expansão Futura
+
+- Sistema de notificações para itens raros
+- Lista de desejos
+- Sistema de reservas
+- Integração com pagamentos reais
+- Gestão de estoque avançada
 
 
 ## 📎 Anexos e Referências
