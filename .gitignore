@@ -23,8 +23,15 @@ yarn-error.log
 /.zed
 
 # Vitepress
-.docs/.vitepress/cache
+.docs/.vitepress/cache/*
 .docs/.vitepress/dist
 
 # PHPStan - Habilitar o ignore abaixo ao usar com mais de 1 dev
 # phpstan.dev.neon
+
+# OS specific
+.DS_Store
+
+# Eliminando arquivos desnecessário
+.vscode/*.backup*
+logs/
