@@ -19,14 +19,35 @@ O Meraki Shop elimina a frustração de colecionadores que perdem itens raros de
 - Fluxos de uso principais
 - Considerações de UI/UX] -->
 
-Exemplo:
+## Fluxo principal do usuário
+
 ```mermaid
 graph LR
-    A[User Action] --> B{Decision Point}
-    B -->|Path 1| C[Outcome 1]
-    B -->|Path 2| D[Outcome 2]
-    D --> E[Final State]
-    C --> E
+    A[Visita o Meraki Shop na Home/Catálogo] --> B[Login com Google]
+    B --> D{Autenticou com sucesso?}
+    D -->|Não| B
+    D -->|Sim| E{Conta é admin?}
+
+    E -->|Sim| AD1[Dashboard]
+    AD1 --> AD2[Ver vendas e gráficos]
+    AD2 --> AD3[Gerenciar produtos]
+    AD3 --> AD5[Configurações: Perfil, Aparência]
+
+    E -->|Não| F[Explorar produtos]
+
+    F --> K{Em estoque?}
+    K -->|Não| L[Exibe erro sobre a quantidade dispinível]
+    K -->|Sim| M[Comprar com 1 clique]
+
+    M --> N{Endereço cadastrado?}
+    N -->|Não| O[Cadastrar endereço]
+    N -->|Sim| P{Cartão cadastrado?}
+    O --> P
+    P -->|Não| Q[Cadastrar cartão]
+    P -->|Sim| R[Confirmar e criar pedido]
+    R --> U[Ver detalhes do pedido]
+    Q --> R
+    U --> F
 ```
 
 </contexto>
@@ -44,60 +65,112 @@ graph LR
 
 ```mermaid
 graph TB
-    subgraph "Frontend"
-        UI[User Interface]
-        State[State Management]
+    subgraph "Frontend Layer"
+        UI["`**Vue.js SPA**<br/>Components, Pages, Layouts`"]
+        AUTH["`**WorkOS**<br/>Authentication`"]
+        COMP_COMP["`**Typescript Composables**<br/>useProductForm, useAuth, etc.`"]
     end
     
-    subgraph "Backend"
-        API[API Layer]
-        BL[Business Logic]
-        DB[(Database)]
+    subgraph "Laravel Backend"
+        CTRL["`**Controllers**<br/>ProductController, UserController`"]
+        
+        SERVICES["`**Service Layer**<br/>Business Logic - Services or Repositories`"]
+
+        MODELS["`**Eloquent Models**<br/>Product, User, Order`"]
+    end
+
+    DB[("`**Database**<br/>PostgreSQL`")]
+    
+    subgraph "External Services"
+        WORKOS["`**WorkOS**<br/>Authentication Provider`"]
+        CDN["`**CDN Statically**<br/>Static Assets`"]
     end
     
-    subgraph "External"
-        EXT[External Services]
-    end
+    %% Connections
+    UI --> AUTH
+    UI --> COMP_COMP
     
-    UI --> API
-    API --> BL
-    BL --> DB
-    BL --> EXT
-    State --> UI
+    COMP_COMP .->|"HTTP Requests<br/>(JSON API)"| CTRL
+    CTRL --> SERVICES
+    SERVICES --> MODELS
+    MODELS --> DB
+    
+    AUTH -.->|"OAuth Flow"| WORKOS
+    UI -.->|"Static Assets"| CDN
+    
+    %% Response flow
+    CTRL -.->|"JSON Response"| COMP_COMP
+    
+    %% Styling
+    classDef frontend fill:#e1f5fe
+    classDef backend fill:#f3e5f5
+    classDef external fill:#fff3e0
+    classDef database fill:#e8f5e8
+    
+    class UI,COMP,COMP_LIB,COMP_COMP,UTILS frontend
+    class ROUTES,CTRL,MIDDLEWARE,SERVICES,REPOS,MODELS backend
+    class WORKOS,CDN external
+    class DB database
 ```
 
 ## Component Breakdown
 
 - **Frontend Components**:
-  - [Component 1]: [Purpose]
-  - [Component 2]: [Purpose]
+  - **UserInfo.vue**: Exibe informações do usuário logado com avatar, nome, email e integração com sistema de iniciais quando não há foto.
+  - **NavMain.vue**: Menu principal de navegação com controle de permissões (admin/user), ícones dinâmicos e indicação de página ativa.
+  - **AppearanceTabs.vue**: Controle de tema da aplicação permitindo alternar entre modo claro, escuro e automático baseado no sistema.
+  - **ProductCard.vue:** Card de produto na vitrine com imagem, preço, avaliação, botão de compra e feedback de status de pedidos.
+  - **TopBanner.vue:** Banner informativo que exibe status de cartão e endereço cadastrados, com botões para registro quando necessário.
 
 - **Backend Services**:
-  - [Service 1]: [Purpose]
-  - [Service 2]: [Purpose]
+  - **ProductService.php (Business Logic):** Gerencia a lógica de negócio para produtos, incluindo criação, validação, formatação de dados (preços em centavos), e aplicação de regras de negócio antes da persistência no banco de dados.
+  - **ProductRepository.php (Data Access Layer):** Centraliza operações de acesso a dados de produtos, implementando padrão Repository para abstrair consultas complexas e manter separação entre lógica de negócio e acesso a dados.
+  - **UserRepository.php (Data Access Layer):** Gerencia operações de persistência de usuários, incluindo consultas específicas para autenticação, perfis administrativos e relacionamentos com pedidos e endereços.
+  - **AddressRepository.php (Data Access Layer):** Controla operações CRUD para endereços de entrega, implementando validações específicas e consultas otimizadas para relacionamentos usuário-endereço.
+  - **ProductController.php (API Controllers):** API para gerenciamento de produtos com endpoints para CRUD, validação de entrada via FormRequests e retorno de dados formatados em JSON.
+  - **OrderController.php, AddressController.php, CustomerCardController.php (API Controllers):**  gerencia operações CRUD, integrando pedidos, endereço e cartões de crédito.
+  - **ProductFormRequest.php (Data Validation):** Centraliza regras de validação para dados de produtos, incluindo validação de preços, URLs de imagens, limites de caracteres e campos obrigatórios.
+
+Baseado nas migrations do projeto **Meraki Shop**, aqui estão os principais modelos de dados:
 
 - **Data Models**:
-  - [Model 1]: [Fields and relationships]
-  - [Model 2]: [Fields and relationships]
+  - **User**: `id`, `name`, `email`, `workos_id`, `avatar`, `role` (admin/client) - Relacionamentos: hasMany(Orders, Addresses, CustomerCards)
+  - **Product**: `id`, `name`, `price` (centavos), `cost_price`, `stock`, `thumbnail`, `images`, `short_description`, `description`, `rating`, `sku` - Relacionamentos: hasMany(OrderItems), belongsToMany(Attributes)
+  - **Order**: `id`, `user_id`, `status`, `payment_method` - Relacionamentos: belongsTo(User), hasMany(OrderItems)
+  - **OrderItem**: `id`, `order_id`, `product_id`, `variation_id`, `quantity`, `unit_price` - Relacionamentos: belongsTo(Order, Product, Variation)
+  - **Address**: `id`, `user_id`, `label`, `recipient_name`, `street`, `number`, `neighborhood`, `complement`, `city`, `state`, `country`, `postal_code` - Relacionamentos: belongsTo(User)
+  - **CustomerCard**: `id`, `user_id`, `card_token`, `card_last4`, `card_brand` - Relacionamentos: belongsTo(User)
+  - **Variation**: `id`, `name`, `image_url`, `price`, `stock`, `sku`, `available` - Relacionamentos: hasMany(OrderItems), belongsToMany(Attributes)
+  - **Attribute**: `id`, `name` - Relacionamentos: belongsToMany(Products, Variations)
+  - **PersonalAccessToken**: `id`, `tokenable_type`, `tokenable_id`, `name`, `token`, `abilities`, `last_used_at`, `expires_at` - Sistema de autenticação API (Laravel Sanctum)
 
 ## API Design
 
 ```mermaid
 sequenceDiagram
-    participant U as User
-    participant F as Frontend
-    participant A as API
-    participant D as Database
-    participant E as External Service
+    participant U as 👤 User (Admin)
+    participant F as 🖥️ Frontend Vue.js
+    participant A as ⚙️ Laravel API
+    participant D as 🗄️ Database PostgreSQL
     
-    U->>F: Initiates Action
-    F->>A: POST /api/endpoint
-    A->>D: Query Data
-    D-->>A: Return Data
-    A->>E: Call External API
-    E-->>A: Response
-    A-->>F: Processed Result
-    F-->>U: Display Result
+    rect rgb(240, 248, 255)
+        Note over U,D: 🛍️ Product Creation Flow
+        U->>F: Fill Product Form
+        F->>F: Validate Form Data
+        F->>+A: POST /api/products + Bearer Token
+        A->>A: Validate Request Data
+        A->>+D: INSERT Product
+        D-->>-A: Created Product
+        A-->>-F: JSON Response {status: success, data: product}
+        F-->>U: Success Message + Redirect
+    end
+    
+    rect rgb(255, 245, 245)
+        Note over U,D: ❌ Error Handling
+        A->>A: Validation Failed
+        A-->>F: 422 Validation Errors
+        F-->>U: Display Field Errors
+    end
 ```
 
 
