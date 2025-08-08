@@ -2,7 +2,7 @@
 
 - Sempre consulte o arquivo `.docs/src/requirements/prd.md` para uma compreensão clara dos objetivos e funcionalidades.
 - Revise todos os arquivos de documentação adicionais no diretório `.docs` fornecido com o projeto.
-- Caso seja necessária documentação adicional ou atualizada, utilize os servidores MCP [DEFINIR] para localizar fontes oficiais e atualizadas online.
+- Caso seja necessária documentação adicional ou atualizada, utilize buscas na internet para localizar fontes oficiais e atualizadas online.
 
 ## Conformidade com a Pilha Tecnológica
 
