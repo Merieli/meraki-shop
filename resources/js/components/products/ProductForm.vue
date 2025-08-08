@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { type PartialProductData, type ProductApiData } from '@/types/product';
@@ -19,9 +20,9 @@ const emit = defineEmits<{
     (e: 'cancel'): void;
 }>();
 
-const { formData, isSubmitting, errors, validateField, validateAll, convertToApiFormat } = useProductForm(props.initialData);
+const { formData, isSubmitting, error, success, errors, isValid, validateField, validateAll, submitProduct } = useProductForm(props.initialData);
 
-const isButtonDisabled = computed(() => isSubmitting.value || props.disabled);
+const isButtonDisabled = computed(() => isSubmitting.value || props.disabled || !isValid.value);
 
 const validationSchema = {
     name: (value: string) => {
@@ -65,17 +66,12 @@ const validationSchema = {
     },
 };
 
-const onSubmit = () => {
-    if (!validateAll(formData.value)) return;
+const onSubmit = async () => {
+    const result = await submitProduct();
 
-    isSubmitting.value = true;
-    try {
-        const apiData = convertToApiFormat(formData.value);
-        emit('submit', apiData);
-    } catch (error) {
-        console.error('Error submitting form:', error);
-    } finally {
-        isSubmitting.value = false;
+    if (result) {
+        // Se a requisição foi bem-sucedida, emitir evento para o componente pai
+        emit('submit', result);
     }
 };
 
@@ -89,13 +85,29 @@ const sections = [
 <template>
     <Form @submit="onSubmit" :validation-schema="validationSchema" :initial-values="formData">
         <div class="product-form">
+            <!-- Error and Success Alerts -->
+            <div v-if="error || success" class="mb-6">
+                <Alert v-if="error" variant="destructive" class="mb-4">
+                    <AlertDescription>{{ error }}</AlertDescription>
+                </Alert>
+                <Alert v-if="success" class="mb-4 border-green-200 bg-green-50 text-green-800">
+                    <AlertDescription>{{ success }}</AlertDescription>
+                </Alert>
+            </div>
+
             <!-- Form content -->
             <div class="space-y-8">
                 <!-- Basic Information Section -->
                 <div>
                     <h3 class="mb-4 text-lg font-medium">{{ sections[0].title }}</h3>
                     <div class="rounded-md border p-4">
-                        <ProductBasicInfo :form-data="formData" :errors="errors" :validate-field="validateField" />
+                        <ProductBasicInfo
+                            v-model:name="formData.name"
+                            v-model:description="formData.description"
+                            v-model:short_description="formData.short_description"
+                            :errors="errors"
+                            :validate-field="validateField"
+                        />
                     </div>
                 </div>
 
@@ -103,7 +115,14 @@ const sections = [
                 <div>
                     <h3 class="mb-4 text-lg font-medium">{{ sections[1].title }}</h3>
                     <div class="rounded-md border p-4">
-                        <ProductPricing :form-data="formData" :errors="errors" :validate-field="validateField" />
+                        <ProductPricing
+                            v-model:price="formData.price"
+                            v-model:cost="formData.cost_price"
+                            v-model:stock="formData.stock"
+                            v-model:sku="formData.sku"
+                            :errors="errors"
+                            :validate-field="validateField"
+                        />
                     </div>
                 </div>
 
@@ -111,15 +130,31 @@ const sections = [
                 <div>
                     <h3 class="mb-4 text-lg font-medium">{{ sections[2].title }}</h3>
                     <div class="rounded-md border p-4">
-                        <ProductMedia :form-data="formData" :errors="errors" :validate-field="validateField" />
+                        <ProductMedia
+                            v-model:thumbnail="formData.thumbnail"
+                            v-model:images="formData.images"
+                            v-model:rating="formData.rating"
+                            :errors="errors"
+                            :validate-field="validateField"
+                        />
                     </div>
                 </div>
 
                 <!-- Form actions -->
                 <div class="flex justify-end space-x-4 pt-4">
-                    <Button type="button" variant="outline" @click="emit('cancel')" :disabled="isButtonDisabled">Cancel</Button>
-                    <Button type="submit" :disabled="isButtonDisabled">
-                        {{ isSubmitting ? 'Saving...' : 'Create Product' }}
+                    <Button type="button" variant="outline" @click="emit('cancel')" :disabled="isSubmitting">Cancel</Button>
+                    <Button
+                        type="submit"
+                        :disabled="isButtonDisabled"
+                        :class="{
+                            'cursor-not-allowed opacity-75': isButtonDisabled,
+                            'bg-green-600 hover:bg-green-700': !isButtonDisabled,
+                        }"
+                    >
+                        <div class="flex items-center space-x-2">
+                            <div v-if="isSubmitting" class="h-4 w-4 animate-spin rounded-full border-b-2 border-white"></div>
+                            <span>{{ isSubmitting ? 'Criando Produto...' : 'Create Product' }}</span>
+                        </div>
                     </Button>
                 </div>
             </div>

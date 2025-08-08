@@ -1,4 +1,5 @@
 import { type PartialProductData, type ProductApiData, type ProductFormData } from '@/types/product';
+import { apiService } from '@/utils/api';
 import { useValidation, z } from '@/utils/formValidation';
 import { toCents } from '@/utils/money';
 import { computed, ref } from 'vue';
@@ -48,6 +49,39 @@ export const convertToApiFormat = (data: ProductFormData): ProductApiData => {
         rating: formatRating(data),
         sku: formatSku(data),
     };
+};
+
+/**
+ * Filters out empty fields from API data to send only filled values
+ */
+export const filterFilledFields = (data: ProductApiData): Partial<ProductApiData> => {
+    const filteredData: Partial<ProductApiData> = {};
+
+    // Always include required fields
+    if (data.name && data.name.trim()) filteredData.name = data.name;
+    if (data.price !== undefined && data.price >= 0) filteredData.price = data.price;
+    if (data.thumbnail && data.thumbnail.trim()) filteredData.thumbnail = data.thumbnail;
+    if (data.short_description && data.short_description.trim()) filteredData.short_description = data.short_description;
+    if (data.rating !== undefined && data.rating >= 1) filteredData.rating = data.rating;
+
+    // Optional fields - only include if they have value
+    if (data.cost_price !== null && data.cost_price !== undefined && data.cost_price >= 0) {
+        filteredData.cost_price = data.cost_price;
+    }
+    if (data.stock !== null && data.stock !== undefined && data.stock >= 0) {
+        filteredData.stock = data.stock;
+    }
+    if (data.images && data.images.trim()) {
+        filteredData.images = data.images;
+    }
+    if (data.description && data.description.trim()) {
+        filteredData.description = data.description;
+    }
+    if (data.sku && data.sku.trim()) {
+        filteredData.sku = data.sku;
+    }
+
+    return filteredData;
 };
 
 const formatName = (data: ProductFormData): string => {
@@ -133,6 +167,51 @@ export function useProductForm(initialData?: PartialProductData) {
         validateField(field, formData.value[field]);
     };
 
+    const submitProduct = async (): Promise<any> => {
+        // Clear previous messages
+        error.value = null;
+        success.value = null;
+
+        // Validate all fields
+        if (!validateAll(formData.value)) {
+            error.value = 'Por favor, corrija os erros no formulário antes de continuar.';
+            return false;
+        }
+
+        isSubmitting.value = true;
+
+        try {
+            // Convert form data to API format
+            const apiData = convertToApiFormat(formData.value);
+
+            // Filter only filled fields
+            const filteredData = filterFilledFields(apiData);
+
+            // Make the API request
+            const response = await apiService.create('products', filteredData, true);
+
+            success.value = 'Produto criado com sucesso!';
+            return response;
+        } catch (err: any) {
+            console.error('Erro ao criar produto:', err);
+
+            // Handle different error types
+            if (err?.response?.status === 422) {
+                error.value = 'Dados inválidos. Verifique os campos preenchidos.';
+            } else if (err?.response?.status === 401) {
+                error.value = 'Você precisa estar logado para criar produtos.';
+            } else if (err?.response?.status === 403) {
+                error.value = 'Você não tem permissão para criar produtos.';
+            } else {
+                error.value = 'Erro interno do servidor. Tente novamente mais tarde.';
+            }
+
+            return false;
+        } finally {
+            isSubmitting.value = false;
+        }
+    };
+
     return {
         formData,
         isSubmitting,
@@ -145,5 +224,7 @@ export function useProductForm(initialData?: PartialProductData) {
         validateFieldOnChange,
         resetForm,
         convertToApiFormat,
+        filterFilledFields,
+        submitProduct,
     };
 }
