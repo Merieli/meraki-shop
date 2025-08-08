@@ -35,3 +35,4 @@ yarn-error.log
 # Eliminando arquivos desnecessário
 .vscode/*.backup*
 logs/
+.cursor/
