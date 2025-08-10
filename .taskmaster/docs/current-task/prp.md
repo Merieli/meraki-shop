@@ -178,40 +178,44 @@ sequenceDiagram
 
 #### Produtos
 - **GET /api/products**
-  - Request: Query params para filtros (categoria, preço, etc.)
+  - Obtém todos os produtos com paginação
   - Response: `{data: [products], meta: {pagination}}`
-  - Errors: `401 Unauthorized`
+
+- **GET /api/products/{id}**
+  - Obtém um produto específico por ID
+  - Response: `{data: product}`
 
 - **POST /api/products** *(Admin only)*
-  - Request: `{name: string, price: number, cost_price: number, stock: number, thumbnail: string, images: array, short_description: string, description: string, sku: string}`
+  - Request Body: `{name: string, price: number, cost_price: number, stock: number, thumbnail: string, images: array, short_description: string, description: string, sku: string}`
   - Response: `{status: 'success', data: product}`
   - Errors: `422 Validation Error`, `401 Unauthorized`, `403 Forbidden`
 
 #### Pedidos  
-- **POST /api/orders** *(Compra com 1 clique)*
+- **POST /api/orders** *(Admin or Authenticated User)*
   - Request: `{product_id: number, quantity: number}`
   - Response: `{status: 'success', data: order, message: 'Pedido criado com sucesso!'}`
   - Errors: `422 Validation Error`, `400 Bad Request` (estoque insuficiente)
 
-- **GET /api/orders** 
+- **GET /api/orders** *(Admin or Authenticated User)*
   - Request: Bearer Token
   - Response: `{data: [orders], meta: {pagination}}`
   - Errors: `401 Unauthorized`
 
-#### Usuários e Autenticação
-- **GET /api/user**
+#### Usuários e Autenticação 
+- **GET /api/users** *(Admin or Authenticated User)*
   - Request: Bearer Token
   - Response: `{data: user_with_addresses_and_cards}`
   - Errors: `401 Unauthorized`
 
 #### Endereços
-- **POST /api/addresses**
+- **POST /api/address** *(Admin or Authenticated User)*
   - Request: `{label: string, recipient_name: string, street: string, number: string, neighborhood: string, city: string, state: string, country: string, postal_code: string, complement?: string}`
   - Response: `{status: 'success', data: address}`
   - Errors: `422 Validation Error`, `401 Unauthorized`
 
 #### Cartões
-- **POST /api/customer-cards**
+
+- **POST /api/credit-card**
   - Request: `{card_token: string, card_last4: string, card_brand: string}`
   - Response: `{status: 'success', data: card}`
   - Errors: `422 Validation Error`, `401 Unauthorized`
@@ -248,25 +252,6 @@ flowchart TD
 - Melhorias futuras
 - Não pense em prazos neste momento — o que importa é o escopo e detalhar exatamente o que precisa ser construído em cada fase para depois ser quebrado em tarefas] -->
 
-
-## Development Phases (Baseado no PRD)
-
-```mermaid
-graph LR
-    A[🏗️ Phase 1:<br/>Setup e Auth] --> B[🛍️ Phase 2:<br/>Produtos e Catálogo]
-    B --> C[💳 Phase 3:<br/>Fluxo de Compra]
-    C --> D[⚡ Phase 4:<br/>Compra Rápida]
-    D --> E[👑 Phase 5:<br/>Painéis Admin]
-    E --> F[🧪 Phase 6:<br/>Testes e Otimização]
-    
-    A -.- AA[Database Schema<br/>Laravel + Vue.js<br/>WorkOS Authentication]
-    B -.- BB[CRUD Produtos<br/>Catálogo Frontend<br/>ProductCard Component]
-    C -.- CC[Sistema de Pedidos<br/>Address/Card Management<br/>Basic Checkout]
-    D -.- DD[1-Click Purchase<br/>Auto-populate Data<br/>Instant Confirmation]
-    E -.- EE[Admin Dashboard<br/>Sales Metrics<br/>User Management]
-    F -.- FF[Performance Testing<br/>Security Review<br/>Production Deploy]
-```
-
 ### Phases
 
 **Phase 1 - Setup e Autenticação**
@@ -275,37 +260,50 @@ graph LR
 - ✅ Schema do banco PostgreSQL com migrations
 - ✅ Middleware de autenticação e controle de acesso
 
-**Phase 2 - Gestão de Produtos e Catálogo (Semanas 3-4)**
-- ✅ Models e API para Products com variações
+**Phase 2 - Gestão de Produtos e Catálogo**
+- ✅ Models e API para Produtos
 - ✅ Interface administrativa para CRUD de produtos
-- ✅ Catálogo público com ProductCard e filtragem
+- ✅ Catálogo público com produtos
 - ✅ Upload e gerenciamento de imagens
 
-**Phase 3 - Fluxo de Compra Padrão (Semanas 5-6)**
-- ✅ Sistema de pedidos (Order, OrderItem)
+**Phase 3 - Fluxo de Compra Padrão**
+- ✅ Sistema de pedidos
 - ✅ Gerenciamento de endereços e cartões
 - ✅ Fluxo básico de checkout
 - ✅ Histórico de pedidos para usuários
 
-**Phase 4 - Implementação de Compra Rápida (Semana 7)**
-- ⏳ Botão "Comprar com 1 clique" nos products
-- ⏳ Validação automática de dados salvos
-- ⏳ Processamento instantâneo sem redirect
-- ⏳ Feedback visual imediato
+**Phase 4 - Implementação de Compra Rápida**
+- ✅ Botão "Comprar com 1 clique"
+- ✅ Validação automática de dados salvos
+- ✅ Feedback visual imediato
 
-**Phase 5 - Painéis Administrativos (Semana 8)**
-- ⏳ Dashboard com métricas de vendas
-- ⏳ Gestão avançada de pedidos e usuários
-- ⏳ Relatórios e gráficos de performance
-- ⏳ Configurações e preferências
+**Phase 5 - Painel Administrativo**
+- ✅ Dashboard com métricas de vendas
+- ✅ Gestão de pedidos
+- ✅ Configurações e preferências
 
-**Phase 6 - Testes e Otimizações (Semana 9)**
+**Phase 6 - Criação de produtos via painel**
+- ⏳ Implementação do formulário de criação de produtos
+- ⏳ Feedback visual de sucesso/erro
+- ⏳ Validação de dados do formulário
+
+**Phase 7 - Filtro de produtos por nome**
+- ⏳ Implementação de filtros de produtos
+- ⏳ Busca por nome de produto
+
+**Phase 8 - Votação para revisão de produtos**
+- ⏳ Implementação de sistema de votação
+- ⏳ Feedback visual de votos
+- ⏳ Exibição revisões reais dos produtos
+
+**Phase 9 - Testes e Otimizações**
 - ⏳ Testes unitários e de integração
 - ⏳ Otimização de performance (< 1500ms API)
 - ⏳ Revisão de segurança
-- ⏳ Documentação e deploy production
+- ⏳ Deploy em produção
 
-## Definition of Done (Meraki Shop)
+## Definition of Done
+
 - [ ] **Funcionalidades**: 100% das user stories do PRD implementadas
 - [ ] **Performance**: Tempo de resposta da API < 1500ms
 - [ ] **Segurança**: Zero compras sem autenticação
@@ -327,29 +325,9 @@ graph LR
 
 ## Implementation Priority (Meraki Shop)
 
-### 1. 🏗️ Foundation (Prioridade CRÍTICA)
-- **Autenticação WorkOS + Google OAuth**: Base para todo o sistema
-- **Database Schema**: Models para User, Product, Order, Address, CustomerCard
-- **API Authentication Middleware**: Controle de acesso admin/client
-- **Basic Laravel + Vue.js Setup**: Estrutura da aplicação
-
-### 2. 🛍️ MVP Core Features (Prioridade ALTA)
-- **Product Management (Admin)**: CRUD completo de produtos
-- **Product Catalog (Public)**: Listagem e visualização de produtos
-- **User Profile Management**: Cadastro de endereços e cartões
-- **Basic Order System**: Criação e histórico de pedidos
-
-### 3. ⚡ Funcionalidade Diferencial (Prioridade ALTA) 
-- **1-Click Purchase**: O coração do negócio - compra instantânea
-- **Auto-validation**: Verificação automática de dados necessários
-- **Instant Feedback**: Retorno imediato de sucesso/erro
-- **TopBanner Component**: Alertas de endereço/cartão não cadastrados
-
 ### 4. 👑 Enhanced Features (Prioridade MÉDIA)
 - **Admin Dashboard**: Métricas e gráficos de vendas
 - **Advanced Product Search**: Filtros e categorização
-- **Order Management**: Interface administrativa para pedidos
-- **User Management**: Controle de usuários e permissões
 
 ### 5. 🧪 Production Ready (Prioridade BAIXA)
 - **Performance Optimization**: Cache, lazy loading, otimizações
