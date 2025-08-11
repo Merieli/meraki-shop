@@ -1,7 +1,7 @@
 ## Uso da Documentação
 
 - Sempre consulte o arquivo `.docs/src/requirements/prd.md` para uma compreensão clara dos objetivos e funcionalidades.
-- Revise todos os arquivos de documentação adicionais no diretório `.docs` fornecido com o projeto.
+- Revise todos os arquivos de documentação adicionais no diretório `.docs/src/` fornecido com o projeto.
 - Caso seja necessária documentação adicional ou atualizada, utilize buscas na internet para localizar fontes oficiais e atualizadas online.
 
 ## Conformidade com a Pilha Tecnológica

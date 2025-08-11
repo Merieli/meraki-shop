@@ -2,132 +2,266 @@
   "master": {
     "tasks": [
       {
-        "id": 1,
-        "title": "Project Setup and User Authentication",
-        "description": "Initialize the Laravel and Vue 3 project. Implement core user authentication features including account creation, login, and logout.",
-        "details": "Covers functional requirements RF-001 (User can create an account) and RF-002 (User can do login/logout). Use Laravel Starter Kit as a base. Also includes setup for Google SSO as per RNF-004.",
-        "testStrategy": "Verify that a new user can register, log in, and log out successfully. Test Google SSO authentication flow.",
+        "id": 11,
+        "title": "Implement Backend API for Product Management (CRUD)",
+        "description": "Create the necessary Laravel backend components to manage products, including API endpoints for creating, reading, updating, and deleting products, accessible only by admin users as specified in the 'Painel Administrativo' functionality.",
+        "details": "Implement `ProductController.php`, `ProductService.php`, `ProductRepository.php`, and `ProductFormRequest.php`. Define endpoints: `GET /api/products`, `GET /api/products/{id}`, `POST /api/products`, `PUT /api/products/{id}`, `DELETE /api/products/{id}`. Secure admin-only endpoints using middleware.",
+        "testStrategy": "Write API tests for each endpoint covering success cases (200/201), validation errors (422), and authorization failures (401/403 for non-admin users).",
         "priority": "high",
         "dependencies": [],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Set up Product Model, Migration, and Core Service/Repository Structure",
+            "description": "Create the `Product` Eloquent model, its corresponding database migration, and scaffold the `ProductRepository.php` and `ProductService.php` classes.",
+            "dependencies": [],
+            "details": "Define product attributes (e.g., name, description, price, stock) in the migration. Implement basic constructor and dependency injection in `ProductService` and `ProductRepository`.",
+            "status": "done",
+            "testStrategy": "N/A (This is foundational setup, not directly testable via API tests yet)"
+          },
+          {
+            "id": 2,
+            "title": "Implement Product List and Show Endpoints",
+            "description": "Develop the `GET /api/products` and `GET /api/products/{id}` API endpoints within `ProductController.php` to retrieve product data.",
+            "dependencies": [
+              "11.1"
+            ],
+            "details": "Use `ProductService` to fetch all products and a single product by ID. Ensure proper JSON response formatting.",
+            "status": "done",
+            "testStrategy": "Write API tests for `GET /api/products` (success 200, empty list) and `GET /api/products/{id}` (success 200, not found 404)."
+          },
+          {
+            "id": 3,
+            "title": "Implement Product Creation Endpoint and Form Request",
+            "description": "Develop the `POST /api/products` API endpoint in `ProductController.php` for creating new products, including input validation using `ProductFormRequest.php`.",
+            "dependencies": [
+              "11.1",
+              "11.2"
+            ],
+            "details": "Define validation rules in `ProductFormRequest` for required fields (e.g., name, price, stock). Use `ProductService` to store the new product. Return 201 Created on success.",
+            "status": "done",
+            "testStrategy": "Write API tests for `POST /api/products` (success 201, validation errors 422 for missing/invalid data)."
+          },
+          {
+            "id": 4,
+            "title": "Implement Product Update and Delete Endpoints",
+            "description": "Develop the `PUT /api/products/{id}` and `DELETE /api/products/{id}` API endpoints in `ProductController.php` for updating and deleting existing products.",
+            "dependencies": [
+              "11.1",
+              "11.3"
+            ],
+            "details": "Use `ProductService` for update and delete operations. For update, reuse `ProductFormRequest` or create a specific one if rules differ. Return 200 OK for update, 204 No Content for delete. Handle 404 Not Found for non-existent products.",
+            "status": "done",
+            "testStrategy": "Write API tests for `PUT /api/products/{id}` (success 200, validation errors 422, not found 404) and `DELETE /api/products/{id}` (success 204, not found 404)."
+          },
+          {
+            "id": 5,
+            "title": "Implement Admin Middleware and Comprehensive API Testing",
+            "description": "Apply the admin-only middleware to all product management API endpoints (`/api/products/*`) and write comprehensive API tests covering all specified scenarios.",
+            "dependencies": [
+              "11.2",
+              "11.3",
+              "11.4"
+            ],
+            "details": "Create or configure an existing `AdminMiddleware` to check for admin user roles/permissions. Apply this middleware to the product routes. Write API tests for all CRUD endpoints covering authorization failures (401/403 for non-admin users) and ensure all previous success/validation tests are robust.",
+            "status": "done",
+            "testStrategy": "Write API tests for all product CRUD endpoints to verify 401/403 responses for unauthenticated/non-admin users. Ensure all previously defined tests (success, validation, not found) are passing."
+          },
+          {
+            "id": 6,
+            "title": "Create Product Model, Migration, and Repository",
+            "description": "Generate the `Product` model, its corresponding database migration, and the `ProductRepository.php` to handle all direct database interactions for products.",
+            "dependencies": [],
+            "details": "The migration must define the products table schema including fields like name, description, price, stock, and image_url. The repository will implement methods like `all()`, `find()`, `create()`, `update()`, and `delete()` using Eloquent.",
+            "status": "done",
+            "testStrategy": "Run `php artisan migrate` to verify the table is created correctly in the database. Write a basic unit test to ensure the repository can be instantiated."
+          },
+          {
+            "id": 7,
+            "title": "Define API Routes and Implement Controller and Service Shells",
+            "description": "Define all five CRUD API endpoints in `routes/api.php`. Create the `ProductController.php` with empty methods for each route and the `ProductService.php` to contain business logic.",
+            "dependencies": [],
+            "details": "The controller methods will be placeholders (e.g., `index`, `show`, `store`, `update`, `destroy`). The `ProductService` will be injected into the `ProductController` and will, in turn, use the `ProductRepository`.",
+            "status": "done",
+            "testStrategy": "Use `php artisan route:list` to confirm the routes are registered. Write a unit test to verify the controller can be instantiated with a mocked service."
+          },
+          {
+            "id": 8,
+            "title": "Implement Product Creation Endpoint with Validation",
+            "description": "Implement the `store` method in `ProductController.php` and the corresponding logic in `ProductService.php` to handle the `POST /api/products` endpoint. Create `ProductFormRequest.php` for input validation.",
+            "dependencies": [],
+            "details": "The `ProductFormRequest` should define validation rules for name, price, and stock. The service method will receive validated data and use the repository to create the product. The controller should return a 201 Created response with the new product data.",
+            "status": "done",
+            "testStrategy": "Write an API test to verify successful product creation (201) and another to check for validation failures (422) when sending invalid data."
+          },
+          {
+            "id": 9,
+            "title": "Implement Product Read Endpoints (List & Show)",
+            "description": "Implement the `index` and `show` methods in `ProductController.php` to handle the `GET /api/products` and `GET /api/products/{id}` endpoints.",
+            "dependencies": [],
+            "details": "The `index` method should retrieve a paginated list of products via the service. The `show` method should retrieve a single product by its ID and return a 404 Not Found error if it does not exist.",
+            "status": "done",
+            "testStrategy": "API test for listing products, including checking pagination data. API test for retrieving a specific product and for a non-existent product (404)."
+          },
+          {
+            "id": 10,
+            "title": "Implement Update, Delete Endpoints and Apply Admin Security",
+            "description": "Implement the `update` and `destroy` methods in the controller and service for the `PUT /api/products/{id}` and `DELETE /api/products/{id}` endpoints. Secure all product endpoints using admin-only middleware.",
+            "dependencies": [],
+            "details": "The update logic will use the `ProductFormRequest` for validation. The delete logic will remove the product from the database. Group all product routes in `routes/api.php` and apply the admin authentication middleware.",
+            "status": "done",
+            "testStrategy": "API tests for successful update (200) and delete (204). Write tests to ensure that a non-admin user receives a 403 Forbidden error when trying to access any of the five endpoints."
+          }
+        ]
       },
       {
-        "id": 2,
-        "title": "Admin Product Management",
-        "description": "Develop the administrative panel for managing the product catalog. Admins must be able to create and edit products.",
-        "details": "Implements RF-008 (Admin can register/edit products via panel). The interface should be simple, focusing on product name, description, and price. No stock management is required.",
-        "testStrategy": "Log in as an admin, create a new product, edit its details, and verify the changes are saved to the database.",
+        "id": 12,
+        "title": "Develop Frontend Admin Interface for Product Management",
+        "description": "Build the Vue.js interface within the admin panel that allows administrators to perform CRUD operations on the product catalog, as outlined in Phase 2 of the roadmap.",
+        "details": "Create Vue components for a product table/list and a product form. Use composables like `useProductForm` to handle state and API communication with the endpoints from task 11. Ensure feedback for success/error is provided.",
+        "testStrategy": "E2E tests for creating a new product, editing an existing one, and deleting one. Component tests for the product form's validation and state handling.",
         "priority": "high",
         "dependencies": [
-          1
+          11
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "in-progress",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Develop the Reusable ProductTable.vue Component",
+            "description": "Construir componente reutilizável de tabela para exibir produtos com colunas (Nome, Preço, Estoque) e ações de edição e exclusão.",
+            "details": "Receber lista via props e emitir eventos `edit` e `delete` com ID do produto. Garantir acessibilidade e responsividade.",
+            "status": "pending",
+            "testStrategy": "Testes de componente para renderização correta e emissão de eventos com dados corretos."
+          },
+          {
+            "id": 2,
+            "title": "Implement `useProductForm` Composable with Validation and API Handling",
+            "description": "Criar composable para gerenciar estado do formulário de produto, com validação em tempo real e integração com API (POST, PUT, GET by ID).",
+            "details": "Manter estado dos campos, validar formatos (ex: preço numérico, limite de caracteres, campos obrigatórios) e fornecer feedback imediato. Expor funções `getProduct(id)` e `saveProduct()` com tratamento de loading, sucesso e erro.",
+            "status": "pending",
+            "testStrategy": "Testes unitários para validar regras de negócio, retorno de API, estados e mensagens de erro."
+          },
+          {
+            "id": 3,
+            "title": "Build ProductForm.vue with Real-time Field Validation",
+            "description": "Construir formulário reutilizável para criação e edição de produtos, integrado ao `useProductForm`, exibindo feedback imediato ao usuário.",
+            "details": "Implementar watchers ou computed para validações instantâneas ao digitar. Destacar campos inválidos e exibir mensagens amigáveis. Garantir que ao submeter, apenas dados válidos sejam enviados à API.",
+            "status": "pending",
+            "testStrategy": "Testes de componente para garantir funcionamento das validações em tempo real e submissão correta."
+          },
+          {
+            "id": 4,
+            "title": "Handle API Requests with Loading and Response Feedback",
+            "description": "Integrar feedback visual de carregamento e status de operação (sucesso/erro) em toda a experiência de CRUD.",
+            "details": "Exibir loading durante chamadas assíncronas, usar notificações/toasts para informar resultado da operação e limpar formulários após sucesso. Garantir que erros da API sejam tratados e exibidos de forma clara.",
+            "status": "pending",
+            "testStrategy": "Testes E2E simulando respostas da API e verificando exibição de carregamento e mensagens."
+          }
+        ]
       },
       {
-        "id": 3,
-        "title": "Public Product Catalog Display",
-        "description": "Create the public-facing view where all users (authenticated or not) can see the list of available products.",
-        "details": "Fulfills RF-003 (User can view product catalog). This will be a single list view, without individual product detail pages, as per the technology constraints.",
-        "testStrategy": "Access the catalog page without being logged in and verify all active products from Task 2 are displayed correctly.",
+        "id": 13,
+        "title": "Create Public Product Catalog Page",
+        "description": "Develop the public-facing page that displays all available products in a grid format for users to browse, as described in the 'Catálogo de Produtos' functionality.",
+        "details": "Implement a main catalog page using Vue.js. Create the `ProductCard.vue` component to display product image, name, price, and the purchase button. Fetch data from the `GET /api/products` endpoint.",
+        "testStrategy": "Visual regression tests to ensure layout consistency. E2E test to verify that products are loaded from the API and displayed correctly on the page.",
         "priority": "high",
         "dependencies": [
-          2
+          11
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
-        "id": 4,
-        "title": "User Profile: Credit Card Registration",
-        "description": "Implement the functionality for an authenticated user to register and save a credit card to their account.",
-        "details": "Covers RF-004 (User can register credit card). This is a prerequisite for the 1-click purchase feature. Use a simulated payment API for this.",
-        "testStrategy": "Log in, navigate to the profile/settings page, add credit card details, and verify they are securely associated with the user account.",
+        "id": 14,
+        "title": "Implement Backend for User Profile Management (Address & Card)",
+        "description": "Create the API endpoints for authenticated users to manage their shipping addresses and payment information (credit card tokens), a prerequisite for the 1-click buy feature.",
+        "details": "Implement `AddressController.php` and `CustomerCardController.php`. Define endpoints: `POST /api/address`, `GET /api/users` (to fetch user with addresses/cards), and `POST /api/credit-card`. Ensure endpoints are protected and data is associated with the authenticated user.",
+        "testStrategy": "API tests for creating, listing, and deleting addresses/cards for a user. Test that a user cannot access or modify another user's data.",
         "priority": "high",
-        "dependencies": [
-          1
-        ],
-        "status": "pending",
+        "dependencies": [],
+        "status": "done",
         "subtasks": []
       },
       {
-        "id": 5,
-        "title": "Standard Checkout Process",
-        "description": "Build the standard purchase flow for authenticated users. This involves a basic checkout confirmation step.",
-        "details": "Implements RF-005 (Authenticated user can perform standard purchase via checkout). This flow is for users who do not have a card saved or prefer the standard method.",
-        "testStrategy": "Log in as a user, add a product to a virtual cart/checkout, and complete the purchase using the standard flow. Verify an order is created.",
-        "priority": "high",
-        "dependencies": [
-          1,
-          3
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 6,
-        "title": "1-Click Purchase Feature",
-        "description": "Develop the 1-click purchase functionality for authenticated users with a saved credit card.",
-        "details": "Implements the core business goal, RF-006 (Authenticated user can perform 1-click purchase if they have a saved card). This should be an instant purchase from the catalog page.",
-        "testStrategy": "Log in as a user with a saved card (from Task 4), click the '1-Click Buy' button on a product, and verify the purchase is completed instantly without a checkout step.",
-        "priority": "high",
-        "dependencies": [
-          3,
-          4
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 7,
-        "title": "User Order History Page",
-        "description": "Create a page where authenticated users can view a list of their past purchases.",
-        "details": "Fulfills RF-007 (User can consult their purchases made). The page should list all orders made through both standard and 1-click checkout.",
-        "testStrategy": "After making several purchases (via Task 5 and 6), navigate to the order history page and verify all orders are listed correctly.",
-        "priority": "high",
-        "dependencies": [
-          5,
-          6
-        ],
-        "status": "pending",
-        "subtasks": []
-      },
-      {
-        "id": 8,
-        "title": "Admin Sales and User Dashboard",
-        "description": "Build the admin dashboard to view all sales made on the platform and to list and manage users.",
-        "details": "Covers RF-009 (Admin can view sales made) and RF-010 (Admin can list and manage users). This provides the admin with basic operational metrics and control.",
-        "testStrategy": "Log in as an admin, access the dashboard, and verify that all sales from all users are visible. Check the user management list.",
+        "id": 15,
+        "title": "Build Frontend Client Panel for Profile Management",
+        "description": "Create the UI for the 'Painel do Cliente' where users can add, view, and manage their saved shipping addresses and credit cards.",
+        "details": "Develop Vue components for displaying lists of addresses and cards. Create forms for adding new addresses and cards, interacting with the APIs from task 14. Use the `TopBanner.vue` to prompt users if this data is missing.",
+        "testStrategy": "E2E tests for a user logging in, navigating to their panel, and successfully adding a new address and a new card.",
         "priority": "medium",
         "dependencies": [
-          7
+          14
         ],
         "status": "pending",
         "subtasks": []
       },
       {
-        "id": 9,
-        "title": "API Performance and Responsiveness",
-        "description": "Optimize the application to meet non-functional requirements, focusing on API response time and a mobile-first responsive design.",
-        "details": "Addresses RNF-001 (API response < 500ms) and RNF-003 (Responsive system). This involves query optimization, caching strategies, and CSS adjustments.",
-        "testStrategy": "Use browser developer tools and API testing tools (like Postman) to measure API response times under load. Test the UI on various screen sizes (desktop, tablet, mobile).",
+        "id": 16,
+        "title": "Implement '1-Click Buy' Backend Logic",
+        "description": "Develop the core backend functionality for the 'Compra com 1 Clique' feature. This involves creating an order with a single API call, using the user's saved address and payment info.",
+        "details": "Implement the `POST /api/orders` endpoint in `OrderController.php`. The logic must: validate user authentication, check for a saved address and card, verify product stock using atomic operations, create `Order` and `OrderItem` records, and return a response.",
+        "testStrategy": "Integration tests covering the entire flow: successful purchase, out of stock error, missing address/card error. Test for race conditions where two users try to buy the last item simultaneously.",
         "priority": "high",
         "dependencies": [
-          8
+          11,
+          14
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 17,
+        "title": "Integrate '1-Click Buy' Button on Frontend",
+        "description": "Add the 'Comprar com 1 clique' button to the product display and implement the frontend logic to trigger the purchase, handle API responses, and provide immediate visual feedback.",
+        "details": "Add the button to `ProductCard.vue`. On click, call `POST /api/orders`. Handle success by showing a confirmation and redirecting to order details. Handle errors (e.g., out of stock, missing address) by displaying clear messages. Implement debounce on the button.",
+        "testStrategy": "E2E test simulating a full 1-click purchase flow. Manually test all error paths (out of stock, missing info, API error) to ensure feedback is clear and correct.",
+        "priority": "high",
+        "dependencies": [
+          13,
+          15,
+          16
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 18,
+        "title": "Develop User Order History Page",
+        "description": "Create a page in the 'Painel do Cliente' where users can view their past purchases, including order status and details, as part of Phase 3.",
+        "details": "Implement the `GET /api/orders` endpoint to fetch orders for the currently authenticated user. Create a Vue page to list these orders, showing key info like date, status, and total price. Allow users to click to see full order details.",
+        "testStrategy": "API test for the `GET /api/orders` endpoint. E2E test: log in, make a purchase, navigate to history, and verify the order appears correctly.",
+        "priority": "medium",
+        "dependencies": [
+          16
         ],
         "status": "pending",
         "subtasks": []
       },
       {
-        "id": 10,
-        "title": "Final Testing and Mock API Integration",
-        "description": "Conduct end-to-end testing of all features and handle potential instability from the simulated payment API.",
-        "details": "Focuses on mitigating the risk 'Instability in the simulated payment API'. Ensure proper error handling and user feedback for payment failures.",
-        "testStrategy": "Perform a full user journey test: register, add card, buy with 1-click, buy with standard checkout, view history. Simulate payment API failures and verify the system handles them gracefully.",
-        "priority": "high",
+        "id": 19,
+        "title": "Create Admin Dashboard with Sales Metrics",
+        "description": "Implement the main dashboard for the 'Painel Administrativo', displaying key sales metrics and performance indicators as outlined in Phase 5.",
+        "details": "Create new backend endpoints to provide aggregated data (e.g., total sales, orders per day, top-selling products). Develop a Vue dashboard page with charts and cards to visualize this data.",
+        "testStrategy": "Backend unit tests for the data aggregation logic. E2E tests to verify the dashboard displays data correctly after several orders are placed.",
+        "priority": "medium",
         "dependencies": [
-          9
+          16
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 20,
+        "title": "Implement Product Search Filter in Catalog",
+        "description": "Add a search functionality to the public product catalog, allowing users to filter products by name, as specified in Phase 7 of the roadmap.",
+        "details": "Update the `GET /api/products` endpoint in `ProductController.php` to accept a search query parameter (e.g., `/api/products?search=action-figure`). Add a search input field to the catalog page on the frontend that triggers an API call.",
+        "testStrategy": "API test to verify the search parameter filters results correctly. E2E test to type in the search box and assert that the product list updates to show only matching items.",
+        "priority": "low",
+        "dependencies": [
+          13
         ],
         "status": "pending",
         "subtasks": []
@@ -135,7 +269,7 @@
     ],
     "metadata": {
       "created": "2025-08-06T13:35:04.368Z",
-      "updated": "2025-08-06T13:35:04.368Z",
+      "updated": "2025-08-11T20:14:05.057Z",
       "description": "Tasks for master context"
     }
   }
