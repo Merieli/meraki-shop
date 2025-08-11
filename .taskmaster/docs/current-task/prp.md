@@ -54,12 +54,6 @@ graph LR
 <PRD>
 
 # Arquitetura Técnica  
-<!-- [Descreva os detalhes de implementação técnica:
-- Componentes do sistema
-- Modelos de dados
-- APIs e integrações
-- Requisitos de infraestrutura
-- Formato de resposta esperado] -->
 
 ## High-Level Architecture
 
@@ -247,10 +241,6 @@ flowchart TD
 ```
 
 # Roadmap de Desenvolvimento  
-<!-- [Divida o processo de desenvolvimento em fases:
-- Requisitos do MVP
-- Melhorias futuras
-- Não pense em prazos neste momento — o que importa é o escopo e detalhar exatamente o que precisa ser construído em cada fase para depois ser quebrado em tarefas] -->
 
 ### Phases
 
@@ -323,29 +313,11 @@ flowchart TD
 
 # Cadeia Lógica de Dependências  
 
-## Implementation Priority (Meraki Shop)
-
-### 4. 👑 Enhanced Features (Prioridade MÉDIA)
-- **Admin Dashboard**: Métricas e gráficos de vendas
-- **Advanced Product Search**: Filtros e categorização
-
-### 5. 🧪 Production Ready (Prioridade BAIXA)
-- **Performance Optimization**: Cache, lazy loading, otimizações
-- **Comprehensive Testing**: Unit, integration e E2E tests
-- **Security Hardening**: Rate limiting, input sanitization
-- **Documentation**: API docs, deployment guides
-
-
-
 # Riscos e Mitigações  
 
 ```yaml
 challenges:
-  technical_risks:
-    - risk: "Performance da API abaixo de 1500ms"
-      mitigation: "Cache Redis para produtos, query optimization, lazy loading"
-      priority: "ALTA"
-    
+  technical_risks:   
     - risk: "WorkOS/Google OAuth indisponível"
       mitigation: "Fallback para manutenção, monitoramento da API externa"
       priority: "MÉDIA"
@@ -357,19 +329,6 @@ challenges:
     - risk: "Falha no processamento de pagamento simulado"
       mitigation: "Logs detalhados, rollback de pedidos, retry mechanism"
       priority: "MÉDIA"
-  
-  business_risks:
-    - risk: "Usuários não completam cadastro de endereço/cartão"
-      mitigation: "TopBanner persistente, UX guiada, onboarding melhorado"
-      priority: "ALTA"
-    
-    - risk: "Abandono por checkout muito simplificado"
-      mitigation: "Confirmação clara, detalhes do pedido visíveis"
-      priority: "MÉDIA"
-    
-    - risk: "Scope creep além do MVP definido"
-      mitigation: "PRD rigoroso, phases bem definidas, sem páginas individuais de produto"
-      priority: "BAIXA"
   
   edge_cases:
     - scenario: "Produto fora de estoque durante compra 1-click"
