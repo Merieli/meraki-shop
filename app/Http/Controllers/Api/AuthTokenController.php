@@ -31,10 +31,7 @@ class AuthTokenController extends Controller
 
             /** @var NewAccessToken $accessToken */
             $accessToken = $user->createAccessToken('api-token');
-
             $token = $accessToken->plainTextToken;
-
-            Logger::critical('token ->>', [$token]);
 
             return response()->json([
                 'token' => $token,
