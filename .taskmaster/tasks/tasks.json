@@ -129,33 +129,25 @@
         "subtasks": [
           {
             "id": 1,
-            "title": "Develop the Reusable ProductTable.vue Component",
-            "description": "Construir componente reutilizável de tabela para exibir produtos com colunas (Nome, Preço, Estoque) e ações de edição e exclusão.",
-            "details": "Receber lista via props e emitir eventos `edit` e `delete` com ID do produto. Garantir acessibilidade e responsividade.",
-            "status": "pending",
-            "testStrategy": "Testes de componente para renderização correta e emissão de eventos com dados corretos."
-          },
-          {
-            "id": 2,
             "title": "Implement `useProductForm` Composable with Validation and API Handling",
-            "description": "Criar composable para gerenciar estado do formulário de produto, com validação em tempo real e integração com API (POST, PUT, GET by ID).",
-            "details": "Manter estado dos campos, validar formatos (ex: preço numérico, limite de caracteres, campos obrigatórios) e fornecer feedback imediato. Expor funções `getProduct(id)` e `saveProduct()` com tratamento de loading, sucesso e erro.",
+            "description": "Criar composable para gerenciar estado do formulário de produto, com validação em tempo real e integração com API (POST).",
+            "details": "Manter estado dos campos, validar formatos (ex: preço numérico, limite de caracteres, campos obrigatórios) e fornecer feedback imediato. Expor função `saveProduct()` com tratamento de loading, sucesso e erro.",
             "status": "pending",
             "testStrategy": "Testes unitários para validar regras de negócio, retorno de API, estados e mensagens de erro."
           },
           {
-            "id": 3,
+            "id": 2,
             "title": "Build ProductForm.vue with Real-time Field Validation",
-            "description": "Construir formulário reutilizável para criação e edição de produtos, integrado ao `useProductForm`, exibindo feedback imediato ao usuário.",
-            "details": "Implementar watchers ou computed para validações instantâneas ao digitar. Destacar campos inválidos e exibir mensagens amigáveis. Garantir que ao submeter, apenas dados válidos sejam enviados à API.",
+            "description": "Melhorar o formulário existente para criação de produtos, integrado ao `useProductForm`, exibindo feedback imediato ao usuário.",
+            "details": "Implementar watchers ou computed para validações instantâneas ao digitar. Destacar campos inválidos e exibir mensagens amigáveis. Garantir que ao submeter, apenas dados válidos sejam enviados à API. Se os dados estiverem inválidos bloquear o botão para criação do produto.",
             "status": "pending",
             "testStrategy": "Testes de componente para garantir funcionamento das validações em tempo real e submissão correta."
           },
           {
-            "id": 4,
+            "id": 3,
             "title": "Handle API Requests with Loading and Response Feedback",
-            "description": "Integrar feedback visual de carregamento e status de operação (sucesso/erro) em toda a experiência de CRUD.",
-            "details": "Exibir loading durante chamadas assíncronas, usar notificações/toasts para informar resultado da operação e limpar formulários após sucesso. Garantir que erros da API sejam tratados e exibidos de forma clara.",
+            "description": "Integrar feedback visual de carregamento e status de operação (sucesso/erro) em toda a experiência de salvamento.",
+            "details": "Exibir loading durante chamadas assíncronas, usar notificações/alertas para informar resultado da operação e limpar formulários após sucesso. Garantir que erros da API sejam tratados e exibidos de forma clara.",
             "status": "pending",
             "testStrategy": "Testes E2E simulando respostas da API e verificando exibição de carregamento e mensagens."
           }
