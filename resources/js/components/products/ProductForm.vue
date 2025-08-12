@@ -153,7 +153,7 @@ const sections = [
                     >
                         <div class="flex items-center space-x-2">
                             <div v-if="isSubmitting" class="h-4 w-4 animate-spin rounded-full border-b-2 border-white"></div>
-                            <span>{{ isSubmitting ? 'Criando Produto...' : 'Create Product' }}</span>
+                            <span>{{ isSubmitting ? 'Creating Product...' : 'Create Product' }}</span>
                         </div>
                     </Button>
                 </div>
