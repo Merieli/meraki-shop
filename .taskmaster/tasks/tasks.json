@@ -130,7 +130,7 @@
           {
             "id": 1,
             "title": "Implement `useProductForm` Composable with Validation and API Handling",
-            "description": "Criar composable para gerenciar estado do formulário de produto, com validação em tempo real e integração com API (POST).",
+            "description": "Alterar composable para gerenciar estado do formulário de produto, com validação em tempo real e integração com API (POST).",
             "details": "Manter estado dos campos, validar formatos (ex: preço numérico, limite de caracteres, campos obrigatórios) e fornecer feedback imediato. Expor função `saveProduct()` com tratamento de loading, sucesso e erro.",
             "status": "pending",
             "testStrategy": "Testes unitários para validar regras de negócio, retorno de API, estados e mensagens de erro."
