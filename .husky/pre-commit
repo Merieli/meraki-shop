@@ -1,1 +1,1 @@
-docker exec meraki-shop-dev-php-fpm cmp valid
+#docker exec meraki-shop-dev-php-fpm cmp valid

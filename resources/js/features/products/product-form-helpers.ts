@@ -1,8 +1,6 @@
 import { type PartialProductData, type ProductApiData, type ProductFormData } from '@/types/product';
-import { apiService } from '@/utils/api';
-import { useValidation, z } from '@/utils/formValidation';
+import { z } from '@/utils/formValidation';
 import { toCents } from '@/utils/money';
-import { computed, ref } from 'vue';
 
 export const defaultFormData: ProductFormData = {
     name: '',
@@ -142,89 +140,3 @@ const formatSku = (data: ProductFormData): string | null => {
     }
     return data.sku.trim();
 };
-
-export function useProductForm(initialData?: PartialProductData) {
-    const formData = ref<ProductFormData>({
-        ...defaultFormData,
-        ...initialData,
-    });
-
-    const isSubmitting = ref(false);
-    const error = ref<string | null>(null);
-    const success = ref<string | null>(null);
-
-    const { errors, validateField, validateAll } = useValidation<ProductFormData>(productSchema);
-
-    const isValid = computed(() => validateAll(formData.value));
-
-    const resetForm = () => {
-        formData.value = { ...defaultFormData, ...initialData };
-        error.value = null;
-        success.value = null;
-    };
-
-    const validateFieldOnChange = (field: keyof ProductFormData) => {
-        validateField(field, formData.value[field]);
-    };
-
-    const submitProduct = async (): Promise<any> => {
-        // Clear previous messages
-        error.value = null;
-        success.value = null;
-
-        // Validate all fields
-        if (!validateAll(formData.value)) {
-            error.value = 'Por favor, corrija os erros no formulário antes de continuar.';
-            return false;
-        }
-
-        isSubmitting.value = true;
-
-        try {
-            // Convert form data to API format
-            const apiData = convertToApiFormat(formData.value);
-
-            // Filter only filled fields
-            const filteredData = filterFilledFields(apiData);
-
-            // Make the API request
-            const response = await apiService.create('products', filteredData, true);
-
-            success.value = 'Produto criado com sucesso!';
-            return response;
-        } catch (err: any) {
-            console.error('Erro ao criar produto:', err);
-
-            // Handle different error types
-            if (err?.response?.status === 422) {
-                error.value = 'Dados inválidos. Verifique os campos preenchidos.';
-            } else if (err?.response?.status === 401) {
-                error.value = 'Você precisa estar logado para criar produtos.';
-            } else if (err?.response?.status === 403) {
-                error.value = 'Você não tem permissão para criar produtos.';
-            } else {
-                error.value = 'Erro interno do servidor. Tente novamente mais tarde.';
-            }
-
-            return false;
-        } finally {
-            isSubmitting.value = false;
-        }
-    };
-
-    return {
-        formData,
-        isSubmitting,
-        error,
-        success,
-        errors,
-        isValid,
-        validateField,
-        validateAll,
-        validateFieldOnChange,
-        resetForm,
-        convertToApiFormat,
-        filterFilledFields,
-        submitProduct,
-    };
-}
