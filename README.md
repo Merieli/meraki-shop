@@ -13,12 +13,43 @@ Meraki Shop is an e-commerce platform for collectors of action figures, superher
 
 ## Stack
 
-- [Laravel 12](https://laravel.com/)
-- [Vue.js 3](https://vuejs.org/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [PostgreSQL](https://www.postgresql.org/)
-- [WorkOS](https://workos.com/)
-- [CDN para imagens com Statically](https://statically.io/)
+- **[Laravel 12](https://laravel.com/)**
+- **[Vue.js 3](https://vuejs.org/)**
+- **[PostgreSQL](https://www.postgresql.org/)**
+
+#### Frontend Tools
+
+- **[TypeScript](https://www.typescriptlang.org/)**: Static typing for JavaScript
+- **[Vee-Validate](https://vee-validate.logaretm.com/v4/)**: Form validation management
+- **[Zod](https://zod.dev/)**: Schema validation and data typing
+- **[Tailwind CSS](https://tailwindcss.com/)**: CSS utility library for rapid styling
+- **[Lucide Vue Next](https://lucide.dev/guide/)**: Icon library
+- **[Reka UI](https://reka-ui.com/)**: Interface component library
+- **[VueUse](https://vueuse.org/)**: Reusable logic for Vue components
+- **[ESLint](https://eslint.org/docs/latest/use/configure/rules)**: Linting for JavaScript/TypeScript
+- **[Vitest](https://vitest.dev/api/vi.html)**: JavaScript testing framework
+- **[Vue Test Utils](https://test-utils.vuejs.org/guide/essentials/a-crash-course.html)**: Testing utilities for Vue
+
+#### Backend Tools
+
+- **[Laravel Sanctum](https://laravel.com/docs/12.x/sanctum)**: API authentication
+- **[Laravel Pint](https://laravel.com/docs/12.x/pint)**: PHP code formatting
+- **[PHPStan](https://phpstan.org/)**: Static PHP code analysis
+- **[Prettier](https://prettier.io/)**: Code formatting
+- **[Laravel Tinker](https://laravel.com/docs/12.x/artisan#tinker)**: Interactive REPL for Laravel
+- **[Laravel Pail](https://laravel.com/docs/12.x/pail)**: Real-time log viewer
+- **[Laravel Debugbar](https://github.com/barryvdh/laravel-debugbar)**: Development debugging tool
+- **[Scramble](https://scramble.dedoc.co/)**: OpenAPI documentation generator
+
+#### General Tools
+
+- **[Inertia.js](https://inertiajs.com/)**: Integration between Laravel and Vue.js
+- **[Husky](https://typicode.github.io/husky/)**: Git hooks for validations
+- **[Statically](https://statically.io/)**: CDN for images
+- **[WorkOS](https://workos.com/)**: User authentication and management
+- **[VitePress](https://vitepress.dev/)**: Static Site Generator for project documentation
+- **[Mermaid](https://github.com/mermaid-js/mermaid)**: For generating graphs and diagrams displayed in the vitepress documentation
+
 
 ## 📖  Installation Guide
 
