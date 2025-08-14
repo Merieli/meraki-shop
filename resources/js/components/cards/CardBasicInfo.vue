@@ -111,7 +111,7 @@ const formatCVV = (e: Event) => {
                             autocomplete="cc-exp"
                         />
                     </FormControl>
-                    <FormMessage name="expiration_date"" />
+                    <FormMessage name="expiration_date" />
                 </FormItem>
             </Field>
 
