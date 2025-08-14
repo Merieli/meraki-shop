@@ -1,1 +1,2 @@
 docker exec meraki-shop-dev-php-fpm cmp test
+docker exec meraki-shop-dev-php-fpm npm test
