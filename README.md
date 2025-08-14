@@ -155,6 +155,12 @@ npm run format
 **🧪 Testing**
 ```sh
 cmp test
+
+# Executar todos os testes frontend
+npm test
+
+# Executar testes frontend em modo watch
+npm run test:watch
 ```
 
 
