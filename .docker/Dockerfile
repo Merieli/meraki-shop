@@ -1,7 +1,7 @@
 # Informa um valor padrão para a versão do PHP caso não seja passado
 ARG PHP_VERSION=8.3.20-fpm-alpine3.20
 
-FROM node:22-alpine AS node-stage
+FROM node:22.18-alpine3.21 AS node-stage
 
 FROM php:${PHP_VERSION}
 
