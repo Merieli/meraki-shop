@@ -14,29 +14,21 @@ export interface ProductBase {
     sku: string;
 }
 
-/**
- * Campos que são opcionais na API (podem ser null)
- */
-export type OptionalApiFields = 'cost_price' | 'stock' | 'images' | 'description' | 'sku';
+type ProductOptionals = Partial<Pick<ProductBase, 'description' | 'sku' | 'images' | 'stock' | 'cost_price'>>;
+type ProductRequired = Omit<ProductBase, keyof ProductOptionals>;
+export type ProductForm = ProductOptionals & ProductRequired;
+
+export interface ProductFormErrors {
+    formErrors: string[];
+    fieldErrors: Record<keyof ProductForm, string[]>;
+}
+
+type Nullable<T> = { [K in keyof T]: T[K] | null };
 
 /**
  * Define o formato exato dos dados enviados para a API
- * Alguns campos são opcionais (podem ser null) e outros são obrigatórios
  */
-export type ProductApiData = {
-    [K in keyof ProductBase]: K extends OptionalApiFields ? ProductBase[K] | null : ProductBase[K];
-};
-
-/**
- * Tipo usado para o formulário de criação/edição de produto
- * Todos os campos são obrigatórios no formulário para simplificar a validação
- */
-export type ProductFormData = ProductBase;
-
-/**
- * Tipo para inicialização parcial de dados do formulário
- */
-export type PartialProductData = Partial<ProductFormData>;
+export type ProductApiData = Required<Nullable<ProductOptionals>> & ProductRequired;
 
 /**
  * Tipo para a resposta da API (inclui campos adicionais como id, created_at, etc.)

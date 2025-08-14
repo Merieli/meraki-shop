@@ -1,0 +1,15 @@
+name: Puppeteer mcpServer
+version: 0.0.1
+schema: v1
+mcpServers:
+  - name: Browser search
+    type: stdio
+    command: npx
+    args:
+      - "-y"
+      - "puppeteer-mcp-server"
+    env:
+      CHROME_DEBUG_PORT: 9222
+      DEFAULT_TARGET_URL: "http://localhost:8000"
+      CHROME_EXECUTABLE_PATH: "/opt/google/chrome/chrome"
+      CHROME_ARGS: "--remote-debugging-port=9222 --new-tab http://localhost:8000"

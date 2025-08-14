@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { FormControl, FormDescription, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cardBrands, type CardFormData } from '@/types/card';
-import type { FormErrors } from '@/utils/formValidation';
+import type { FormErrors } from '@/utils/useValidation.type';
+import { Field } from 'vee-validate';
+import { Label } from '../ui/label';
 
 interface Props {
     formData: CardFormData;
@@ -59,84 +61,85 @@ const formatCVV = (e: Event) => {
 <template>
     <div class="space-y-4">
         <!-- Card Number -->
-        <FormField name="card_number">
+        <Field name="card_number" v-slot="{ field, handleChange, handleBlur }">
             <FormItem>
-                <FormLabel>Card Number</FormLabel>
+                <Label>Card Number</Label>
                 <FormControl>
                     <Input
-                        v-model="formData.card_number"
-                        @input="formatCardNumber"
-                        @blur="validateField('card_number', formData.card_number.replace(/\s+/g, ''))"
+                        v-model="field.value"
+                        @input="handleChange"
+                        @blur="handleBlur"
                         placeholder="Enter your card number"
                         maxlength="23"
                         autocomplete="cc-number"
                     />
                 </FormControl>
                 <FormDescription>Enter the number on the front of your card.</FormDescription>
-                <FormMessage v-if="errors.card_number">{{ errors.card_number }}</FormMessage>
+                <FormMessage name="card_number" />
             </FormItem>
-        </FormField>
+        </Field>
 
         <!-- Cardholder Name -->
-        <FormField name="cardholder_name">
+        <Field name="cardholder_name" v-slot="{ field, handleChange, handleBlur }">
             <FormItem>
-                <FormLabel>Cardholder Name</FormLabel>
+                <Label>Cardholder Name</Label>
                 <FormControl>
                     <Input
-                        v-model="formData.cardholder_name"
-                        @blur="validateField('cardholder_name', formData.cardholder_name)"
+                        v-model="field.value"
+                        @input="handleChange"
+                        @blur="handleBlur"
                         placeholder="Name as it appears on the card"
                         autocomplete="cc-name"
                     />
                 </FormControl>
-                <FormMessage v-if="errors.cardholder_name">{{ errors.cardholder_name }}</FormMessage>
+                <FormMessage name="cardholder_name" />
             </FormItem>
-        </FormField>
+        </Field>
 
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <!-- Expiration Date -->
-            <FormField name="expiration_date">
+            <Field name="expiration_date" v-slot="{ field, handleChange, handleBlur }">
                 <FormItem>
-                    <FormLabel>Expiration Date</FormLabel>
+                    <Label>Expiration Date</Label>
                     <FormControl>
                         <Input
-                            v-model="formData.expiration_date"
-                            @input="formatExpiryDate"
-                            @blur="validateField('expiration_date', formData.expiration_date)"
+                            v-model="field.value"
+                            @input="handleChange"
+                            @blur="handleBlur"
                             placeholder="MM/YY"
                             maxlength="5"
                             autocomplete="cc-exp"
                         />
                     </FormControl>
-                    <FormMessage v-if="errors.expiration_date">{{ errors.expiration_date }}</FormMessage>
+                    <FormMessage name="expiration_date"" />
                 </FormItem>
-            </FormField>
+            </Field>
 
             <!-- CVV -->
-            <FormField name="cvv">
+            <Field name="cvv" v-slot="{ field, handleChange, handleBlur }">
                 <FormItem>
-                    <FormLabel>CVV</FormLabel>
+                    <Label>CVV</Label>
                     <FormControl>
                         <Input
-                            v-model="formData.cvv"
-                            @input="formatCVV"
-                            @blur="validateField('cvv', formData.cvv)"
+                            v-model="field.value"
+                            @input="handleChange"
+                            @blur="handleBlur"
                             placeholder="3 or 4 digits"
                             maxlength="4"
                             autocomplete="cc-csc"
                         />
                     </FormControl>
-                    <FormMessage v-if="errors.cvv">{{ errors.cvv }}</FormMessage>
+                    <FormMessage name="cvv" />
                 </FormItem>
-            </FormField>
+            </Field>
         </div>
 
         <!-- Card Brand -->
-        <FormField name="card_brand">
+        <Field name="card_brand" v-slot="{ field, handleChange, handleBlur }">
             <FormItem>
-                <FormLabel>Card Brand</FormLabel>
+                <Label>Card Brand</Label>
                 <FormControl>
-                    <Select v-model="formData.card_brand" @blur="validateField('card_brand', formData.card_brand)">
+                    <Select v-model="field.value" @change="handleChange" @blur="handleBlur">
                         <SelectTrigger>
                             <SelectValue placeholder="Select card brand" />
                         </SelectTrigger>
@@ -147,9 +150,8 @@ const formatCVV = (e: Event) => {
                         </SelectContent>
                     </Select>
                 </FormControl>
-                <FormDescription>Selecione a bandeira do seu cartão.</FormDescription>
-                <FormMessage v-if="errors.card_brand">{{ errors.card_brand }}</FormMessage>
+                <FormMessage name="card_brand" />
             </FormItem>
-        </FormField>
+        </Field>
     </div>
 </template>

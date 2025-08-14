@@ -7,6 +7,7 @@ parameters:
         - tests/*
         - config/*
         - vendor/*
+        - database/*
     paths:
         - app
         - routes

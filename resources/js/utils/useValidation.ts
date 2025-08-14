@@ -1,31 +1,4 @@
-export type ValidationMessage = string;
-
-export interface SchemaValidation {
-    validate: (value: any) => { valid: boolean; message?: ValidationMessage };
-}
-
-export interface StringSchema extends SchemaValidation {
-    type: 'string';
-    minLength?: number;
-    maxLength?: number;
-    pattern?: RegExp;
-    message?: ValidationMessage;
-}
-
-export interface NumberSchema extends SchemaValidation {
-    type: 'number';
-    min?: number;
-    max?: number;
-    message?: ValidationMessage;
-}
-
-export interface EnumSchema extends SchemaValidation {
-    type: 'enum';
-    values: string[];
-    message?: ValidationMessage;
-}
-
-export type FieldSchema = StringSchema | NumberSchema | EnumSchema;
+import type { EnumSchema, FieldSchema, FormErrors, NumberSchema, StringSchema } from './useValidation.type';
 
 export const createSchema = () => {
     const string = () => {
@@ -185,10 +158,6 @@ export const createSchema = () => {
 
 export const z = createSchema();
 
-export interface FormErrors {
-    [key: string]: string;
-}
-
 export const useValidation = <T extends Record<string, any>>(schema: { schema: Record<string, FieldSchema> }, initialErrors: FormErrors = {}) => {
     const errors = ref<FormErrors>(initialErrors);
 
@@ -198,7 +167,7 @@ export const useValidation = <T extends Record<string, any>>(schema: { schema: R
 
         const result = fieldSchema.validate(value);
         if (!result.valid && result.message) {
-            errors.value[field] = result.message;
+            errors.value[field] = result.message as unknown as object;
             return false;
         }
 

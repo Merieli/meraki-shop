@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
-import { Form } from '@/components/ui/form';
 import { type CardApiData, type CardFormData } from '@/types/card';
-import { useValidation, z } from '@/utils/formValidation';
+import { useValidation, z } from '@/utils/useValidation';
+import { Form } from 'vee-validate';
 import { ref } from 'vue';
 import CardBasicInfo from './CardBasicInfo.vue';
 
