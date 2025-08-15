@@ -1,152 +1,120 @@
 <script setup lang="ts">
-import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { FormControl, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import type { FormErrors } from '@/utils/formValidation';
-
-interface Props {
-    formData: {
-        label: string;
-        recipient_name: string;
-        street: string;
-        number: string;
-        neighborhood: string;
-        complement: string;
-        city: string;
-        state: string;
-        country: string;
-        postal_code: string;
-    };
-    errors: FormErrors;
-    validateField: (field: string, value: any) => boolean;
-}
-
-defineProps<Props>();
+import { Field } from 'vee-validate';
+import { Label } from '../ui/label';
 </script>
 
 <template>
     <div class="space-y-4">
         <!-- Label -->
-        <FormField name="label">
+        <Field name="label" v-slot="{ field, handleChange, handleBlur }">
             <FormItem>
-                <FormLabel>Label</FormLabel>
+                <Label>Label</Label>
                 <FormControl>
-                    <Input v-model="formData.label" @blur="validateField('label', formData.label)" placeholder="Home, Work, etc." />
+                    <Input v-model="field.value" @input="handleChange" @blur="handleBlur" placeholder="Home, Work, etc." />
                 </FormControl>
-                <FormDescription>Give a name to identify this address.</FormDescription>
-                <FormMessage v-if="errors.label">{{ errors.label }}</FormMessage>
+                <FormMessage name="label" />
             </FormItem>
-        </FormField>
+        </Field>
 
         <!-- Recipient Name -->
-        <FormField name="recipient_name">
+        <Field name="recipient_name" v-slot="{ field, handleChange, handleBlur }">
             <FormItem>
-                <FormLabel>Recipient Name</FormLabel>
+                <Label>Recipient Name</Label>
                 <FormControl>
-                    <Input
-                        v-model="formData.recipient_name"
-                        @blur="validateField('recipient_name', formData.recipient_name)"
-                        placeholder="Full name of the recipient"
-                    />
+                    <Input v-model="field.value" @input="handleChange" @blur="handleBlur" placeholder="Full name of the recipient" />
                 </FormControl>
-                <FormDescription>Name of the person who will receive deliveries at this address.</FormDescription>
-                <FormMessage v-if="errors.recipient_name">{{ errors.recipient_name }}</FormMessage>
+                <FormMessage name="recipient_name" />
             </FormItem>
-        </FormField>
+        </Field>
 
         <!-- Street -->
-        <FormField name="street">
+        <Field name="street" v-slot="{ field, handleChange, handleBlur }">
             <FormItem>
-                <FormLabel>Street/Avenue</FormLabel>
+                <Label>Street/Avenue</Label>
                 <FormControl>
-                    <Input v-model="formData.street" @blur="validateField('street', formData.street)" placeholder="Street or avenue name" />
+                    <Input v-model="field.value" @input="handleChange" @blur="handleBlur" placeholder="Street or avenue name" />
                 </FormControl>
-                <FormMessage v-if="errors.street">{{ errors.street }}</FormMessage>
+                <FormMessage name="street" />
             </FormItem>
-        </FormField>
+        </Field>
 
         <!-- Number -->
-        <FormField name="number">
+        <Field name="number" v-slot="{ field, handleChange, handleBlur }">
             <FormItem>
-                <FormLabel>Number</FormLabel>
+                <Label>Number</Label>
                 <FormControl>
-                    <Input v-model="formData.number" @blur="validateField('number', formData.number)" placeholder="Address number" />
+                    <Input v-model="field.value" @input="handleChange" @blur="handleBlur" placeholder="Address number" />
                 </FormControl>
-                <FormMessage v-if="errors.number">{{ errors.number }}</FormMessage>
+                <FormMessage name="number" />
             </FormItem>
-        </FormField>
+        </Field>
 
         <!-- Neighborhood -->
-        <FormField name="neighborhood">
+        <Field name="neighborhood" v-slot="{ field, handleChange, handleBlur }">
             <FormItem>
-                <FormLabel>Neighborhood</FormLabel>
+                <Label>Neighborhood</Label>
                 <FormControl>
-                    <Input
-                        v-model="formData.neighborhood"
-                        @blur="validateField('neighborhood', formData.neighborhood)"
-                        placeholder="Neighborhood name"
-                    />
+                    <Input v-model="field.value" @input="handleChange" @blur="handleBlur" placeholder="Neighborhood name" />
                 </FormControl>
-                <FormMessage v-if="errors.neighborhood">{{ errors.neighborhood }}</FormMessage>
+                <FormMessage name="neighborhood" />
             </FormItem>
-        </FormField>
+        </Field>
 
         <!-- Complement -->
-        <FormField name="complement">
+        <Field name="complement" v-slot="{ field, handleChange, handleBlur }">
             <FormItem>
-                <FormLabel>Complement</FormLabel>
+                <Label>Complement</Label>
                 <FormControl>
-                    <Input
-                        v-model="formData.complement"
-                        @blur="validateField('complement', formData.complement)"
-                        placeholder="Apartment, block, reference, etc."
-                    />
+                    <Input v-model="field.value" @input="handleChange" @blur="handleBlur" placeholder="Apartment, block, reference, etc." />
                 </FormControl>
-                <FormMessage v-if="errors.complement">{{ errors.complement }}</FormMessage>
+                <FormMessage name="complement" />
             </FormItem>
-        </FormField>
+        </Field>
 
         <!-- City -->
-        <FormField name="city">
+        <Field name="city" v-slot="{ field, handleChange, handleBlur }">
             <FormItem>
-                <FormLabel>City</FormLabel>
+                <Label>City</Label>
                 <FormControl>
-                    <Input v-model="formData.city" @blur="validateField('city', formData.city)" placeholder="City name" />
+                    <Input v-model="field.value" @input="handleChange" @blur="handleBlur" placeholder="City name" />
                 </FormControl>
-                <FormMessage v-if="errors.city">{{ errors.city }}</FormMessage>
+                <FormMessage name="city" />
             </FormItem>
-        </FormField>
+        </Field>
 
         <!-- State -->
-        <FormField name="state">
+        <Field name="state" v-slot="{ field, handleChange, handleBlur }">
             <FormItem>
-                <FormLabel>State</FormLabel>
+                <Label>State</Label>
                 <FormControl>
-                    <Input v-model="formData.state" @blur="validateField('state', formData.state)" placeholder="State name" />
+                    <Input v-model="field.value" @input="handleChange" @blur="handleBlur" placeholder="State name" />
                 </FormControl>
-                <FormMessage v-if="errors.state">{{ errors.state }}</FormMessage>
+                <FormMessage name="state" />
             </FormItem>
-        </FormField>
+        </Field>
 
         <!-- Country -->
-        <FormField name="country">
+        <Field name="country" v-slot="{ field, handleChange, handleBlur }">
             <FormItem>
-                <FormLabel>Country</FormLabel>
+                <Label>Country</Label>
                 <FormControl>
-                    <Input v-model="formData.country" @blur="validateField('country', formData.country)" placeholder="Country name" />
+                    <Input v-model="field.value" @input="handleChange" @blur="handleBlur" placeholder="Country name" />
                 </FormControl>
-                <FormMessage v-if="errors.country">{{ errors.country }}</FormMessage>
+                <FormMessage name="country" />
             </FormItem>
-        </FormField>
+        </Field>
 
         <!-- Postal Code -->
-        <FormField name="postal_code">
+        <Field name="postal_code" v-slot="{ field, handleChange, handleBlur }">
             <FormItem>
-                <FormLabel>Postal Code</FormLabel>
+                <Label>Postal Code</Label>
                 <FormControl>
-                    <Input v-model="formData.postal_code" @blur="validateField('postal_code', formData.postal_code)" placeholder="Postal code" />
+                    <Input v-model="field.value" @input="handleChange" @blur="handleBlur" placeholder="Postal code" />
                 </FormControl>
-                <FormMessage v-if="errors.postal_code">{{ errors.postal_code }}</FormMessage>
+                <FormMessage name="postal_code" />
             </FormItem>
-        </FormField>
+        </Field>
     </div>
 </template>

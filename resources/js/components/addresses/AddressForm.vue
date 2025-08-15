@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
-import { Form } from '@/components/ui/form';
-import { useValidation, z } from '@/utils/formValidation';
+import { toTypedSchema } from '@vee-validate/zod';
+import { Form } from 'vee-validate';
 import { ref } from 'vue';
+import * as z from 'zod';
 import AddressBasicInfo from './AddressBasicInfo.vue';
 
 export interface AddressFormData {
@@ -63,6 +64,7 @@ const addressSchema = z.object({
         .min(2, { message: 'Postal code must be at least 2 characters.' })
         .max(20, { message: 'Postal code cannot exceed 20 characters.' }),
 });
+const veeAddressSchema = toTypedSchema(addressSchema);
 
 const defaultFormData: AddressFormData = {
     label: '',
@@ -83,17 +85,11 @@ const formData = ref<AddressFormData>({
 });
 
 const isSubmitting = ref(false);
-const { errors, validateField, validateAll } = useValidation<AddressFormData>(addressSchema);
 
-const handleSubmit = async () => {
-    if (!validateAll(formData.value)) {
-        return;
-    }
-
+const handleSubmit = (values: unknown) => {
     isSubmitting.value = true;
-
     try {
-        emit('submit', formData.value);
+        emit('submit', values as AddressFormData);
     } catch (error) {
         console.error('Error submitting form:', error);
     } finally {
@@ -105,21 +101,19 @@ const sections = [{ id: 'address', title: 'Address Information' }];
 </script>
 
 <template>
-    <Form @submit.prevent>
+    <Form :validation-schema="veeAddressSchema" :initial-values="formData" v-slot="{ meta, isSubmitting }" @submit="handleSubmit">
         <!-- Form content -->
         <div class="space-y-8">
             <!-- Address Information Section -->
             <div>
                 <h3 class="mb-4 text-lg font-medium">{{ sections[0].title }}</h3>
                 <div class="rounded-md border p-4">
-                    <AddressBasicInfo :form-data="formData" :errors="errors" :validate-field="validateField" />
+                    <AddressBasicInfo />
                 </div>
             </div>
 
-            <!-- Form actions -->
             <div class="flex justify-end space-x-4 pt-4">
-                <Button type="button" variant="outline" @click="emit('cancel')" :disabled="props.disabled">Cancel</Button>
-                <Button type="button" @click="handleSubmit" :disabled="isSubmitting || props.disabled">
+                <Button type="submit" :disabled="isSubmitting || !meta.valid">
                     {{ isSubmitting ? 'Saving...' : 'Register Address' }}
                 </Button>
             </div>

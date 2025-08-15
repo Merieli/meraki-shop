@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
-import { Form } from '@/components/ui/form';
 import { type CardApiData, type CardFormData } from '@/types/card';
-import { useValidation, z } from '@/utils/formValidation';
+import { toTypedSchema } from '@vee-validate/zod';
+import { Form } from 'vee-validate';
 import { ref } from 'vue';
+import * as z from 'zod';
 import CardBasicInfo from './CardBasicInfo.vue';
 
 const props = defineProps<{
     initialData?: Partial<CardFormData>;
-    submitEndpoint: string;
     disabled?: boolean;
 }>();
 
@@ -33,6 +33,7 @@ const cardSchema = z.object({
         .min(2, { message: 'Card brand must be at least 2 characters.' })
         .max(50, { message: 'Card brand cannot exceed 50 characters.' }),
 });
+const veeCardSchema = toTypedSchema(cardSchema);
 
 const defaultFormData: CardFormData = {
     card_number: '',
@@ -48,7 +49,6 @@ const formData = ref<CardFormData>({
 });
 
 const isSubmitting = ref(false);
-const { errors, validateField, validateAll } = useValidation<CardFormData>(cardSchema);
 
 /**
  * Clean the card number before submitting
@@ -62,10 +62,6 @@ const cleanCardNumber = (cardNumber: string) => {
 const handleSubmit = async () => {
     const cleanNumber = cleanCardNumber(formData.value.card_number);
     formData.value.card_number = cleanNumber;
-
-    if (!validateAll(formData.value)) {
-        return;
-    }
 
     isSubmitting.value = true;
 
@@ -101,21 +97,18 @@ const sections = [{ id: 'card', title: 'Card Information' }];
 </script>
 
 <template>
-    <Form @submit.prevent>
-        <!-- Form content -->
+    <Form :validation-schema="veeCardSchema" :initial-values="formData" v-slot="{ meta, isSubmitting }" @submit="handleSubmit">
         <div class="space-y-8">
             <!-- Card Information Section -->
             <div>
                 <h3 class="mb-4 text-lg font-medium">{{ sections[0].title }}</h3>
                 <div class="rounded-md border p-4">
-                    <CardBasicInfo :form-data="formData" :errors="errors" :validate-field="validateField" />
+                    <CardBasicInfo />
                 </div>
             </div>
 
-            <!-- Form actions -->
             <div class="flex justify-end space-x-4 pt-4">
-                <Button type="button" variant="outline" @click="emit('cancel')" :disabled="props.disabled">Cancel</Button>
-                <Button type="button" @click="handleSubmit" :disabled="isSubmitting || props.disabled">
+                <Button type="submit" :disabled="isSubmitting || !meta.valid || disabled">
                     {{ isSubmitting ? 'Saving...' : 'Register Card' }}
                 </Button>
             </div>

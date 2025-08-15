@@ -1,68 +1,46 @@
 <script setup lang="ts">
-import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { FormControl, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import type { FormErrors } from '@/utils/formValidation';
-
-interface Props {
-    formData: {
-        thumbnail: string;
-        images: string;
-        rating: number;
-    };
-    errors: FormErrors;
-    validateField: (field: string, value: any) => boolean;
-}
-
-const props = defineProps<Props>();
-
-const validateRating = (value: any) => {
-    const numValue = Number(value);
-    props.validateField('rating', numValue);
-};
+import { Field } from 'vee-validate';
+import { Label } from '../ui/label';
 </script>
 
 <template>
     <div class="space-y-4">
-        <!-- Thumbnail -->
-        <FormField name="thumbnail">
+        <Field name="thumbnail" v-slot="{ field, handleChange, handleBlur }">
             <FormItem>
-                <FormLabel>Thumbnail</FormLabel>
+                <Label for="thumbnail">Thumbnail</Label>
                 <FormControl>
-                    <Input v-model="formData.thumbnail" @blur="validateField('thumbnail', formData.thumbnail)" placeholder="Main image URL" />
+                    <Input v-model="field.value" @change="handleChange" @blur="handleBlur" placeholder="https://placeholder.com/300x200" />
                 </FormControl>
-                <FormDescription>URL of the main product image.</FormDescription>
-                <FormMessage v-if="errors.thumbnail">{{ errors.thumbnail }}</FormMessage>
             </FormItem>
-        </FormField>
+            <FormMessage name="thumbnail" />
+        </Field>
 
-        <!-- Images -->
-        <FormField name="images">
+        <Field name="images" v-slot="{ field, handleChange, handleBlur }">
             <FormItem>
-                <FormLabel>Images</FormLabel>
+                <Label>Images</Label>
                 <FormControl>
                     <Textarea
-                        v-model="formData.images"
-                        @blur="validateField('images', formData.images)"
+                        v-model="field.value"
+                        @change="handleChange"
+                        @blur="handleBlur"
                         placeholder="Additional image URLs separated by comma"
-                        class="min-h-[80px]"
                     />
                 </FormControl>
-                <FormDescription>Additional image URLs separated by comma.</FormDescription>
-                <FormMessage v-if="errors.images">{{ errors.images }}</FormMessage>
             </FormItem>
-        </FormField>
+            <FormMessage name="images" />
+        </Field>
 
-        <!-- Rating -->
-        <FormField name="rating">
+        <Field name="rating" v-slot="{ field, handleChange, handleBlur }">
             <FormItem>
-                <FormLabel>Rating</FormLabel>
+                <Label>Rating</Label>
                 <FormControl>
-                    <Input v-model="formData.rating" @blur="validateRating(formData.rating)" type="number" min="1" max="5" step="1" placeholder="1" />
+                    <Input v-model="field.value" @change="handleChange" @blur="handleBlur" type="number" min="1" max="5" step="1" placeholder="1" />
                 </FormControl>
-                <FormDescription>Set the initial rating for the product (1-5).</FormDescription>
-                <FormMessage />
             </FormItem>
-        </FormField>
+            <FormMessage name="rating" />
+        </Field>
     </div>
 </template>

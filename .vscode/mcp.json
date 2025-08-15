@@ -20,12 +20,21 @@
 			"type": "stdio",
 			"command": "/home/merieli/.asdf/shims/npx",
 			"args": ["-y", "@modelcontextprotocol/server-sequential-thinking@latest"],
-			"gallery": true
 		},
 		"puppeteer": {
 			"command": "npx",
 			"args": ["-y", "puppeteer-mcp-server"],
 			"env": {}
+		},
+		"context7": {
+			"command": "npx",
+			"args": ["-y", "@upstash/context7-mcp"]
+		},
+		"playwright": {
+			"command": "npx",
+			"args": [
+				"@playwright/mcp@latest"
+			]
 		}
 	}
 }

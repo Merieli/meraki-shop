@@ -1,5 +1,6 @@
 {
     "phpstan.configuration": "./phpstan.dev.neon",
+    "explorer.autoReveal": true,
     "chat.mcp.serverSampling": {
         "meraki-shop/.vscode/mcp.json: task-master-ai": {
             "allowedModels": [

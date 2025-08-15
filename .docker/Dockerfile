@@ -1,7 +1,7 @@
 # Informa um valor padrão para a versão do PHP caso não seja passado
 ARG PHP_VERSION=8.3.20-fpm-alpine3.20
 
-FROM node:22-alpine AS node-stage
+FROM node:22.18-alpine3.21 AS node-stage
 
 FROM php:${PHP_VERSION}
 
@@ -50,7 +50,7 @@ COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
 COPY ./.docker/php/php.ini "$PHP_INI_DIR/conf.d/99_extra.ini"
 COPY ./.docker/php/php-fpm.conf /usr/local/etc/php-fpm.d
 
-# --------------------------------------------------------------
+# --------------------------------------------------------------    
 # Prepara o usuário - para resolver problemas de permissão ao alterar arquivos
 # --------------------------------------------------------------
 RUN addgroup -g ${GID} ${USER_NAME} \

@@ -1,67 +1,41 @@
 <script setup lang="ts">
-import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { FormControl, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import type { FormErrors } from '@/utils/formValidation';
-
-interface Props {
-    formData: {
-        name: string;
-        short_description: string;
-        description: string;
-    };
-    errors: FormErrors;
-    validateField: (field: string, value: any) => boolean;
-}
-
-defineProps<Props>();
+import { Field } from 'vee-validate';
+import { Label } from '../ui/label';
 </script>
 
 <template>
     <div class="space-y-4">
-        <!-- Product Name -->
-        <FormField name="name">
+        <Field name="name" v-slot="{ field, handleChange, handleBlur }">
             <FormItem>
-                <FormLabel>Name</FormLabel>
+                <Label for="name">Name</Label>
                 <FormControl>
-                    <Input v-model="formData.name" @blur="validateField('name', formData.name)" placeholder="Enter product name" />
+                    <Input v-model="field.value" placeholder="Name of product" @change="handleChange" @blur="handleBlur" />
                 </FormControl>
-                <FormDescription>This is the name that will be displayed for your product.</FormDescription>
-                <FormMessage v-if="errors.name">{{ errors.name }}</FormMessage>
+                <FormMessage name="name" />
             </FormItem>
-        </FormField>
+        </Field>
 
-        <!-- Short Description -->
-        <FormField name="short_description">
+        <Field name="short_description" v-slot="{ field, handleChange, handleBlur }">
             <FormItem>
-                <FormLabel>Short Description</FormLabel>
+                <Label for="short_description">Short Description</Label>
                 <FormControl>
-                    <Input
-                        v-model="formData.short_description"
-                        @blur="validateField('short_description', formData.short_description)"
-                        placeholder="Brief product description"
-                    />
+                    <Input v-model="field.value" placeholder="Brief product description" @change="handleChange" @blur="handleBlur" />
                 </FormControl>
-                <FormDescription>A short description that will be displayed on product cards.</FormDescription>
-                <FormMessage v-if="errors.short_description">{{ errors.short_description }}</FormMessage>
+                <FormMessage name="short_description" />
             </FormItem>
-        </FormField>
+        </Field>
 
-        <!-- Full Description -->
-        <FormField name="description">
+        <Field name="description" v-slot="{ field, handleChange, handleBlur }">
             <FormItem>
-                <FormLabel>Full Description</FormLabel>
+                <Label for="description">Full Description</Label>
                 <FormControl>
-                    <Textarea
-                        v-model="formData.description"
-                        @blur="validateField('description', formData.description)"
-                        placeholder="Detailed product description"
-                        class="min-h-[100px]"
-                    />
+                    <Textarea v-model="field.value" placeholder="Detailed product description" @change="handleChange" @blur="handleBlur" />
                 </FormControl>
-                <FormDescription>Provide a detailed description of your product.</FormDescription>
-                <FormMessage v-if="errors.description">{{ errors.description }}</FormMessage>
+                <FormMessage name="description" />
             </FormItem>
-        </FormField>
+        </Field>
     </div>
 </template>
