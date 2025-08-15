@@ -59,10 +59,10 @@ const sections = [
                 <div class="flex justify-end space-x-4 pt-4">
                     <Button
                         type="submit"
-                        :disabled="isSubmitting || !meta.valid"
+                        :disabled="!meta.valid"
                         :class="{
-                            'cursor-not-allowed opacity-75': isSubmitting || !meta.valid,
-                            'bg-green-600 hover:bg-green-700': !isSubmitting || meta.valid,
+                            'cursor-not-allowed opacity-75': !meta.valid,
+                            'bg-green-600 hover:bg-green-700': meta.valid && !isSubmitting,
                         }"
                     >
                         <div class="flex items-center space-x-2">

@@ -113,7 +113,7 @@ const sections = [{ id: 'address', title: 'Address Information' }];
             </div>
 
             <div class="flex justify-end space-x-4 pt-4">
-                <Button type="submit" :disabled="isSubmitting || !meta.valid">
+                <Button type="submit" :disabled="!meta.valid">
                     {{ isSubmitting ? 'Saving...' : 'Register Address' }}
                 </Button>
             </div>
