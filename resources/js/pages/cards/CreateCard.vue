@@ -62,13 +62,7 @@ const handleCancel = () => {
 
             <div class="flex flex-col space-y-8 lg:flex-row lg:space-y-0 lg:space-x-12">
                 <div class="flex-1 lg:max-w-3xl">
-                    <CardForm
-                        :key="formKey"
-                        submit-endpoint="/api/credit-card"
-                        @submit="handleSubmit"
-                        @cancel="handleCancel"
-                        :disabled="isSubmitting"
-                    />
+                    <CardForm :key="formKey" @submit="handleSubmit" @cancel="handleCancel" :disabled="isSubmitting" />
                 </div>
             </div>
         </div>

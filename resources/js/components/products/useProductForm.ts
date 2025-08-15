@@ -11,18 +11,19 @@ export function useProductForm() {
     };
 
     const validateStringRequired = {
-        error: (issue: { input: unknown }) => (issue.input === undefined ? 'Required' : 'Not a string'),
+        required_error: 'Required',
+        invalid_type_error: 'Must be a string',
     };
     const validateNumberRequired = {
-        error: (issue: { input: unknown }) => (!issue.input === undefined ? 'Required' : 'Required'),
+        required_error: 'Required',
+        invalid_type_error: 'Must be a number',
     };
 
     const productSchema = z.object({
         name: z
             .string(validateStringRequired)
             .min(4, { message: 'Name must be at least 4 characters long.' })
-            .max(150, { message: 'Name cannot exceed 150 characters.' })
-            .nonempty({ message: 'Name is required.' }),
+            .max(150, { message: 'Name cannot exceed 150 characters.' }),
         short_description: z
             .string(validateStringRequired)
             .min(10, { message: 'Short description must be at least 10 characters long.' })

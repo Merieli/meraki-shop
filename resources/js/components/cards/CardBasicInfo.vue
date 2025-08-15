@@ -2,60 +2,9 @@
 import { FormControl, FormDescription, FormItem, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { cardBrands, type CardFormData } from '@/types/card';
-import type { FormErrors } from '@/utils/useValidation.type';
+import { cardBrands } from '@/types/card';
 import { Field } from 'vee-validate';
 import { Label } from '../ui/label';
-
-interface Props {
-    formData: CardFormData;
-    errors: FormErrors;
-    validateField: (field: string, value: any) => boolean;
-}
-
-const props = defineProps<Props>();
-
-/**
- * Formata o número do cartão
- * @param e Evento do input
- */
-const formatCardNumber = (e: Event) => {
-    const input = e.target as HTMLInputElement;
-    let value = input.value.replace(/\D/g, '');
-
-    if (value.length > 19) {
-        value = value.slice(0, 19);
-    }
-    const formatted = value.replace(/(\d{4})(?=\d)/g, '$1 ');
-
-    props.formData.card_number = formatted;
-};
-
-/**
- * Formata a data de validade do cartão
- * @param e Evento do input
- */
-const formatExpiryDate = (e: Event) => {
-    const input = e.target as HTMLInputElement;
-    let value = input.value.replace(/\D/g, '');
-
-    if (value.length > 4) {
-        value = value.slice(0, 4);
-    }
-
-    if (value.length > 2) {
-        value = value.slice(0, 2) + '/' + value.slice(2);
-    }
-
-    props.formData.expiration_date = value;
-};
-
-const formatCVV = (e: Event) => {
-    const input = e.target as HTMLInputElement;
-    const value = input.value.replace(/\D/g, '');
-
-    props.formData.cvv = value.slice(0, 4);
-};
 </script>
 
 <template>
@@ -141,7 +90,9 @@ const formatCVV = (e: Event) => {
                 <FormControl>
                     <Select v-model="field.value" @change="handleChange" @blur="handleBlur">
                         <SelectTrigger>
-                            <SelectValue placeholder="Select card brand" />
+                            <SelectValue placeholder="Select card brand">
+                                {{ field.value }}
+                            </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem v-for="brand in cardBrands" :key="brand.value" :value="brand.value">

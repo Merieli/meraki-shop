@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
+import { toTypedSchema } from '@vee-validate/zod';
 import { Form } from 'vee-validate';
 import { ref } from 'vue';
 import * as z from 'zod';
@@ -63,6 +64,7 @@ const addressSchema = z.object({
         .min(2, { message: 'Postal code must be at least 2 characters.' })
         .max(20, { message: 'Postal code cannot exceed 20 characters.' }),
 });
+const veeAddressSchema = toTypedSchema(addressSchema);
 
 const defaultFormData: AddressFormData = {
     label: '',
@@ -85,12 +87,7 @@ const formData = ref<AddressFormData>({
 const isSubmitting = ref(false);
 
 const handleSubmit = (values: unknown) => {
-    // if (!validateAll(values as AddressFormData)) {
-    //     return;
-    // }
-
     isSubmitting.value = true;
-
     try {
         emit('submit', values as AddressFormData);
     } catch (error) {
@@ -104,7 +101,7 @@ const sections = [{ id: 'address', title: 'Address Information' }];
 </script>
 
 <template>
-    <Form :validation-schema="addressSchema" :initial-values="formData" v-slot="{ meta, isSubmitting }" @submit="handleSubmit">
+    <Form :validation-schema="veeAddressSchema" :initial-values="formData" v-slot="{ meta, isSubmitting }" @submit="handleSubmit">
         <!-- Form content -->
         <div class="space-y-8">
             <!-- Address Information Section -->
@@ -116,8 +113,7 @@ const sections = [{ id: 'address', title: 'Address Information' }];
             </div>
 
             <div class="flex justify-end space-x-4 pt-4">
-                <Button type="button" variant="outline" @click="emit('cancel')" :disabled="props.disabled">Cancel</Button>
-                <Button type="button" :disabled="isSubmitting || props.disabled">
+                <Button type="submit" :disabled="isSubmitting || !meta.valid">
                     {{ isSubmitting ? 'Saving...' : 'Register Address' }}
                 </Button>
             </div>

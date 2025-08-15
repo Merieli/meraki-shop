@@ -2,7 +2,7 @@
 import ProductForm from '@/components/products/ProductForm.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { Head, router } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 import { useProductPage } from './useProductPage';
 
 const breadcrumbItems: BreadcrumbItem[] = [
@@ -13,10 +13,6 @@ const breadcrumbItems: BreadcrumbItem[] = [
 ];
 
 const { isSubmitting, formKey } = useProductPage();
-
-const handleCancel = () => {
-    router.visit('/products');
-};
 </script>
 
 <template>
@@ -31,7 +27,7 @@ const handleCancel = () => {
 
             <div class="flex flex-col space-y-8 lg:flex-row lg:space-y-0 lg:space-x-12">
                 <div class="flex-1 lg:max-w-3xl">
-                    <ProductForm :key="formKey" @cancel="handleCancel" :disabled="isSubmitting" />
+                    <ProductForm :key="formKey" :disabled="isSubmitting" />
                 </div>
             </div>
         </div>

@@ -8,10 +8,6 @@ import ProductMedia from './ProductMedia.vue';
 import ProductPricingAndInventory from './ProductPricingAndInventory.vue';
 import { useProductForm } from './useProductForm';
 
-const emit = defineEmits<{
-    (e: 'cancel'): void;
-}>();
-
 const { formData, error, success, veeProductSchema, submitProduct } = useProductForm();
 
 const onSubmit = async (values: unknown) => {
@@ -61,13 +57,12 @@ const sections = [
 
                 <!-- Form actions -->
                 <div class="flex justify-end space-x-4 pt-4">
-                    <Button type="button" variant="outline" @click="emit('cancel')" :disabled="isSubmitting">Cancel</Button>
                     <Button
                         type="submit"
-                        :disabled="!meta.valid"
+                        :disabled="isSubmitting || !meta.valid"
                         :class="{
-                            'cursor-not-allowed opacity-75': !meta.valid,
-                            'bg-green-600 hover:bg-green-700': meta.valid,
+                            'cursor-not-allowed opacity-75': isSubmitting || !meta.valid,
+                            'bg-green-600 hover:bg-green-700': !isSubmitting || meta.valid,
                         }"
                     >
                         <div class="flex items-center space-x-2">

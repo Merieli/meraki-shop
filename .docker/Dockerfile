@@ -50,7 +50,7 @@ COPY --from=composer/composer:latest-bin /composer /usr/bin/composer
 COPY ./.docker/php/php.ini "$PHP_INI_DIR/conf.d/99_extra.ini"
 COPY ./.docker/php/php-fpm.conf /usr/local/etc/php-fpm.d
 
-# --------------------------------------------------------------
+# --------------------------------------------------------------    
 # Prepara o usuário - para resolver problemas de permissão ao alterar arquivos
 # --------------------------------------------------------------
 RUN addgroup -g ${GID} ${USER_NAME} \
