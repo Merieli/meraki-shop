@@ -125,14 +125,14 @@
         "dependencies": [
           11
         ],
-        "status": "in-progress",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
             "title": "Implement `useProductForm` Composable with Validation and API Handling",
             "description": "Alterar composable para gerenciar estado do formulário de produto, com validação em tempo real e integração com API (POST).",
             "details": "Manter estado dos campos, validar formatos (ex: preço numérico, limite de caracteres, campos obrigatórios) e fornecer feedback imediato. Expor função `saveProduct()` com tratamento de loading, sucesso e erro.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Testes unitários para validar regras de negócio, retorno de API, estados e mensagens de erro."
           },
           {
@@ -140,7 +140,7 @@
             "title": "Build ProductForm.vue with Real-time Field Validation",
             "description": "Melhorar o formulário existente para criação de produtos, integrado ao `useProductForm`, exibindo feedback imediato ao usuário.",
             "details": "Implementar watchers ou computed para validações instantâneas ao digitar. Destacar campos inválidos e exibir mensagens amigáveis. Garantir que ao submeter, apenas dados válidos sejam enviados à API. Se os dados estiverem inválidos bloquear o botão para criação do produto.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Testes de componente para garantir funcionamento das validações em tempo real e submissão correta."
           },
           {
@@ -148,7 +148,7 @@
             "title": "Handle API Requests with Loading and Response Feedback",
             "description": "Integrar feedback visual de carregamento e status de operação (sucesso/erro) em toda a experiência de salvamento.",
             "details": "Exibir loading durante chamadas assíncronas, usar notificações/alertas para informar resultado da operação e limpar formulários após sucesso. Garantir que erros da API sejam tratados e exibidos de forma clara.",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "Testes E2E simulando respostas da API e verificando exibição de carregamento e mensagens."
           }
         ]
@@ -175,7 +175,62 @@
         "priority": "high",
         "dependencies": [],
         "status": "done",
-        "subtasks": []
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Create Address Model, Migration, and `POST /api/address` Endpoint",
+            "description": "Implement the necessary database structure and API endpoint for an authenticated user to add a new shipping address to their profile.",
+            "dependencies": [],
+            "details": "Create the `Address` Eloquent model and its corresponding database migration. Implement the `store` method in `AddressController.php` to validate the incoming request and save a new address, associating it with the currently authenticated user's ID.",
+            "status": "pending",
+            "testStrategy": "API test to confirm a logged-in user can successfully create an address and receives a 201 response with the address data."
+          },
+          {
+            "id": 2,
+            "title": "Create Customer Card Model, Migration, and `POST /api/credit-card` Endpoint",
+            "description": "Implement the database structure and API endpoint for an authenticated user to save a new payment card token.",
+            "dependencies": [],
+            "details": "Create the `CustomerCard` Eloquent model and its migration to store card tokens (not raw card numbers). Implement the `store` method in `CustomerCardController.php` to handle the `POST /api/credit-card` request, associating the new card token with the authenticated user.",
+            "status": "pending",
+            "testStrategy": "API test to verify a logged-in user can save a new card token and receives a 201 response."
+          },
+          {
+            "id": 3,
+            "title": "Implement `GET /api/users` Endpoint to Fetch Profile with Relations",
+            "description": "Develop the endpoint for a user to retrieve their own profile information, including their lists of saved addresses and payment cards.",
+            "dependencies": [
+              "14.1",
+              "14.2"
+            ],
+            "details": "Define the `GET /api/users` route and its controller logic. The implementation should fetch the authenticated user and eager-load the `addresses` and `customer_cards` relationships to include them in the JSON response. This provides the data needed for the frontend profile page and 1-click buy selection.",
+            "status": "pending",
+            "testStrategy": "API test to fetch the authenticated user's profile and assert that the `addresses` and `customer_cards` arrays are present and correctly formatted in the response."
+          },
+          {
+            "id": 4,
+            "title": "Secure Profile Endpoints with Authentication and Authorization",
+            "description": "Apply security measures to all new endpoints to ensure they are only accessible by authenticated users and that users can only manage their own data.",
+            "dependencies": [
+              "14.1",
+              "14.2",
+              "14.3"
+            ],
+            "details": "Apply authentication middleware (e.g., `auth:api`) to the routes for `POST /api/address`, `POST /api/credit-card`, and `GET /api/users`. Implement authorization logic, potentially using Laravel Policies, to verify that the user performing an action is the owner of the data being accessed or modified.",
+            "status": "pending",
+            "testStrategy": "Write API tests to ensure unauthenticated requests receive a 401 error. Create a test where User A attempts to fetch User B's profile and receives a 403 Forbidden error."
+          },
+          {
+            "id": 5,
+            "title": "Write Comprehensive API Tests for Data Isolation",
+            "description": "Create a suite of API tests to explicitly verify that a user cannot access, view, or modify the addresses or cards belonging to another user.",
+            "dependencies": [
+              "14.4"
+            ],
+            "details": "In the test suite, create two distinct users. Have User A create an address and a card. Then, while authenticated as User B, attempt to perform actions on the data created by User A (e.g., list, delete if implemented). Assert that all such cross-user attempts fail with a 403 Forbidden status code.",
+            "status": "pending",
+            "testStrategy": "This subtask is the implementation of the cross-user security testing portion of the main task's test strategy."
+          }
+        ]
       },
       {
         "id": 15,
@@ -261,7 +316,7 @@
     ],
     "metadata": {
       "created": "2025-08-06T13:35:04.368Z",
-      "updated": "2025-08-11T20:14:05.057Z",
+      "updated": "2025-08-18T13:42:50.452Z",
       "description": "Tasks for master context"
     }
   }

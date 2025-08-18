@@ -73,11 +73,15 @@ export const apiService = {
      * Envia uma requisição GET para obter uma lista de recursos
      * @param useToken Se true, força o uso do token de autenticação
      */
-    async list<T>(endpoint: string, params = {}, useToken = false): Promise<T> {
+    async list<T>(endpoint: string, params = {}, useToken = false): Promise<T[]> {
         try {
             const response = await api.get(endpoint, { params, useToken });
             return response.data;
         } catch (error) {
+            if (axios.isAxiosError(error) && error.response?.status === 404) {
+                return [] as T[];
+            }
+
             console.error('API Error:', error);
             throw error;
         }
