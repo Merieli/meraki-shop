@@ -20,17 +20,18 @@ class AuthTokenController extends Controller
     public function create(Request $request): JsonResponse
     {
         try {
-            $credentials = $request->only('email', 'workos_id');
-
             $user =  Auth::user();
-            if (!isset($user) || ! Auth::attempt($credentials)) {
+            if (!isset($user)) {
                 return response()->json([
                     'message' => 'User unauthorized'
                 ], 401);
             }
+            Auth::login($user);
+
+            $scopes = $this->getScopesBasedOnRole($user->role);
 
             /** @var NewAccessToken $accessToken */
-            $accessToken = $user->createAccessToken('api-token');
+            $accessToken = $user->createToken('api-token', $scopes);
             $token = $accessToken->plainTextToken;
 
             return response()->json([
@@ -48,6 +49,22 @@ class AuthTokenController extends Controller
                 ],
                 $e->getCode()
             );
+        }
+    }
+
+    /**
+     * Get scopes based on user role
+     *
+     * @param string $role
+     * @return array<string>
+     */
+    private function getScopesBasedOnRole(string $role): array
+    {
+        switch ($role) {
+            case 'a':
+                return ['orders:get-all'];
+            default:
+                return [];
         }
     }
 }

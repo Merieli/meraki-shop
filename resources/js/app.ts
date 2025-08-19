@@ -22,6 +22,13 @@ declare module 'vite/client' {
     }
 }
 
+declare module 'axios' {
+    interface AxiosRequestConfig {
+        useToken?: boolean;
+        skipToken?: boolean;
+    }
+}
+
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({

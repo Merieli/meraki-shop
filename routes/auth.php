@@ -26,9 +26,14 @@ Route::get('authenticate', function (AuthKitAuthenticationRequest $request) {
             ]
         );
 
-        Auth::login($user);
+        $tokenResponse = app(\MerakiShop\Http\Controllers\Api\AuthTokenController::class)->create(new Request(['email' => $user->email, 'workos_id' => $user->workos_id]));
 
-        $token = $user->createToken('api-token')->plainTextToken;
+        if ($tokenResponse->status() !== 200) {
+            throw new \Exception('Failed to create token');
+        }
+
+        $token = $tokenResponse->getData()->token;
+
         $cookie = cookie(
             'X-API-TOKEN',
             $token,

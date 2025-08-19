@@ -4,14 +4,14 @@ namespace MerakiShop\Http\Controllers\Api;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use MerakiShop\Facades\Logger;
 use MerakiShop\Http\Controllers\Controller;
+use MerakiShop\Http\Requests\IndexOrderRequest;
 use MerakiShop\Http\Requests\StoreOrderRequest;
 use MerakiShop\Http\Requests\UpdateOrderRequest;
 use MerakiShop\Models\{
-    User,
     Order,
     OrderItem
 };
@@ -24,86 +24,37 @@ class OrderController extends Controller
      *
      * @throws Throwable
      */
-    public function index(Request $request, Authenticatable $user): JsonResponse
+    public function index(IndexOrderRequest $request, Authenticatable $user): JsonResponse
     {
         try {
-            if ($request->input('scope') === 'all') {
-                $orders = Order::with(['orderItems.product', 'user'])
-                    ->latest()
-                    ->get();
+            /** @var int $userId */
+            $userId = $user->getAuthIdentifier();
+            $user = Auth::user();
 
-                Logger::info('All orders found for dashboard', ['count' => $orders->count()]);
-            } else {
-                $userId = $user->getAuthIdentifier();
-                $user = User::find($userId);
-                if (! $user) {
-                    return response()->json(['message' => 'User not found'], 404);
-                }
+            $scope = $request->input('scope');
+            $notHasPermission = $user?->tokenCant('orders:get-all');
 
-                $orders = Order::where('user_id', $userId)
-                    ->with(['orderItems.product'])
-                    ->get();
-
-                if ($orders->isEmpty()) {
-                    return response()->json(['message' => 'No existing orders'], 404);
-                }
-
-                Logger::info('Orders found for user', ['user_id' => $user['id'], 'count' => $orders->count()]);
+            if (! $userId || ($notHasPermission && $scope === 'all')) {
+                return response()->json(['message' => 'Unauthorized'], 401);
             }
 
-            // Transform orders data to match frontend expectations
-            $formattedOrders = $orders->map(function ($order) {
-                $items = $order->orderItems;
+            $orderModel = Order::with(['orderItems.product', 'user']);
 
-                if ($order->user) {
-                    // Format for dashboard view
-                    return [
-                        'id' => $order->id,
-                        'status' => $order->status,
-                        'payment_method' => $order->payment_method,
-                        'created_at' => $order->created_at,
-                        'updated_at' => $order->updated_at,
-                        'user' => [
-                            'id' => $order->user->id,
-                            'name' => $order->user->name,
-                        ],
-                        'order_items' => $items->map(function ($item) {
-                            return [
-                                'id' => $item->id,
-                                'product_id' => $item->product_id,
-                                'variation_id' => $item->variation_id,
-                                'quantity' => $item->quantity,
-                                'unit_price' => $item->unit_price,
-                            ];
-                        })->toArray(),
-                    ];
-                } else {
-                    // Format for user orders view
-                    return [
-                        'id' => $order->id,
-                        'status' => $order->status,
-                        'payment_method' => $order->payment_method,
-                        'created_at' => $order->created_at,
-                        'updated_at' => $order->updated_at,
-                        'items' => $items->map(function ($item) {
-                            $product = $item->product;
-                            $variation = $item->variation;
+            if (empty($scope) ||  $scope === 'user') {
+                $orderModel = Order::with(['orderItems.product'])
+                    ->where('user_id', $userId);
+            }
 
-                            return [
-                                'id' => $item->id,
-                                'product_id' => $item->product_id,
-                                'variation_id' => $item->variation_id,
-                                'product_name' => $product ? $product->name : 'Unknown Product',
-                                'variation_name' => $variation->name ?? 'Standard',
-                                'quantity' => $item->quantity,
-                                'unit_price' => $item->unit_price,
-                            ];
-                        })->toArray(),
-                    ];
-                }
-            });
+            $orders = $orderModel
+                ->latest()
+                ->get();
 
-            return response()->json($formattedOrders);
+
+            if ($orders->isEmpty()) {
+                $orders = [];
+            }
+
+            return response()->json($orders);
         } catch (Throwable $e) {
             Logger::error('Error fetching orders', [$e]);
 
