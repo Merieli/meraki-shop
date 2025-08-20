@@ -32,7 +32,10 @@ Route::get('authenticate', function (AuthKitAuthenticationRequest $request) {
             throw new \Exception('Failed to create token');
         }
 
-        $token = $tokenResponse->getData()->token;
+        /** @var \MerakiShop\DTOs\ResponseToken $tokenResponse */
+        $tokenResponse = $tokenResponse->getData();
+        $token = $tokenResponse->token;
+
 
         $cookie = cookie(
             'X-API-TOKEN',

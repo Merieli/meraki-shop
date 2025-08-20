@@ -5,6 +5,7 @@ namespace MerakiShop\Http\Controllers\Api;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use MerakiShop\DTOs\ResponseToken;
 use MerakiShop\Facades\Logger;
 use MerakiShop\Http\Controllers\Controller;
 use Laravel\Sanctum\NewAccessToken;
@@ -34,9 +35,7 @@ class AuthTokenController extends Controller
             $accessToken = $user->createToken('api-token', $scopes);
             $token = $accessToken->plainTextToken;
 
-            return response()->json([
-                'token' => $token,
-            ]);
+            return response()->json(new ResponseToken($token));
         } catch (Throwable $e) {
             Logger::error('Create Token', [
                 'exception' => $e,

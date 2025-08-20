@@ -43,8 +43,11 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
+      - name: Run PHP Pint
+        run: composer lint
+
       - name: Run PHPStan
-        run: ./vendor/bin/phpstan analyse
+        run: composer check
 
   tests:
     runs-on: ubuntu-latest
