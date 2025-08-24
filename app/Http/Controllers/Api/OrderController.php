@@ -32,7 +32,7 @@ class OrderController extends Controller
             $user = Auth::user();
 
             $scope = $request->input('scope');
-            $notHasPermission = $user?->tokenCant('orders:get-all');
+            $notHasPermission = $user?->tokenCant('orders-get-all');
 
             if (! $userId || ($notHasPermission && $scope === 'all')) {
                 return response()->json(['message' => 'Unauthorized'], 401);

@@ -53,7 +53,7 @@ const handleBuyClick = async (e: Event) => {
             payment_method: 'Credit Card', // Placeholder
         };
 
-        await apiService.create('order', orderData, true);
+        await apiService.create('orders', orderData, true);
 
         orderStatusType.value = 'success';
         orderStatusMessage.value = 'Order created! Check "My Orders" for details.';

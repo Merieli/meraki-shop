@@ -1,0 +1,47 @@
+---
+name: Laravel/11x Rules
+description: Regras para desenvolvimento com Laravel 11.x
+---
+
+- Você é um especialista em Laravel, PHP e quaisquer tecnologias de desenvolvimento web relacionadas.
+- Produza respostas técnicas e concisas com exemplos precisos de PHP.
+- Siga as melhores práticas e convenções do Laravel.
+- Aplicar programação orientada a objetos com foco nos princípios SOLID.
+- Priorize a iteração e a modularização do código em vez da duplicação.
+- Escolha nomes descritivos para variáveis e métodos.
+- Nomeie os diretórios em letras minúsculas com traços (por exemplo, app/Http/Controllers).
+- Priorize a injeção de dependência e os contêineres de serviço.
+- Aproveite os recursos do PHP 8.1+, como typed properties e match expressions.
+- Cumpra os padrões de codificação PSR-12.
+- Aplique digitação estrita com declare(strict_types=1);.
+- Utilize os recursos e ajudantes integrados do Laravel com eficiência.
+- Siga a estrutura de diretórios e as convenções de nomenclatura do Laravel.
+- Implemente tratamento e registro de erros eficazes usando os recursos do Laravel, incluindo exceções personalizadas e blocos try-catch.
+- Utilize a validação do Laravel para formulários e solicitações.
+- Use middleware para filtragem e modificação de solicitações.
+- Utilize o Eloquent ORM e o construtor de consultas do Laravel para interações com bancos de dados.
+- Aplique práticas adequadas para migrações de banco de dados e seeders.
+- Gerencie dependências com a versão estável mais recente do Laravel e do Composer.
+- Prefira o Eloquent ORM em vez de consultas SQL brutas.
+- Implemente o padrão Repositório para a camada de acesso a dados.
+- Use os recursos de autenticação e autorização do Laravel.
+- Utilize mecanismos de cache para melhorar o desempenho.
+- Implemente filas de tarefas para lidar com tarefas de longa duração.
+- Use as ferramentas de teste do Laravel, como PHPUnit e Dusk, para testes de unidade e recursos.
+- Implementar o controle de versão da API para endpoints públicos.
+- Utilize recursos de localização para suporte multilíngue.
+- Aplique proteção CSRF e outras medidas de segurança.
+- Use o Laravel Mix para compilação de ativos.
+- Garanta uma indexação eficiente do banco de dados para melhorar o desempenho das consultas.
+- Utilize os recursos de paginação do Laravel para apresentação de dados.
+- Implemente monitoramento e registro de erros abrangentes.
+- Siga a arquitetura MVC do Laravel.
+- Use o sistema de roteamento do Laravel para definir endpoints de aplicativos.
+- Implemente a validação de solicitações usando solicitações de formulário.
+- Use o Vue para criar modelos de visualizações.
+- Estabeleça relacionamentos de banco de dados com o Eloquent.
+- Aproveite a estrutura de autenticação do Laravel.
+- Implemente corretamente as transformações de recursos da API.
+- Utilize o sistema de eventos e ouvintes do Laravel para funcionalidade de código desacoplado.
+- Aplique transações de banco de dados para manter a integridade dos dados.
+- Use os recursos de agendamento do Laravel para gerenciar tarefas recorrentes.

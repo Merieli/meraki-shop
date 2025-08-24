@@ -50,9 +50,8 @@ const fetchRecentOrders = async () => {
     isLoading.value = true;
     error.value = null;
     try {
-        const ordersFromApi = await apiService.list<ApiOrder[]>('order', { scope: 'all' }, true);
+        const ordersFromApi = await apiService.list<ApiOrder[]>('orders', { scope: 'all' }, true);
 
-        // Calcular métricas baseadas nos dados reais
         totalOrders.value = ordersFromApi.length;
 
         let revenue = 0;
@@ -62,8 +61,8 @@ const fetchRecentOrders = async () => {
         });
 
         totalRevenue.value = revenue;
-        // Considerar lucro como 30% da receita (ajustar conforme necessário)
-        totalProfit.value = Math.round(revenue * 0.3);
+        const profit = 0.3;
+        totalProfit.value = Math.round(revenue * profit);
 
         recentOrders.value = ordersFromApi
             .map((order) => ({

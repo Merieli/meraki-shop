@@ -10,7 +10,7 @@ use MerakiShop\Http\Controllers\Api\UserController;
 
 Route::middleware('auth')->post('token', [AuthTokenController::class, 'create']);
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('users', UserController::class)->only(['index', 'store']);
 
     Route::apiResource(
@@ -21,8 +21,9 @@ Route::middleware('auth:sanctum')->group(function () {
         'credit-card',
         CustomerCardController::class,
     )->except(['create', 'edit', 'destroy', 'show']);
+
     Route::apiResource(
-        'order',
+        'orders',
         OrderController::class,
     )->except(['create', 'edit', 'destroy', 'show']);
 

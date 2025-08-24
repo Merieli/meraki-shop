@@ -1,7 +1,7 @@
 import { useApiToken } from '@/utils/apiTokenStore';
 import axios from 'axios';
 
-const protectedEndpoints = ['/users', '/address', '/credit-card', '/token', '/order', '/products'];
+const protectedEndpoints = ['/users', '/address', '/credit-card', '/token', '/orders', '/products'];
 
 const api = axios.create({
     baseURL: '/api',

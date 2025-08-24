@@ -24,7 +24,7 @@ const fetchOrders = async () => {
     error.value = null;
 
     try {
-        const response = await apiService.list<OrderData[]>('order', {}, true);
+        const response = await apiService.list<OrderData[]>('orders', {}, true);
         orders.value = response;
     } catch (err: any) {
         console.error('Error fetching orders:', err);

@@ -2,6 +2,7 @@
 
 namespace MerakiShop\Http\Controllers\Api;
 
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,6 +10,7 @@ use MerakiShop\DTOs\ResponseToken;
 use MerakiShop\Facades\Logger;
 use MerakiShop\Http\Controllers\Controller;
 use Laravel\Sanctum\NewAccessToken;
+use MerakiShop\Models\User;
 use Throwable;
 
 class AuthTokenController extends Controller
@@ -21,14 +23,14 @@ class AuthTokenController extends Controller
     public function create(Request $request): JsonResponse
     {
         try {
-            $user =  Auth::user();
-            if (!isset($user)) {
+            $user = $this->authenticateUser();
+            if (! $user) {
                 return response()->json([
                     'message' => 'User unauthorized'
                 ], 401);
             }
-            Auth::login($user);
 
+            /** @var User $user */
             $scopes = $this->getScopesBasedOnRole($user->role);
 
             /** @var NewAccessToken $accessToken */
@@ -52,6 +54,21 @@ class AuthTokenController extends Controller
     }
 
     /**
+     * Summary of authenticateUser
+     * @throws Throwable
+     */
+    private function authenticateUser(): Authenticatable|null
+    {
+        $user =  Auth::user();
+        if (!isset($user)) {
+            return $user;
+        }
+        Auth::login($user);
+
+        return $user;
+    }
+
+    /**
      * Get scopes based on user role
      *
      * @param string $role
@@ -61,7 +78,7 @@ class AuthTokenController extends Controller
     {
         switch ($role) {
             case 'a':
-                return ['orders:get-all'];
+                return ['orders-get-all'];
             default:
                 return [];
         }
