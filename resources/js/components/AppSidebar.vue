@@ -10,16 +10,16 @@ import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'My Orders',
-        href: '/orders',
-        icon: ShoppingBag,
-        admin: false,
-    },
-    {
         title: 'Dashboard',
         href: '/dashboard',
         icon: LayoutGrid,
         admin: true,
+    },
+    {
+        title: 'My Orders',
+        href: '/orders',
+        icon: ShoppingBag,
+        admin: false,
     },
     {
         title: 'Register Product',

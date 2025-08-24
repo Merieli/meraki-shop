@@ -16,22 +16,33 @@ Route::middleware([
         return Inertia::render('Dashboard', [
             'api_token' => session('api_token'),
         ]);
-    })->name('dashboard');
+    })->name('orders.all');
 
     Route::get('products/create', function () {
-        return Inertia::render('products/CreateProduct');
+        return Inertia::render('products/CreateProduct', [
+            'api_token' => session('api_token'),
+        ]);
     })->name('products.create');
 
     Route::get('addresses/create', function () {
-        return Inertia::render('addresses/CreateAddress');
+        return Inertia::render(
+            'addresses/CreateAddress',
+            [
+            'api_token' => session('api_token'),
+        ]
+        );
     })->name('addresses.create');
 
     Route::get('cards/create', function () {
-        return Inertia::render('cards/CreateCard');
+        return Inertia::render('cards/CreateCard', [
+            'api_token' => session('api_token'),
+        ]);
     })->name('cards.create');
 
     Route::get('orders', function () {
-        return Inertia::render(component: 'orders/CreateOrders');
+        return Inertia::render('Orders', [
+            'api_token' => session('api_token'),
+        ]);
     })->name('orders.index');
 });
 

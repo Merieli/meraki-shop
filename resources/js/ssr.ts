@@ -18,7 +18,7 @@ createServer((page) =>
 
             // Configure Ziggy for SSR...
             const ziggyConfig = {
-                ...page.props.ziggy,
+                ...page.props.ziggy!,
                 location: new URL(page.props.ziggy.location),
             };
 

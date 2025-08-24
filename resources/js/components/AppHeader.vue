@@ -56,7 +56,7 @@ const handleSearch = () => {
                                     </Avatar>
                                     <div>
                                         <p class="text-sm font-medium">{{ auth.user.name }}</p>
-                                        <Link :href="route('dashboard')" class="text-xs text-neutral-500">Dashboard</Link>
+                                        <Link :href="route('orders.index')" class="text-xs text-neutral-500">Dashboard</Link>
                                     </div>
                                 </div>
 
@@ -126,7 +126,7 @@ const handleSearch = () => {
                 <!-- Usuário conectado -->
                 <Link
                     v-if="auth.user"
-                    :href="route('dashboard')"
+                    :href="route('orders.index')"
                     class="flex items-center justify-center gap-2 rounded-sm px-3 py-1.5 text-sm leading-normal text-[#1b1b18] hover:bg-neutral-100 dark:text-[#EDEDEC] dark:hover:bg-neutral-800"
                 >
                     Hello {{ auth.user.name }}

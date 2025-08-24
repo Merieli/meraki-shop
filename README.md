@@ -29,6 +29,7 @@ Meraki Shop is an e-commerce platform for collectors of action figures, superher
 - **[ESLint](https://eslint.org/docs/latest/use/configure/rules)**: Linting for JavaScript/TypeScript
 - **[Vitest](https://vitest.dev/api/vi.html)**: JavaScript testing framework
 - **[Vue Test Utils](https://test-utils.vuejs.org/guide/essentials/a-crash-course.html)**: Testing utilities for Vue
+- **[Ziggy JS](https://github.com/tighten/ziggy?ref=madewithlaravel.com)**: use Laravel routes in JavaScript
 
 #### Backend Tools
 

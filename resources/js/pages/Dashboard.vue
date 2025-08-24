@@ -9,7 +9,6 @@ import { DollarSign, ShoppingBag, TrendingUp } from 'lucide-vue-next';
 import { onMounted, ref } from 'vue';
 
 type OrderStatus = 'completed' | 'processing' | 'pending' | 'cancelled';
-
 interface TableOrder {
     id: number;
     customer_name: string;

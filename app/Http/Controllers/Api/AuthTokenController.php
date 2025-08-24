@@ -37,6 +37,8 @@ class AuthTokenController extends Controller
             $accessToken = $user->createToken('api-token', $scopes);
             $token = $accessToken->plainTextToken;
 
+            session(['api_token' => $token]);
+
             return response()->json(new ResponseToken($token));
         } catch (Throwable $e) {
             Logger::error('Create Token', [

@@ -34,12 +34,9 @@ Route::get('authenticate', function (AuthKitAuthenticationRequest $request) {
 
         /** @var \MerakiShop\DTOs\ResponseToken $tokenResponse */
         $tokenResponse = $tokenResponse->getData();
-        $token = $tokenResponse->token;
-
-
         $cookie = cookie(
             'X-API-TOKEN',
-            $token,
+            $tokenResponse->token,
             60 * 24,
             null,
             null,
@@ -47,12 +44,9 @@ Route::get('authenticate', function (AuthKitAuthenticationRequest $request) {
             true
         );
 
-        // Também armazena o token na sessão para que o JavaScript possa acessá-lo
-        session(['api_token' => $token]);
-
-        return redirect()->route('orders')
-            ->withCookie($cookie)
-            ->with('api_token', $token);
+        return redirect()->route('orders.index')
+            ->withCookie(cookie: $cookie)
+            ->with('api_token', $tokenResponse->token);
     } catch (\Exception $e) {
         Logger::critical('Erro de autenticação: '.$e->getMessage());
 
